@@ -5,5 +5,44 @@
 {% endblock %}
 
 {% block content %}
-   <p>Upload Content!</p>
+    <h2>Upload any new data files to your database:</h2>
+    <form>
+        <table border="2">
+            <tr style="vertical-align: text-top">
+                <td style="padding-right: 100px;">
+                    <p style="font-size: 12px;">Select 'meta_Project.csv' file:</p>
+                </td>
+                <td>
+                    <input style="font-size: 12px;" type="file" name="Project"/></p>
+                </td>
+            </tr>
+            <tr style="vertical-align: text-top">
+                <td>
+                    <p style="font-size: 12px;">Select 'meta_Sample.csv' file:</p>
+                </td>
+                <td>
+                    <input style="font-size: 12px;" type="file" name="Sample"/></p>
+                </td>
+            </tr>
+            <tr style="vertical-align: text-top">
+                <td>
+                    <p style="font-size: 12px;">Select consensus taxonomy file:</p>
+                </td>
+                <td>
+                    <input style="font-size: 12px;" type="file" name="conTaxonomy"/></p>
+                </td>
+            </tr>
+            <tr style="vertical-align: text-top">
+                <td>
+                    <p style="font-size: 12px;">Select .shared file:</p>
+                </td>
+                <td>
+                    <input style="font-size: 12px;" type="file" name="shared"/></p>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <input style="font-size: 12px;" type="submit" name="Upload"/>
+        <input style="font-size: 12px;" type="reset" name="Reset"/>
+    </form>
 {% endblock %}

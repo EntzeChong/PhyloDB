@@ -30,7 +30,7 @@ a img {
 h1 {
 	color: #F90;
 	font-size: 24px;
-	margin: 0px;
+	margin: 0;
 }
 
 h2 {
@@ -40,12 +40,10 @@ h2 {
 
 h2.sottotitolo {
 	color: #7CBE29;
-	color: #F90;
 }
 
 table, fieldset {
 	background: #F4F4F4;
-
 }
 
 
@@ -54,41 +52,38 @@ th {
 }
 
 #Content {
-
+    top: 70px;
+    left: 120px;
+    position: absolute;
 }
 
 #intestazione {
+    top: 0px;
+    position: fixed;
+    width: 100%;
 	border-bottom: 3px double #7CBE29;
-
 }
 
 #pagina {
-	width: 100%;
-	clear: both;
-	float: left;
-	margin-bottom: 20px;
+    top: 70px;
+    width: 100%;
 }
 
 #piedipagina {
     position:absolute;
     bottom:0;
-	border-top: 2px solid #7CBE29;
 	width: 100%;
-	float: left;
+	border-top: 2px solid #7CBE29;
 	background-color: #FFF;
-	text-indent: 10px;
-	padding-top: 4px;
-}
-
-#piedipagina img {
-	vertical-align: middle;
 }
 
 #Menu {
-	width: 125px;
-	height: 100%;
-	float: left;
-	background: url("../media/images/sf_menu.png") repeat-x top #cbffa8;
+    top: 70px;
+    left: 0px;
+    height: 75%;
+    position: absolute;
+	width: 100px;
+	background: url("/media/css/images/sf_menu.png") repeat-x top #ccd1cb;
 	border: 1px solid #7CBE29;
     font-size: 12px;
     margin: 10px;
@@ -133,7 +128,7 @@ th {
 }
 
 .dataTable th, .dataTable td {
-	padding: 1px 4px;
+	padding: 4px 4px;
 }
 
 .even {
@@ -156,15 +151,16 @@ th {
 	font-weight: bold;
 	color: #000;
 	text-align: center;
-    margin-top: 10px;
 }
 
 ul.menuItems {
-	margin: 20px 0px;
-	padding-left: 20px;
+	margin: 0x;
+	padding-left: 5px;
 }
 
 .menuItems li {
+    margin: 0px;
+    padding-left: 0px;
 	height: 25px;
 	list-style: none;
 }
@@ -185,19 +181,17 @@ ul.menuItems {
 
 .Onmouse {
 	color: navy;
-	color: #000;
 	text-align: left;
-	margin-left: 0px;
-	margin-right: 0px;
+	margin-left: 0;
+	margin-right: 0;
 	text-decoration: underline;
 }
 
 .Offmouse {
 	color: navy;
-	color: #000;
 	text-align: left;
-	margin-left: 0px;
-	margin-right: 0px;
+	margin-left: 0;
+	margin-right: 0;
 	text-decoration: none;
 }
 

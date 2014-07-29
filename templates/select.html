@@ -5,5 +5,20 @@
 {% endblock %}
 
 {% block content %}
-   <p>This is new content!</p>
+    <h2>Select any combination of data for analysis:</h2>
+    <form>
+        <table border="2">
+            <th style="padding-right: 100px;">Project/Samples</th>
+            <th style="padding-right: 100px;">Metadata</th>
+            <th style="padding-right: 100px;">Taxonomy</th>
+            <tr>
+                <td>Tree1</td>
+                <td>Tree2</td>
+                <td>Tree3</td>
+            </tr>
+        </table>
+        <br>
+        <input style="font-size: 12px;" type="submit" name="Upload"/>
+        <input style="font-size: 12px;" type="reset" name="Reset"/>
+    </form>
 {% endblock %}
