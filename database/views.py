@@ -7,12 +7,12 @@ from database.models import Project
 def home(request):
     return render_to_response('home.html')
 
+def upload(request):
+    return render_to_response('upload.html')
 
-'''def home(request):
-    project_list = Project.objects.all()
-    t = loader.get_template('home.html')
-    c = Context({
-        'project_list': project_list,
-    })
-    return HttpResponse(t.render(c))
-'''
+def select(request):
+    return render_to_response('select.html')
+
+def norm(request):
+    return render_to_response('norm.html')
+
