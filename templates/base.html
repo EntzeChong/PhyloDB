@@ -15,11 +15,11 @@
             <table width="100%" style="border-bottom-color: black; border-bottom-style: double;">
                 <tr>
 
-                   <!-- <td><img style="height:50px" src='../media/images/dbimage.jpeg'></td>
-                    <td><img style="height:50px" src='../media/images/DNA.jpeg'></td>
+                    <td><img style="height:50px" src="{% static "images/dbimage.jpeg" %}" /></td>
+                    <td><img style="height:50px" src="{% static "images/DNA.jpeg" %}" /></td>
                     <td><h1>PhyloDB: A web-based database storage and retrieval system for metagenomic data</h1></td>
-                    <td><img style="height:50px" src='../media/images/ARS.jpeg'></td> -->
-                    <td><img style="height:50px" src="{% static "images/dbimage.jpeg" alt="myimg" %}"/></td>
+                    <td><img style="height:50px" src="{% static "images/ARS.jpeg" %}" /></td>
+
                 </tr>
             </table>
         </div>
@@ -31,10 +31,10 @@
                 <div class="menuTitle">Menu</div>
 
                 <ul class="menuItems">
-                    <li><a class="Offmouse" href=/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Home</a></li>
-                    <li><a class="Offmouse" href="/Upload/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">[Upload Data]</a></li>
-                    <li><a class="Offmouse" href="/Select/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Select Data</a></li>
-                    <li><a class="Offmouse" href="/Normalize/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Normalize Data</a></li>
+                    <li><a class="Offmouse" href="/home/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Home</a></li>
+                    <li><a class="Offmouse" href="/upload/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">[Upload Data]</a></li>
+                    <li><a class="Offmouse" href="/select/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Select Data</a></li>
+                    <li><a class="Offmouse" href="/norm/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Normalize Data</a></li>
                     <li>Analyze Data</li>
                     <ul><a class="Offmouse" href="/Analysis/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">ANOVA</a></ul>
                     <ul><a class="Offmouse" href="/Analysis/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Graphs</a></ul>
