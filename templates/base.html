@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.-1 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+{% load staticfiles %}
+    <head>
+        <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+        <link href="{% static "css/new_style.css" %}" rel='stylesheet' type='text/css'>
+        <title>{% block pagetitle %}{% endblock %}</title>
+    </head>
+
+    <body>
+
+        <div id="intestazione">
+            <table width="100%" style="border-bottom-color: black; border-bottom-style: double;">
+                <tr>
+
+                   <!-- <td><img style="height:50px" src='../media/images/dbimage.jpeg'></td>
+                    <td><img style="height:50px" src='../media/images/DNA.jpeg'></td>
+                    <td><h1>PhyloDB: A web-based database storage and retrieval system for metagenomic data</h1></td>
+                    <td><img style="height:50px" src='../media/images/ARS.jpeg'></td> -->
+                    <td><img style="height:50px" src="{% static "images/dbimage.jpeg" alt="myimg" %}"/></td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="pagina">
+
+            <div id="Menu">
+
+                <div class="menuTitle">Menu</div>
+
+                <ul class="menuItems">
+                    <li><a class="Offmouse" href=/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Home</a></li>
+                    <li><a class="Offmouse" href="/Upload/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">[Upload Data]</a></li>
+                    <li><a class="Offmouse" href="/Select/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Select Data</a></li>
+                    <li><a class="Offmouse" href="/Normalize/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Normalize Data</a></li>
+                    <li>Analyze Data</li>
+                    <ul><a class="Offmouse" href="/Analysis/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">ANOVA</a></ul>
+                    <ul><a class="Offmouse" href="/Analysis/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Graphs</a></ul>
+                </ul>
+             </div>
+
+            <div id="Content">
+                {% block content %} <p>This will be overwritten</p> {% endblock %}
+            </div>
+
+        </div>
+
+        <div id="piedipagina">
+            <p>Footer text here</p>
+        </div>
+
+    </body>
+</html>
