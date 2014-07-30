@@ -5,12 +5,15 @@
 {% load staticfiles %}
     <head>
         <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
-        <link href="{% static "css/new_style.css" %}" rel='stylesheet' type='text/css'>
-        <title>{% block pagetitle %}{% endblock %}</title>
+        <link href="../media/css/new_style.css" rel='stylesheet' type='text/css'>
+
+        {% block jquery %}{% endblock %}
+        {% block pagetitle %}{% endblock %}
+        {% block dynatree %}{% endblock %}
+
     </head>
 
     <body>
-
         <div id="intestazione">
             <table>
                 <tr>
@@ -41,14 +44,9 @@
              </div>
 
             <div id="Content">
-                {% block content %} <p>This will be overwritten</p> {% endblock %}
+                {% block content %}{% endblock %}
             </div>
 
         </div>
-
-        <div id="piedipagina">
-            <p>Footer text here</p>
-        </div>
-
     </body>
 </html>

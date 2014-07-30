@@ -1,7 +1,95 @@
 {% extends 'base.html' %}
 
+{% block jquery %}
+    <script src="../media/jquery/jquery.js" type="text/javascript"></script>
+    <script src="../media/jquery/jquery-ui.custom.js" type="text/javascript"></script>
+    <script src="../media/jquery/jquery.cookie.js" type="text/javascript"></script>
+
+    <link rel='stylesheet' type='text/css' href="../media/skin/ui.dynatree.css">
+    <script src="../media/jquery.dynatree.js" type="text/javascript"></script>
+{% endblock %}
+
 {% block pagetitle %}
-    Select
+    <title>Select</title>
+{% endblock %}
+
+{% block dynatree %}
+    <script type="text/javascript">
+        var treeData1 = [
+            {title: "item1"},
+            {title: "item2"},
+            {title: "item3",
+                children: [
+                    {title: "Sub-item 3.1",
+                        children: [
+                            {title: "Sub-item 3.1.1", key: "id3.1.1" },
+                            {title: "Sub-item 3.1.2", key: "id3.1.2" }
+                        ]
+                    },
+                    {title: "Sub-item 3.2",
+                        children: [
+                            {title: "Sub-item 3.2.1", key: "id3.2.1" },
+                            {title: "Sub-item 3.2.2", key: "id3.2.2" }
+                        ]
+                    }
+                ]
+            },
+            {title: "Item4",
+                children: [
+                    {title: "Sub-item 4.1",
+                        children: [
+                            {title: "Sub-item 4.1.1", key: "id4.1.1" },
+                            {title: "Sub-item 4.1.2", key: "id4.1.2" }
+                        ]
+                    },
+                    {title: "Sub-item 4.2",
+                        children: [
+                            {title: "Sub-item 4.2.1", key: "id4.2.1" },
+                            {title: "Sub-item 4.2.2", key: "id4.2.2" }
+                        ]
+                    },
+                    {title: "Sub-item 4.3"},
+                    {title: "Sub-item 4.4"}
+                ]
+            }
+        ];
+
+        $(function () {
+            $("#tree1").dynatree({
+                checkbox: true,
+                selectMode: 3,
+                children: treeData1,
+
+                onSelect: function (select, node) {
+                    // Get a list of all selected nodes, and convert to a key array:
+                    var selKeys = $.map(node.tree.getSelectedNodes(), function (node) {
+                        return node.data.key;
+                    });
+                    $("#echoSelection").text(selKeys.join(", "));
+
+                    // Get a list of all selected TOP nodes
+                    var selRootNodes = node.tree.getSelectedNodes(true);
+                    // ... and convert to a key array:
+                    var selRootKeys = $.map(selRootNodes, function (node) {
+                        return node.data.key;
+                    });
+                    $("#echoSelectionRootKeys").text(selRootKeys.join(", "));
+                    $("#echoSelectionRoots").text(selRootNodes.join(", "));
+                },
+
+                onDblClick: function (node, event) {
+                    node.toggleSelect();
+                },
+
+                onKeydown: function (node, event) {
+                    if (event.which == 32) {
+                        node.toggleSelect();
+                        return false;
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -12,7 +100,9 @@
             <th style="padding-right: 100px;">Metadata</th>
             <th style="padding-right: 100px;">Taxonomy</th>
             <tr>
-                <td>Tree1</td>
+                <td>
+                    <div id="tree1"></div>
+                </td>
                 <td>Tree2</td>
                 <td>Tree3</td>
             </tr>

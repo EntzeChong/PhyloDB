@@ -60,13 +60,17 @@ th {
 #intestazione {
     top: 0px;
     position: fixed;
+    height: 50px;
     width: 100%;
 	border-bottom: 3px double #7CBE29;
 }
 
 #pagina {
-    top: 70px;
-    width: 100%;
+    margin-top: 60px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    overflow-y: scroll;
 }
 
 #piedipagina {
@@ -83,7 +87,7 @@ th {
     height: 75%;
     position: absolute;
 	width: 100px;
-	background: url("/media/css/images/sf_menu.png") repeat-x top #ccd1cb;
+	background: url("media/images/sf_menu.png") repeat-x top #ccd1cb;
 	border: 1px solid #7CBE29;
     font-size: 12px;
     margin: 10px;

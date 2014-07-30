@@ -15,4 +15,3 @@ def select(request):
 
 def norm(request):
     return render_to_response('norm.html')
-
