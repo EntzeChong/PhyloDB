@@ -7,7 +7,7 @@ TABLE = 'tblProject'
 
 def parse(f_in, f_out):
     for record in utils.parse_data(f_in):
-        print record[0]
         export_sql(f_out, record)
+
 def export_sql(f_out, record):
-    print utils.build_sql(TABLE, record) 
+    f_out.write(utils.build_sql(TABLE, record))
