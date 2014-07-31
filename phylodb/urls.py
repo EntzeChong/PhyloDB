@@ -10,6 +10,6 @@ urlpatterns = patterns('',
     url(r'^upload/$', 'database.views.upload'),
     url(r'^select/$', 'database.views.select'),
     url(r'^norm/$', 'database.views.norm'),
-    url(r'^getTree', treePlotter.views.getTree, name='getTree')
+    #url(r'^getTree', treePlotter.views.getTree, name='getTree')
 )
 
