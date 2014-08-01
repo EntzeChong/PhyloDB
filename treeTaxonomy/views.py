@@ -25,3 +25,4 @@ def treeTaxonomy(request):
     response_dict = {}
     response_dict.update({'children': tree})
     return HttpResponse(response_dict, mimetype='application/javascript')
+

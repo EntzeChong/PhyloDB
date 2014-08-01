@@ -9,4 +9,6 @@ urlpatterns = patterns('',
     url(r'^treeProject', 'treeProject.views.treeProject', name='treeProject'),
     url(r'^treeMeta', 'treeMeta.views.treeMeta', name='treeMeta'),
     url(r'^treeTaxonomy', 'treeTaxonomy.views.treeTaxonomy', name='treeTaxonomy'),
+  #  url(r'^getGraphData', 'treeTaxonomy.views.getGraphData', name='getGraphData'),
+  #  url(r'^getTableData', 'treeTaxonomy.views.getTableData', name='getTableData'),
 )

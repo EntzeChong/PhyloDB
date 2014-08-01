@@ -19,22 +19,23 @@
     <script src="../media/nvd3/line.js"></script>
     <link href="../media/nvd3/nv.d3.css" rel="stylesheet" type="text/css">
     <!-- table tools stuff -->
-    <link rel='stylesheet' type='text/css' href='../media/tabletools/TableTools.css'>
-    <link rel='stylesheet' type='text/css' href='../media/tabletools/TableTools_JUI.css'>
-    <script src='../media/tabletools/TableTools.js' type="text/javascript"></script>
-    <script src='../media/tabletools/ZeroClipboard.js' type="text/javascript"></script>
+
+    <link rel='stylesheet' type='text/css' href='../media/tabletools/dataTables.tableTools.css'>
+    <script src='../media/tabletools/dataTables.tableTools.js' type="text/javascript"></script>
 {% endblock %}
 
 {% block pagetitle %}
-    <title>Select</title>
+    <title>Graph</title>
 {% endblock %}
 
 {% block dynatree %}
     <script type="text/javascript">
         $(function () {
+
+            // start tree load
             $("#tree").dynatree({
                 checkbox: true,
-                selectMode: 3,
+                selectMode: 2,
                 initAjax: {
                     url: "/treeTaxonomy/",
                     dataType: "jsonp",
@@ -42,7 +43,6 @@
                 },
 
                 onSelect: function (node) {
-                    //updateChart();
                     function getStringOfSelectedTreeNodes() {
                         var returnString = "";
                         var nodes = $("#tree").dynatree("getSelectedNodes");
@@ -52,7 +52,16 @@
                         return returnString.substring(0, returnString.length - 1);
                     }
 
-                    //updateDataTable();
+                    $('#dataTable').dataTable({
+                        "bProcessing": true,
+                        "bJQueryUI": true,
+                        "sPaginationType": "full_numbers",
+                        "sDom": 'T<"clear">lfrtip',
+                        "oTableTools": {
+                            "sSwfPath": "/media/tabletools/swf/copy_csv_xls_pdf.swf",
+                            "aButtons": ["csv"]
+                        }
+                    });
                 },
 
                 onActivate: function (node) {
@@ -62,7 +71,7 @@
                 fx: { height: "toggle", duration: 200 },
                 onPostInit: function (isReloading, isError) {
                     if (getStringOfSelectedTreeNodes() != '') {
-                        //updateChart();
+
                         serialize = function (obj) {
                             var str = [];
                             for (var p in obj)
@@ -106,7 +115,16 @@
 
                         }
 
-                        //updateDataTable();
+                        function updateDataTable() {
+                            var returnDict = getDictOfAllCheckboxes();
+                            returnDict['nodes'] = getStringOfSelectedTreeNodes();
+                            if (returnDict['nodes'] == '') {
+                                return;
+                            }
+                            // also need logic to check the from and to fields (parse fields and see if they're valid)
+                            $('#dataTable').dataTable().fnReloadAjax("/getTableData?" + serialize(returnDict));
+
+                        }
                     }
                 }
             });
@@ -116,7 +134,7 @@
 
 {% block content %}
     <table cellpadding="0" cellspacing="0" border="0" class="display" id="dataTable">
-    <thead>
+        <thead>
         <tr>
             <th>Col 1</th>
             <th>Col 2</th>
@@ -124,11 +142,11 @@
             <th>Col 4</th>
             <th>Col 5</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
 
-    </tbody>
-    <tfoot>
+        </tbody>
+        <tfoot>
         <tr>
             <th>Col 1</th>
             <th>Col 2</th>
@@ -136,8 +154,8 @@
             <th>Col 4</th>
             <th>Col 5</th>
         </tr>
-    </tfoot>
-</table>
+        </tfoot>
+    </table>
     <div id="tree"></div>
     <div id="chart">
         <svg style="height: 500px;"></svg>
