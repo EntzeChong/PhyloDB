@@ -41,7 +41,7 @@ class Sample(models.Model):
     pH = models.CharField(max_length=45, blank=True)
     tot_org_carb = models.CharField(max_length=45, blank=True)
     tot_nitro = models.CharField(max_length=45, blank=True)
-    user1 = models.CharField(max_length=45, blank=True)
+    user1 = models.CharField(max_length=45, blank=True) # what are these for? should be another table relating user to sampleID
     user2 = models.CharField(max_length=45, blank=True)
     user3 = models.CharField(max_length=45, blank=True)
     user4 = models.CharField(max_length=45, blank=True)
