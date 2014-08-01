@@ -144,8 +144,8 @@ span.dynatree-expander
 }
 .dynatree-loading span.dynatree-expander  /* 'Loading' status overrides all others */
 {
-	background-position: 0 0;
-	background-image: url("loading.gif");
+	background-position: 0px 0px;
+	background-image: url("/media/dynatree/loading.gif");
 }
 
 
@@ -243,7 +243,7 @@ span.dynatree-icon /* Default icon */
 
 .dynatree-statusnode-wait span.dynatree-icon
 {
-	background-image: url("loading.gif");
+	background-image: url("/media/dynatree/loading.gif");
 }
 
 .dynatree-statusnode-error span.dynatree-icon

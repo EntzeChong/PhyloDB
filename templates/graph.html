@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block jquery %}
+    <!-- jquery -->
+    <script src="../media/jquery/jquery.js" type="text/javascript"></script>
+    <script src="../media/jquery/jquery-ui.custom.js" type="text/javascript"></script>
+    <script src="../media/jquery/jquery.cookie.js" type="text/javascript"></script>
+    <!-- dynatree -->
+    <link rel='stylesheet' type='text/css' href="../media/dynatree/ui.dynatree.css">
+    <script src="../media/dynatree/jquery.dynatree.js" type="text/javascript"></script>
+    <!-- nvd3 -->
+    <script src="../media/nvd3/d3.v2.js"></script>
+    <script src="../media/nvd3/nv.d3.js"></script>
+    <script src="../media/nvd3/tooltip.js"></script>
+    <script src="../media/nvd3/utils.js"></script>
+    <script src="../media/nvd3/legend.js"></script>
+    <script src="../media/nvd3/axis.js"></script>
+    <script src="../media/nvd3/scatter.js"></script>
+    <script src="../media/nvd3/line.js"></script>
+    <link href="../media/nvd3/nv.d3.css" rel="stylesheet" type="text/css">
+    <!-- table tools stuff -->
+    <link rel='stylesheet' type='text/css' href='../media/tabletools/TableTools.css'>
+    <link rel='stylesheet' type='text/css' href='../media/tabletools/TableTools_JUI.css'>
+    <script src='../media/tabletools/TableTools.js' type="text/javascript"></script>
+    <script src='../media/tabletools/ZeroClipboard.js' type="text/javascript"></script>
+{% endblock %}
+
+{% block pagetitle %}
+    <title>Select</title>
+{% endblock %}
+
+{% block dynatree %}
+    <script type="text/javascript">
+        $(function () {
+            $("#tree").dynatree({
+                checkbox: true,
+                selectMode: 3,
+                initAjax: {
+                    url: "/treeTaxonomy/",
+                    dataType: "jsonp",
+                    data: {}
+                },
+
+                onSelect: function (node) {
+                    //updateChart();
+                    function getStringOfSelectedTreeNodes() {
+                        var returnString = "";
+                        var nodes = $("#tree").dynatree("getSelectedNodes");
+                        for (i in nodes) {
+                            returnString = nodes[i].data.title + "|" + returnString;
+                        }
+                        return returnString.substring(0, returnString.length - 1);
+                    }
+
+                    //updateDataTable();
+                },
+
+                onActivate: function (node) {
+                },
+                persist: true,
+                noLink: false,
+                fx: { height: "toggle", duration: 200 },
+                onPostInit: function (isReloading, isError) {
+                    if (getStringOfSelectedTreeNodes() != '') {
+                        //updateChart();
+                        serialize = function (obj) {
+                            var str = [];
+                            for (var p in obj)
+                                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                            return str.join("&");
+                        }
+
+                        function updateChart() {
+                            var returnDict = getDictOfAllCheckboxes();
+                            returnDict['nodes'] = getStringOfSelectedTreeNodes();
+                            var argQueryString = serialize(returnDict);
+
+                            var request = $.ajax({
+                                url: "/getGraphData?" + argQueryString,
+                                type: "GET",
+                                dataType: "json",
+                                success: function (result) {
+                                    // start nvd3 code
+                                    nv.addGraph(function () {
+                                        var chart = nv.models.lineChart();
+
+                                        chart.xAxis
+                                                .tickFormat(function (d) {
+                                                    return d3.time.format('%x')(new Date(d));
+                                                });
+
+                                        chart.yAxis
+                                                .tickFormat(d3.format(',.3f'));
+
+                                        d3.select('#chart svg')
+                                                .datum(result)
+                                                .transition().duration(500)
+                                                .call(chart);
+
+                                        nv.utils.windowResize(chart.update);
+
+                                        return chart;
+                                    });
+                                }
+                            });
+
+                        }
+
+                        //updateDataTable();
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <table cellpadding="0" cellspacing="0" border="0" class="display" id="dataTable">
+    <thead>
+        <tr>
+            <th>Col 1</th>
+            <th>Col 2</th>
+            <th>Col 3</th>
+            <th>Col 4</th>
+            <th>Col 5</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Col 1</th>
+            <th>Col 2</th>
+            <th>Col 3</th>
+            <th>Col 4</th>
+            <th>Col 5</th>
+        </tr>
+    </tfoot>
+</table>
+    <div id="tree"></div>
+    <div id="chart">
+        <svg style="height: 500px;"></svg>
+    </div>
+{% endblock %}

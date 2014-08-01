@@ -1,9 +1,6 @@
-from django.http import HttpResponse
 from django.shortcuts import render_to_response
-from django.template import loader, Context
-from database.models import Project
 
-# Create your views here.
+
 def home(request):
     return render_to_response('home.html')
 
@@ -15,3 +12,6 @@ def select(request):
 
 def norm(request):
     return render_to_response('norm.html')
+
+def graph(request):
+    return render_to_response('graph.html')
