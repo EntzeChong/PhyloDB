@@ -1,4 +1,0 @@
-sample_name,organism,title,seq_methods,collection_date,biome,feature,geo_loc_name,lat_lon,material,depth,elev
-Sample1,soil metagenome,soil sample from plot 1,V3 16S rRNA tags,YYYY-MM-DD,desert,riparian,USA: CO,45.123 -125.429,soil,0-30,500
-Sample2,soil metagenome,soil sample from plot 2,V3 16S rRNA tags,YYYY-MM-DD,desert,riparian,USA: CO,45.123 -125.429,soil,0-30,498
-Sample3,soil metagenome,soil sample from plot 3,V3 16S rRNA tags,YYYY-MM-DD,desert,riparian,USA: CO,45.123 -125.429,soil,0-30,326

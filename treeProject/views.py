@@ -1,6 +1,9 @@
-from django.http import HttpResponse
 import simplejson
+from django.http import HttpResponse
+from database.models import Project
 
+#qryProject = Project.objects.values_list('project_name')
+#qryProject_json = simplejson.dumps(list(qryProject))
 
 def treeProject(request):
     myTree = {'children': [], 'title': 'Root', 'isFolder': True, 'hideCheckbox': True}

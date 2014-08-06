@@ -6,10 +6,10 @@ import sample_parser as sp
 #for f in [f for f in os.listdir('.') if os.path.isfile(f)]: print f
 
 # read files
-f_shared = open('input/Test.silva_102.wang.tx.shared', 'r')
-f_taxonomy = open('input/Test.wang.tx.1.cons.taxonomy', 'r')
-f_project = open('input/meta_Project.csv', 'r')
-f_sample = open('input/meta_Sample.csv', 'r')
+f_shared = open('input/test_data/Test.silva_102.wang.tx.shared', 'r')
+f_taxonomy = open('input/test_data/Test.wang.tx.1.cons.taxonomy', 'r')
+f_project = open('input/test_data/meta_Project.csv', 'r')
+f_sample = open('input/test_data/meta_Sample.csv', 'r')
 
 # parse project
 project_parser.parse_and_import(f_project)
