@@ -1,14 +1,10 @@
-from collections import defaultdict
-from utils import parse_data
+from utils import parse_to_defaultlist
 
-TABLE = 'Sample'
-NAME = 0  # csv indices
+NAME = 0  # csv hash index
 ORGANISM, TITLE, SEQ_METHODS, DATE, BIOME, FEATURE, LOC, LAT_LON, MATERIAL, DEPTH, ELEV = \
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10  # dict indexes
 
 
+# hash 1st attribute with the rest of the record
 def parse(f_in):
-    d = defaultdict(list)
-    for record in parse_data(f_in):
-        d[record[NAME]].append(record[NAME + 1:])
-    return d
+    return parse_to_defaultlist(f_in, NAME)

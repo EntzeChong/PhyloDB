@@ -10,8 +10,13 @@ def execute(sql_stmt=None):
     conn = sq.connect(PATH_TO_DB)
     cursor = conn.cursor()
     cursor.execute(sql_stmt)
-    cursor.execute("SELECT * FROM database_project;")
+    #cursor.execute("SELECT * FROM database_project;")
     #cursor.execute("PRAGMA table_info(" + PROJECT + ");")
     #cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-    print(cursor.fetchall())
+    #print(cursor.fetchall())
 
+def projects():
+    conn = sq.connect(PATH_TO_DB)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM database_project;")
+    print(cursor.fetchall())

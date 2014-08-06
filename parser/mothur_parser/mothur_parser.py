@@ -1,9 +1,7 @@
-import os
-import project_parser
-import sample_parser as sp
-# currently exports values as tables, but can eventually link up directly to our backend DB
+import project_parser as pp
+import sample_parser as sample
+import database as db
 
-#for f in [f for f in os.listdir('.') if os.path.isfile(f)]: print f
 
 # read files
 f_shared = open('input/test_data/Test.silva_102.wang.tx.shared', 'r')
@@ -12,9 +10,12 @@ f_project = open('input/test_data/meta_Project.csv', 'r')
 f_sample = open('input/test_data/meta_Sample.csv', 'r')
 
 # parse project
-project_parser.parse_and_import(f_project)
+project_ids = pp.parse_and_import(f_project)
+for p in project_ids: print p
 
 # parse sample
-sp_data = sp.parse(f_sample)
-print sp_data['Sample1'][0][sp.ORGANISM]
-print sp_data['Sample1'][0][sp.TITLE]
+sp_data = sample.parse(f_sample)
+#print sp_data['Con.Fwy.1'][0][sample.ORGANISM]
+#print sp_data['Con.Fwy.1'][0][sample.TITLE]
+
+db.projects()
