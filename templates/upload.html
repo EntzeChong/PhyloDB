@@ -6,43 +6,27 @@
 
 {% block content %}
     <h2>Upload any new data files to your database:</h2>
-    <form>
-        <table border="2">
-            <tr style="vertical-align: text-top">
-                <td style="padding-right: 100px;">
-                    <p style="font-size: 12px;">Select 'meta_Project.csv' file:</p>
-                </td>
-                <td>
-                    <input style="font-size: 12px;" type="file" name="Project"/></p>
-                </td>
+    <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <br>
+        <table>
+            <tr>
+                <td>{{ form.docfile1.label_tag }}</td>
+                <td>{{ form.docfile1 }}</td>
             </tr>
-            <tr style="vertical-align: text-top">
-                <td>
-                    <p style="font-size: 12px;">Select 'meta_Sample.csv' file:</p>
-                </td>
-                <td>
-                    <input style="font-size: 12px;" type="file" name="Sample"/></p>
-                </td>
+            <tr>
+                <td>{{ form.docfile2.label_tag }}</td>
+                <td>{{ form.docfile2 }}</td>
             </tr>
-            <tr style="vertical-align: text-top">
-                <td>
-                    <p style="font-size: 12px;">Select consensus taxonomy file:</p>
-                </td>
-                <td>
-                    <input style="font-size: 12px;" type="file" name="conTaxonomy"/></p>
-                </td>
+            <tr>
+                <td>{{ form.docfile3.label_tag }}</td>
+                <td>{{ form.docfile3 }}</td>
             </tr>
-            <tr style="vertical-align: text-top">
-                <td>
-                    <p style="font-size: 12px;">Select .shared file:</p>
-                </td>
-                <td>
-                    <input style="font-size: 12px;" type="file" name="shared"/></p>
-                </td>
+            <tr>
+                <td>{{ form.docfile4.label_tag }}</td>
+                <td>{{ form.docfile4 }}</td>
             </tr>
         </table>
-        <br>
-        <input style="font-size: 12px;" type="submit" name="Upload"/>
-        <input style="font-size: 12px;" type="reset" name="Reset"/>
+        <p><input type="submit" value="Upload"/></p>
     </form>
 {% endblock %}

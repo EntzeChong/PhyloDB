@@ -3,10 +3,14 @@ import simplejson
 
 
 def treeProject(request):
-    myTree = {'children': [], 'title': 'Projects', 'isFolder': True, 'hideCheckbox': True}
-    myTree['children'].append({'title': 'Project 1', 'isFolder': 'false', 'children': []})
-    myTree['children'].append({'title': 'Project 2', 'isFolder': 'false', 'children': []})
-    myTree['children'].append({'title': 'Project 3', 'isFolder': 'false', 'children': []})
+    myTree = {'children': [], 'title': 'Root', 'isFolder': True, 'hideCheckbox': True}
+    myTree['children'].append({'title': 'Kingdom', 'isFolder': 'false', 'children': []})
+    myTree['children'].append({'title': 'Phylum', 'isFolder': 'false', 'children': []})
+    myTree['children'].append({'title': 'Class', 'isFolder': 'false', 'children': []})
+    myTree['children'].append({'title': 'Order', 'isFolder': 'false', 'children': []})
+    myTree['children'].append({'title': 'Family', 'isFolder': 'false', 'children': []})
+    myTree['children'].append({'title': 'Genus', 'isFolder': 'false', 'children': []})
+    myTree['children'].append({'title': 'Species', 'isFolder': 'false', 'children': []})
 
     # Convert result list to a JSON string
     res = simplejson.dumps(myTree, encoding="Latin-1")
@@ -21,3 +25,4 @@ def treeProject(request):
     response_dict = {}
     response_dict.update({'children': tree})
     return HttpResponse(response_dict, mimetype='application/javascript')
+

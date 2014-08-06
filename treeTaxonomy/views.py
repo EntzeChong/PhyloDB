@@ -3,7 +3,7 @@ import simplejson
 
 
 def treeTaxonomy(request):
-    myTree = {'children': [], 'title': 'root', 'isFolder': True, 'hideCheckbox': True}
+    myTree = {'children': [], 'title': 'Root', 'isFolder': True, 'hideCheckbox': True}
     myTree['children'].append({'title': 'Kingdom', 'isFolder': 'false', 'children': []})
     myTree['children'].append({'title': 'Phylum', 'isFolder': 'false', 'children': []})
     myTree['children'].append({'title': 'Class', 'isFolder': 'false', 'children': []})

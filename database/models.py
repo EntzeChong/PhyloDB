@@ -1,6 +1,6 @@
 from django.db import models
 
-# Create your models here.
+
 class Project(models.Model):
     ProjectID = models.CharField(max_length=45, primary_key=True)
     project_name = models.CharField(max_length=45, blank=True)
@@ -12,6 +12,7 @@ class Project(models.Model):
     PI_affiliation = models.CharField(max_length=50, blank=True)
     PI_email = models.TextField(blank=True)
     PI_phone = models.CharField(max_length=15, blank=True)
+
 
 class Sample(models.Model):
     SampleID = models.CharField(max_length=45, primary_key=True)
@@ -54,6 +55,7 @@ class Sample(models.Model):
     user11 = models.CharField(max_length=45, blank=True)
     user12 = models.CharField(max_length=45, blank=True)
 
+
 class Taxonomy(models.Model):
     SampleID = models.ForeignKey('Sample', to_field='SampleID', related_name='SampleID_50')
     Kingdom = models.CharField(max_length=45)
@@ -64,4 +66,20 @@ class Taxonomy(models.Model):
     Genus = models.CharField(max_length=45)
     Species = models.CharField(max_length=45)
     SeqReads = models.IntegerField(blank=True)
+
+
+class Document1(models.Model):
+    docfile1 = models.FileField(upload_to='%Y.%m.%d')
+
+
+class Document2(models.Model):
+    docfile2 = models.FileField(upload_to='%Y.%m.%d')
+
+
+class Document3(models.Model):
+    docfile3 = models.FileField(upload_to='%Y.%m.%d')
+
+
+class Document4(models.Model):
+    docfile4 = models.FileField(upload_to='%Y.%m.%d')
 

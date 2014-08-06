@@ -14,3 +14,4 @@ def execute(sql_stmt=None):
     #cursor.execute("PRAGMA table_info(" + PROJECT + ");")
     #cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
     print(cursor.fetchall())
+
