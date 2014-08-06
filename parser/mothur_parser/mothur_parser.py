@@ -1,5 +1,5 @@
 import os
-import project_parser
+import project_parser as pp
 import sample_parser as sp
 # currently exports values as tables, but can eventually link up directly to our backend DB
 
@@ -12,7 +12,7 @@ f_project = open('input/meta_Project.csv', 'r')
 f_sample = open('input/meta_Sample.csv', 'r')
 
 # parse project
-project_parser.parse_and_import(f_project)
+pp.parse_and_import(f_project)
 
 # parse sample
 sp_data = sp.parse(f_sample)
