@@ -16,116 +16,61 @@
 {% block dynatree %}
     <script type="text/javascript">
         $(function () {
-            $("#tree1").dynatree({
+            // Initialize tree
+            $("#tree").dynatree({
                 checkbox: true,
                 selectMode: 3,
-                initAjax: {
-                    url: "/treeProject/",
-                    dataType: "jsonp",
-                    data: {}
-                }  /* add comma when other functions added */
-
-/*                onSelect: function (node) {
-                    //updateChart();
-                    //updateDataTable();
-                },
-
-                onActivate: function (node) {
-                },
-                persist: true,
-                noLink: false,
-                fx: { height: "toggle", duration: 200 },
-                onPostInit: function (isReloading, isError) {
-                    if (getStringOfSelectedTreeNodes() != '') {
-                        //updateChart();
-                        //updateDataTable();
-                    }
-                }
-*/
-            });
-        });
-    </script>
-
-        <script type="text/javascript">
-        $(function () {
-            $("#tree2").dynatree({
-                checkbox: true,
-                selectMode: 3,
-                initAjax: {
-                    url: "/treeMeta/",
-                    dataType: "jsonp",
-                    data: {}
-                }  /* add comma when other functions added */
-
-/*                onSelect: function (node) {
-                    //updateChart();
-                    //updateDataTable();
-                },
-
-                onActivate: function (node) {
-                },
-                persist: true,
-                noLink: false,
-                fx: { height: "toggle", duration: 200 },
-                onPostInit: function (isReloading, isError) {
-                    if (getStringOfSelectedTreeNodes() != '') {
-                        //updateChart();
-                        //updateDataTable();
-                    }
-                }
-*/
-            });
-        });
-    </script>
-
-        <script type="text/javascript">
-        $(function () {
-            $("#tree3").dynatree({
-                checkbox: true,
-                selectMode: 3,
-                initAjax: {
-                    url: "/treeTaxonomy/",
-                    dataType: "jsonp",
-                    data: {}
-                }  /* add comma when other functions added */
-
-/*                onSelect: function (node) {
-                    //updateChart();
-                    //updateDataTable();
-                },
-
-                onActivate: function (node) {
-                },
-                persist: true,
-                noLink: false,
-                fx: { height: "toggle", duration: 200 },
-                onPostInit: function (isReloading, isError) {
-                    if (getStringOfSelectedTreeNodes() != '') {
-                        //updateChart();
-                        //updateDataTable();
-                    }
-                }
-*/
-            });
-        });
+                onSelect: function (node) {
+                    var selKeys = $.map($("#tree").dynatree("getSelectedNodes"), function (node) {
+                        return node.data.uuid;
+                    });
+                    $('#textField').val(selKeys.join(","));  // uuids for all selected samples (no projects)
+                } // end onSelect
+            }); // end tree
+        }); // end function
     </script>
 {% endblock %}
-
+project
 {% block content %}
     <h2>Select any combination of data for analysis:</h2>
     <form>
         <table border="2">
             <th style="padding-right: 100px;">Project/Samples</th>
-            <th style="padding-right: 100px;">Metadata</th>
-            <th style="padding-right: 100px;">Taxonomy</th>
             <tr>
-                <td style="vertical-align: top"><div id="tree1"></div></td>
-                <td style="vertical-align: top"><div id="tree2"></div></td>
-                <td style="vertical-align: top"><div id="tree3"></div></td>
+                <td style="vertical-align: top">
+                    <div id="tree">
+                        <ul>
+                            <li title="root">All Projects
+                                <ul>
+                                    {% for project in projects %}
+                                        <li title={{ project.project_name }} tooltip={{ project.project_desc }}>
+                                        Project: {{ project.project_name }}
+                                        <ul>
+                                            {% for sample in samples %}
+                                                {% if sample.projectid_id == project.projectid %}
+                                                    <li title={{ sample.sample_name }}
+                                                                data="uuid: {{ sample.sampleid }}">
+                                                    Sample: {{ sample.sample_name }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    {% endfor %}
+                                </ul>
+                        </ul>
+                    </div>
+                </td>
             </tr>
         </table>
         <br>
-        <input style="font-size: 12px;" type="submit" name="Upload"/>
-        <input style="font-size: 12px;" type="reset" name="Reset"/>
     </form>
+    <div id="textField">
+        <!-- need to send this to norm.html not alert box -->
+        <input type="button" id="button" onclick="alert($('#textField').val())" value="Select"/>
+    </div>
+
+    <!-- note on page -->
+    <p>Might be useful to provide users with a table of info regarding samples<br>
+        More than just project/sample name?<br>
+        After normalization, we can have sample meta data/taxonomy trees for more detailed selection.</p>
 {% endblock %}
+

@@ -288,7 +288,7 @@ ul.dynatree-container a:hover
 
 span.dynatree-node a
 {
-	font-size: 10pt; /* required for IE, quirks mode */
+	font-size: 9pt; /* required for IE, quirks mode */
 	display: inline-block; /* Better alignment, when title contains <br> */
 /*	vertical-align: top;*/
 	padding-left: 3px;

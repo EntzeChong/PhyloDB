@@ -5,10 +5,9 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Upload any new data files to your database:</h2>
+    <h2>Upload any new data files:</h2>
     <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <br>
         <table>
             <tr>
                 <td>{{ form.docfile1.label_tag }}</td>
@@ -27,6 +26,19 @@
                 <td>{{ form.docfile4 }}</td>
             </tr>
         </table>
-        <p><input type="submit" value="Upload"/></p>
+        <p><input type="submit" value="Upload Files"/></p>
+        <br>
     </form>
+
+    <!-- need to eventually add ability to remove selected projects -->
+    <h2>List of previously uploaded projects:</h2>
+    {% if projects %}
+        {% for project in projects %}
+            <input type="checkbox" value="{{ project.project_name }}">{{ project.project_name }}: {{ project.project_desc }}<br>
+        {% endfor %}
+    {% else %}
+        <p>No projects uploaded.</p>
+    {% endif %}
+    <p><input type="submit" value="Remove Selected Projects"/></p>
+    <p>Remove button is currently not functional</p>
 {% endblock %}
