@@ -12,11 +12,11 @@ def uniqueID():
     return str(uuid.uuid1().int)
 
 
-def parse_to_list(f, delim):
+def parse_to_list(f, delim='\t'):
     return [[field.strip() for field in line.split(delim)] for line in f][1:]
 
 
-def parse_to_defaultlist(f_in, hash_index):
+def parse_to_defaultdict(f_in, hash_index=0):
     d = defaultdict(list)
     for record in parse_to_list(f_in):
         d[record[hash_index]].append(record[hash_index + 1:])
