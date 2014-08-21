@@ -26,19 +26,25 @@
                 <td>{{ form.docfile4 }}</td>
             </tr>
         </table>
-        <p><input type="submit" value="Upload Files"/></p>
+        <p><input name='Upload' type="submit" value="Upload Files"/></p>
         <br>
     </form>
 
-    <!-- need to eventually add ability to remove selected projects -->
     <h2>List of previously uploaded projects:</h2>
-    {% if projects %}
-        {% for project in projects %}
-            <input type="checkbox" value="{{ project.project_name }}">{{ project.project_name }}: {{ project.project_desc }}<br>
-        {% endfor %}
-    {% else %}
-        <p>No projects uploaded.</p>
-    {% endif %}
-    <p><input type="submit" value="Remove Selected Projects"/></p>
-    <p>Remove button is currently not functional</p>
+    <form action="{% url 'upload' %}" method="post">{% csrf_token %}
+        <table>
+            <td>
+                {% if projects %}
+                    {% for project in projects %}
+                        <input name="chkbx" type="checkbox" value="{{ project.projectid }}"/>
+                        {{ project.project_name }}: {{ project.project_desc }}
+                        <br>
+                    {% endfor %}
+                {% else %}
+                    <p>No projects uploaded.</p>
+                {% endif %}
+            </td>
+        </table>
+        <p><input name="clickMe" type="submit" value="Remove selected projects"/></p>
+    </form>
 {% endblock %}

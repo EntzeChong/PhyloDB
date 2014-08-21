@@ -1,27 +1,9 @@
 {% extends 'base.html' %}
 
 {% block jquery %}
-    <!-- jquery -->
-    <script src="../media/jquery/jquery.js" type="text/javascript"></script>
-    <script src="../media/jquery/jquery-ui.custom.js" type="text/javascript"></script>
-    <script src="../media/jquery/jquery.cookie.js" type="text/javascript"></script>
     <!-- dynatree -->
     <link rel='stylesheet' type='text/css' href="../media/dynatree/ui.dynatree.css">
     <script src="../media/dynatree/jquery.dynatree.js" type="text/javascript"></script>
-    <!-- nvd3 -->
-    <script src="../media/nvd3/d3.v2.js"></script>
-    <script src="../media/nvd3/nv.d3.js"></script>
-    <script src="../media/nvd3/tooltip.js"></script>
-    <script src="../media/nvd3/utils.js"></script>
-    <script src="../media/nvd3/legend.js"></script>
-    <script src="../media/nvd3/axis.js"></script>
-    <script src="../media/nvd3/scatter.js"></script>
-    <script src="../media/nvd3/line.js"></script>
-    <link href="../media/nvd3/nv.d3.css" rel="stylesheet" type="text/css">
-    <!-- table tools stuff -->
-
-    <link rel='stylesheet' type='text/css' href='../media/tabletools/dataTables.tableTools.css'>
-    <script src='../media/tabletools/dataTables.tableTools.js' type="text/javascript"></script>
 {% endblock %}
 
 {% block pagetitle %}
@@ -31,133 +13,106 @@
 {% block dynatree %}
     <script type="text/javascript">
         $(function () {
-
-            // start tree load
-            $("#tree").dynatree({
+            // Initialize tree
+            $("#tree1").dynatree({
                 checkbox: true,
-                selectMode: 2,
-                initAjax: {
-                    url: "/treeTaxonomy/",
-                    dataType: "jsonp",
-                    data: {}
-                },
-
+                selectMode: 3,
                 onSelect: function (node) {
-                    function getStringOfSelectedTreeNodes() {
-                        var returnString = "";
-                        var nodes = $("#tree").dynatree("getSelectedNodes");
-                        for (i in nodes) {
-                            returnString = nodes[i].data.title + "|" + returnString;
-                        }
-                        return returnString.substring(0, returnString.length - 1);
-                    }
-
-                    $('#dataTable').dataTable({
-                        "bProcessing": true,
-                        "bJQueryUI": true,
-                        "sPaginationType": "full_numbers",
-                        "sDom": 'T<"clear">lfrtip',
-                        "oTableTools": {
-                            "sSwfPath": "/media/tabletools/swf/copy_csv_xls_pdf.swf",
-                            "aButtons": ["csv"]
-                        }
+                    var selKeys = $.map($("#tree1").dynatree("getSelectedNodes"), function (node) {
+                        return node.data.uuid;
                     });
-                },
-
-                onActivate: function (node) {
-                },
-                persist: true,
-                noLink: false,
-                fx: { height: "toggle", duration: 200 },
-                onPostInit: function (isReloading, isError) {
-                    if (getStringOfSelectedTreeNodes() != '') {
-
-                        serialize = function (obj) {
-                            var str = [];
-                            for (var p in obj)
-                                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                            return str.join("&");
-                        }
-
-                        function updateChart() {
-                            var returnDict = getDictOfAllCheckboxes();
-                            returnDict['nodes'] = getStringOfSelectedTreeNodes();
-                            var argQueryString = serialize(returnDict);
-
-                            var request = $.ajax({
-                                url: "/getGraphData?" + argQueryString,
-                                type: "GET",
-                                dataType: "json",
-                                success: function (result) {
-                                    // start nvd3 code
-                                    nv.addGraph(function () {
-                                        var chart = nv.models.lineChart();
-
-                                        chart.xAxis
-                                                .tickFormat(function (d) {
-                                                    return d3.time.format('%x')(new Date(d));
-                                                });
-
-                                        chart.yAxis
-                                                .tickFormat(d3.format(',.3f'));
-
-                                        d3.select('#chart svg')
-                                                .datum(result)
-                                                .transition().duration(500)
-                                                .call(chart);
-
-                                        nv.utils.windowResize(chart.update);
-
-                                        return chart;
-                                    });
-                                }
-                            });
-
-                        }
-
-                        function updateDataTable() {
-                            var returnDict = getDictOfAllCheckboxes();
-                            returnDict['nodes'] = getStringOfSelectedTreeNodes();
-                            if (returnDict['nodes'] == '') {
-                                return;
-                            }
-                            // also need logic to check the from and to fields (parse fields and see if they're valid)
-                            $('#dataTable').dataTable().fnReloadAjax("/getTableData?" + serialize(returnDict));
-
-                        }
-                    }
-                }
-            });
-        });
+                    $('#textField').val(selKeys.join(","));  // uuids for all selected samples (no projects)
+                } // end onSelect
+            }); // end tree
+        }); // end function
     </script>
 {% endblock %}
 
 {% block content %}
-    <table cellpadding="0" cellspacing="0" border="0" class="display" id="dataTable">
-        <thead>
-        <tr>
-            <th>Col 1</th>
-            <th>Col 2</th>
-            <th>Col 3</th>
-            <th>Col 4</th>
-            <th>Col 5</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-        <tfoot>
-        <tr>
-            <th>Col 1</th>
-            <th>Col 2</th>
-            <th>Col 3</th>
-            <th>Col 4</th>
-            <th>Col 5</th>
-        </tr>
-        </tfoot>
-    </table>
-    <div id="tree"></div>
-    <div id="chart">
-        <svg style="height: 500px;"></svg>
-    </div>
+    <form>
+        <table border="2">
+            <th style="padding-right: 10px;">Select categorical variables</th>
+            <tr>
+                <td style="vertical-align: top">
+                    <div id="tree1">
+                        <ul>
+                            <li title="Organism">Organism
+                                <ul>
+                                    {% for item in organism %}
+                                        <li title="{{ item }}">{{ item }}
+                                    {% endfor %}
+                                </ul>
+                            <li title="biome">biome
+                                <ul>
+                                    {% for item in biome %}
+                                        <li title="{{ item }}">{{ item }}
+                                    {% endfor %}
+                                </ul>
+                            <li title="feature">feature
+                                <ul>
+                                    {% for item in feature %}
+                                        <li title="{{ item }}">{{ item }}
+                                    {% endfor %}
+                                </ul>
+                            <li title="geo_loc">geo_loc
+                                <ul>
+                                    {% for item in geo_loc %}
+                                        <li title="{{ item }}">{{ item }}
+                                    {% endfor %}
+                                </ul>
+                            <li title="material">material
+                                <ul>
+                                    {% for item in material %}
+                                        <li title="{{ item }}">{{ item }}
+                                    {% endfor %}
+                                </ul>
+                            <li title="crop_rotation">crop_rotation
+                                <ul>
+                                    {% for item in crop_rotation %}
+                                        <li title="{{ item }}">{{ item }}
+                                    {% endfor %}
+                                </ul>
+                            <li title="cur_land_use">cur_land_use
+                                <ul>
+                                    {% for item in cur_land %}
+                                        <li title="{{ item }}">{{ item }}
+                                    {% endfor %}
+                                </ul>
+                            <li title="cur_crop">cur_crop
+                                <ul>
+                                    {% for item in cur_crop %}
+                                        <li title="{{ item }}">{{ item }}
+                                    {% endfor %}
+                                </ul>
+                            <li title="cur_cultivar">cur_cultivar
+                                <ul>
+                                    {% for item in cur_cultivar %}
+                                        <li title="{{ item }}">{{ item }}
+                                    {% endfor %}
+                                </ul>
+                            <li title="profile_position">profile_position
+                                <ul>
+                                    {% for item in profile_position %}
+                                        <li title="{{ item }}">{{ item }}
+                                    {% endfor %}
+                                </ul>
+                            <li title="soil_type">soil_type
+                                <ul>
+                                    {% for item in soil_type %}
+                                        <li title="{{ item }}">{{ item }}
+                                    {% endfor %}
+                                </ul>
+                            <li title="tillage">tillage
+                                <ul>
+                                    {% for item in tillage %}
+                                        <li title="{{ item }}">{{ item }}
+                                    {% endfor %}
+                                </ul>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <br>
+    </form>
 {% endblock %}

@@ -3,50 +3,61 @@
 
 <html lang="en">
 {% load staticfiles %}
-    <head>
-        <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
-        <link href="../media/css/new_style.css" rel='stylesheet' type='text/css'>
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+    <link href="../media/css/new_style.css" rel='stylesheet' type='text/css'>
+    <script src="../media/jquery/jquery.js" type="text/javascript"></script>
+    <script src="../media/jquery/jquery-ui.custom.js" type="text/javascript"></script>
+    <script src="../media/jquery/jquery.cookie.js" type="text/javascript"></script>
 
-        {% block jquery %}{% endblock %}
-        {% block pagetitle %}{% endblock %}
-        {% block dynatree %}{% endblock %}
+    {% block jquery %}{% endblock %}
+    {% block pagetitle %}{% endblock %}
+    {% block dynatree %}{% endblock %}
+    {% block javascript %}{% endblock %}
+</head>
 
-    </head>
+<body>
+<div id="intestazione">
+    <table>
+        <tr>
+            <td><img style="height:50px" src="{% static "images/dbimage.jpeg" %}"/></td>
+            <td><img style="height:50px" src="{% static "images/DNA.jpeg" %}"/></td>
+            <td><h1>PhyloDB: A web-based database storage and retrieval system for metagenomic data</h1></td>
+            <td><img style="height:50px" src="{% static "images/ARS.jpeg" %}"/></td>
 
-    <body>
-        <div id="intestazione">
-            <table>
-                <tr>
-                    <td><img style="height:50px" src="{% static "images/dbimage.jpeg" %}" /></td>
-                    <td><img style="height:50px" src="{% static "images/DNA.jpeg" %}" /></td>
-                    <td><h1>PhyloDB: A web-based database storage and retrieval system for metagenomic data</h1></td>
-                    <td><img style="height:50px" src="{% static "images/ARS.jpeg" %}" /></td>
+        </tr>
+    </table>
+</div>
 
-                </tr>
-            </table>
-        </div>
+<div id="pagina">
 
-        <div id="pagina">
+    <div id="Menu">
 
-            <div id="Menu">
+        <div class="menuTitle">Menu</div>
 
-                <div class="menuTitle">Menu</div>
+        <ul class="menuItems">
+            <li><a class="Offmouse" href="/home/" id="newOspite" onmouseout="this.className='Offmouse'"
+                   onmouseover="this.className='Onmouse'">Home</a></li>
+            <li><a class="Offmouse" href="/upload/" id="newOspite" onmouseout="this.className='Offmouse'"
+                   onmouseover="this.className='Onmouse'">[Upload Data]</a></li>
+            <li><a class="Offmouse" href="/select/" id="newOspite" onmouseout="this.className='Offmouse'"
+                   onmouseover="this.className='Onmouse'">Select Data</a></li>
+            <li><a class="Offmouse" href="/norm/" id="newOspite" onmouseout="this.className='Offmouse'"
+                   onmouseover="this.className='Onmouse'">Normalize Data</a></li>
+            <li><a class="Offmouse" href="/graph/" id="newOspite" onmouseout="this.className='Offmouse'"
+                   onmouseover="this.className='Onmouse'">Graph Data</a></li>
+            <li>Analyze Data</li>
+            <ul><a class="Offmouse" href="/Analysis/" id="newOspite" onmouseout="this.className='Offmouse'"
+                   onmouseover="this.className='Onmouse'">ANOVA</a></ul>
+            <ul><a class="Offmouse" href="/Analysis/" id="newOspite" onmouseout="this.className='Offmouse'"
+                   onmouseover="this.className='Onmouse'">Graphs</a></ul>
+        </ul>
+    </div>
 
-                <ul class="menuItems">
-                    <li><a class="Offmouse" href="/home/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Home</a></li>
-                    <li><a class="Offmouse" href="/upload/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">[Upload Data]</a></li>
-                    <li><a class="Offmouse" href="/select/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Select Data</a></li>
-                    <li><a class="Offmouse" href="/norm/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Normalize Data</a></li>
-                    <li>Analyze Data</li>
-                    <ul><a class="Offmouse" href="/Analysis/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">ANOVA</a></ul>
-                    <ul><a class="Offmouse" href="/Analysis/" id="newOspite" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'">Graphs</a></ul>
-                </ul>
-             </div>
+    <div id="Content">
+        {% block content %}{% endblock %}
+    </div>
 
-            <div id="Content">
-                {% block content %}{% endblock %}
-            </div>
-
-        </div>
-    </body>
+</div>
+</body>
 </html>

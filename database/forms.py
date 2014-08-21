@@ -6,3 +6,5 @@ class FileUploadForm(forms.Form):
     docfile2 = forms.FileField(label='Select meta_Sample.csv file:')
     docfile3 = forms.FileField(label='Select a conserved taxonomy file:')
     docfile4 = forms.FileField(label='Select a .shared file:')
+
+

@@ -5,5 +5,13 @@
 {% endblock %}
 
 {% block content %}
-   <p>This is new content!</p>
+    <br>
+    <h2>List of samples selected with tree</h2>
+    {% for sample in samples %}
+        <ul>{{ sample.sample_name }}</ul>
+    {% endfor %}
+    <br>
+    {% for project in projects %}
+        <ul>{{ project.project_name }} </ul>
+    {% endfor %}
 {% endblock %}
