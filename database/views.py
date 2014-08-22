@@ -28,18 +28,26 @@ def select(request):
 
 
 def getTree(request):
-    myTree = {'children': [], 'title': 'All Projects', 'isFolder': 'true'}
+    myTree = {'title': 'All Projects', 'isFolder': 'true', 'children': []}
 
     projects = Project.objects.all()
-    #samples = Sample.objects.all()
+    samples = Sample.objects.all()
 
     for project in projects:
-        myTree['children'].append({
+        myNode = {
             'title': 'Project: ' + project.project_name,
             'tooltip': project.project_desc,
             'isFolder': 'true',
             'children': []
-        })
+        }
+        for sample in samples:
+            if sample.projectid_id == project.projectid:
+                myNode['children'].append({
+                    'title': 'Sample: ' + sample.sample_name,
+                    'tooltip': sample.title,
+                    'isFolder': 'true'
+                })
+        myTree['children'].append(myNode)
 
     # Convert result list to a JSON string
     res = simplejson.dumps(myTree, encoding="Latin-1")
