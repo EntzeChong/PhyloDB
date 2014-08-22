@@ -1,4 +1,5 @@
-from django.db.models import Sum
+import simplejson
+from django.http import HttpResponse, StreamingHttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from database.models import Project, Sample
@@ -20,29 +21,49 @@ def home(request):
 
 
 def select(request):
-    projects = Project.objects.all()
-    samples = Sample.objects.all()
-
     return render_to_response(
         'select.html',
-        {'projects': projects,
-         'samples': samples},
         context_instance=RequestContext(request)
     )
 
 
+def getTree(request):
+    myTree = {'children': [], 'title': 'All Projects', 'isFolder': 'true'}
+
+    projects = Project.objects.all()
+    #samples = Sample.objects.all()
+
+    for project in projects:
+        myTree['children'].append({
+            'title': 'Project: ' + project.project_name,
+            'tooltip': project.project_desc,
+            'isFolder': 'true',
+            'children': []
+        })
+
+    # Convert result list to a JSON string
+    res = simplejson.dumps(myTree, encoding="Latin-1")
+
+    # Support for the JSONP protocol.
+    response_dict={}
+    if 'callback' in request.GET:
+        response_dict = request.GET['callback'] + "(" + res + ")"
+    return StreamingHttpResponse(response_dict, content_type='application/json')
+
+    response_dict = {}
+    response_dict.update({'children': myTree})
+    return StreamingHttpResponse(response_dict, content_type='application/javascript')
+
 def norm(request):
-    if request.method == 'POST' and 'sampleids' in request.POST:
-        selected_samples = request.POST.getlist('sampleids')
+    if request.is_ajax():
+        # if request.method == 'POST':
+        # selected_samples = request.POST.getlist('id')
 
-        # filter by list
-        samples = Sample.objects.all().filter(sampleid__in=selected_samples)
+        #samples = Sample.objects.all().filter(sampleid__in=selected_samples)
+        data = request.POST.body
+        print data
 
-        return render_to_response(
-            'norm.html',
-            {'samples': samples},
-            context_instance=RequestContext(request)
-        )
+    return HttpResponse("OK")
 
 
 def graph(request):
@@ -105,6 +126,7 @@ def upload(request):
         context_instance=RequestContext(request)
     )
 
+
 def parse_files(request):
     f_project = open('uploads/temp/meta_Project.csv', 'r')
     f_in_project = parse_to_list(f_project, ',')
@@ -129,6 +151,7 @@ def parse_files(request):
         {'projects': projects},
         context_instance=RequestContext(request)
     )
+
 
 def remove_list(request):
     items = request.POST.getlist('chkbx')

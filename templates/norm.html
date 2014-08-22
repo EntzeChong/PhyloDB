@@ -7,11 +7,17 @@
 {% block content %}
     <br>
     <h2>List of samples selected with tree</h2>
-    {% for sample in samples %}
-        <ul>{{ sample.sample_name }}</ul>
-    {% endfor %}
-    <br>
-    {% for project in projects %}
-        <ul>{{ project.project_name }} </ul>
-    {% endfor %}
+    <ul>
+        {% for sample in samples %}
+            <li>{{ sample.sample_name }}</li>
+        {% endfor %}
+    </ul>
+    <br><br>
+    <h2>How do we normalize?</h2>
+    <ul>
+        <li>sum</li>
+        <li>number of reads</li>
+        <li>IQR</li>
+    </ul>
+    </p>
 {% endblock %}

@@ -5,30 +5,100 @@
 {% endblock %}
 
 {% block content %}
+
     <h2>Upload any new data files:</h2>
+
     <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <table>
+
+        <!-- main table -->
+        <table width="100%" border="0" cellspacing="0" cellpadding="5">
+            <tr><p>1.) Select associated meta files (required):</p></tr>
             <tr>
-                <td>{{ form.docfile1.label_tag }}</td>
-                <td>{{ form.docfile1 }}</td>
+
+                <!-- sub-table one -->
+                <table id="meta_files" width="100%" border="2" cellspacing="0" cellpadding="1">
+                    <th colspan="2">Metadata files:</th>
+                    <tr>
+                        <td>{{ form.docfile1.label_tag }}</td>
+                        <td>{{ form.docfile1 }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.docfile2.label_tag }}</td>
+                        <td>{{ form.docfile2 }}</td>
+                    </tr>
+                </table>
+                <!-- end table -->
+
             </tr>
+            <tr><br><p>2.) Choose one of the following formats for your taxonomic profile data:</p></tr>
             <tr>
-                <td>{{ form.docfile2.label_tag }}</td>
-                <td>{{ form.docfile2 }}</td>
+
+                <!-- sub-table two -->
+                <table id="mothur" width="100%" border="2" cellspacing="0" cellpadding="1">
+                    <th colspan="2">Mothur files:</th>
+                    <tr>
+                        <td>{{ form.docfile3.label_tag }}</td>
+                        <td>{{ form.docfile3 }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.docfile4.label_tag }}</td>
+                        <td>{{ form.docfile4 }}</td>
+                    </tr>
+                </table>
+                <!-- end table -->
+
             </tr>
+            <tr><br></tr>
             <tr>
-                <td>{{ form.docfile3.label_tag }}</td>
-                <td>{{ form.docfile3 }}</td>
+
+                <!-- sub-table three -->
+                <table id="QIIME" width="100%" border="2" cellspacing="0" cellpadding="1">
+                    <th colspan="2">QIIME OTU Table (BIOM, v1.5.0+):</th>
+                    <tr>
+                        <td>{{ form.docfile5.label_tag }}</td>
+                        <td>{{ form.docfile5 }}</td>
+                    </tr>
+                </table>
+                <!-- end table -->
+
             </tr>
+            <tr><br></tr>
             <tr>
-                <td>{{ form.docfile4.label_tag }}</td>
-                <td>{{ form.docfile4 }}</td>
+
+                <!-- sub-table four -->
+                <table id="QIIME_classic" width="100%" border="2" cellspacing="0" cellpadding="1">
+                    <th colspan="2">Classic QIIME OTU Table (v1.4.0 and earlier):</th>
+                    <tr>
+                        <td>{{ form.docfile6.label_tag }}</td>
+                        <td>{{ form.docfile6 }}</td>
+                    </tr>
+                </table>
+                <!-- end table -->
+
+            </tr>
+            <tr><br></tr>
+            <tr>
+
+                <!-- sub-table five -->
+                <table id="MG-RAST" width="100%" border="2" cellspacing="0" cellpadding="1">
+                    <th colspan="2">MG-RAST organism abundance table (.tsv):</th>
+                    <tr>
+                        <td>{{ form.docfile7.label_tag }}</td>
+                        <td>{{ form.docfile7 }}</td>
+                    </tr>
+                </table>
+                <!-- end table -->
+
             </tr>
         </table>
+        <!-- end main table -->
+
         <p><input name='Upload' type="submit" value="Upload Files"/></p>
         <br>
     </form>
+
+
 
     <h2>List of previously uploaded projects:</h2>
     <form action="{% url 'upload' %}" method="post">{% csrf_token %}

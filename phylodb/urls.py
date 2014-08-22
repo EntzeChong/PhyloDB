@@ -11,5 +11,6 @@ urlpatterns = patterns('',
 
     url(r'^graph/$', 'database.views.graph'),
 
+    url(r'^getTree/$', 'database.views.getTree', name='getTree')
 )
 

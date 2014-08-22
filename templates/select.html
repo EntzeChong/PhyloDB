@@ -11,68 +11,42 @@
 
 {% block dynatree %}
     <script type="text/javascript">
+
         $(function () {
-            $("#tree1").dynatree({
+            $("#tree").dynatree({
                 checkbox: true,
                 selectMode: 3,
+                initAjax: {
+                    url: "/getTree/",
+                    dataType: "jsonp",
+                    data: {}
+                },
 
-                // Un/check real checkboxes recursively after selection
-                onSelect: function (select, dtnode) {
-                    dtnode.visit(function (dtnode) {
-                        $("#chb-" + dtnode.data.key).attr("checked", select);
-                    }, true, true);
-                    dtnode.visitParents(function (dtnode) {
-                        $("#chb-" + dtnode.data.key).attr("checked", select);
-                    }, null, true);
+                onSelect: function (flag, node) {
+                    //updateChart();
+                },
+
+                onActivate: function (node) {
+                },
+
+                noLink: false,
+                fx: { height: "toggle", duration: 200},
+                onPostInit: function (isReloading, isError) {
+                    if (getSringOfSelectedTreeNodes() != '') {
+                        //updateChart();
+                    }
                 }
-
-            }); // End dynatree
-
-            // Update real (hidden) checkboxes according to selections
-            // Form action posts checkbox ids based on checked status
-            $.map($("#tree1").dynatree("getTree").getSelectedNodes(),
-                    function (dtnode) {
-                        $("#chb-" + dtnode.data.key).attr("checked", true);
-                        dtnode.activate();
-                    });
-
-        }); // End initial function
+            });
+        });
     </script>
 {% endblock %}
 
 {% block content %}
     <h2>Select any combination of data for analysis:</h2>
-    <form id="myform" method="POST" action="{% url 'norm' %}">
+    <form id="myform" method="POST">
         {% csrf_token %}
-        <table>
-            <td>
-                <div id="tree1">
-                    <ul>
-                        <li id="root" title="tooltip" class="folder"><input style="display:none" type="checkbox"
-                                                                            id="chb-root" name="root" value="Root"/>All
-                            projects
-                            <ul>
-                                {% for project in projects %}
-                                    <li id="{{ project.projectid }}" title="{{ project.project_desc }}" class="folder">
-                                    <input style="display:none" type="checkbox" id="chb-{{ project.projectid }}"
-                                           name="projectids" value="{{ project.projectid }}"/>Project:
-                                    {{ project.project_name }}
-                                    <ul>
-                                        {% for sample in samples %}
-                                            <li id="{{ sample.sampleid }}" title="{{ sample.title }}">
-                                            <input style="display:none" type="checkbox" id="chb-{{ sample.sampleid }}"
-                                                   name="sampleids" value="{{ sample.sampleid }}"/>Sample:
-                                            {{ sample.sample_name }}
-                                        {% endfor %}
-                                    </ul>
-                                {% endfor %}
-                            </ul>
-
-                    </ul>
-                </div>
-            </td>
-        </table>
-        <p><input type="submit" value="Submit selection"/></p>
+        <div id="tree"></div>
+        <p><input type="submit" id="submit" value="Submit selection"/></p>
     </form>
 {% endblock %}
 

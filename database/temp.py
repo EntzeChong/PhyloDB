@@ -5,7 +5,7 @@ OTU, SIZE, TAXA = 0, 1, 2
 
 
 def strip_parens(txt):
-    return re.sub(r'\(.*?\)', '', txt) # strip parens and everything inside
+    return re.sub(r'\(.*?\)', '', txt) # strip parents and everything inside
 
 def parse_taxa(taxa_raw):
     taxa_list = list()

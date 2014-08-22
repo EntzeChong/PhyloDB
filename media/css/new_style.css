@@ -52,25 +52,24 @@ th {
 }
 
 #Content {
-    top: 70px;
-    left: 120px;
+    top: 10%;
+    left: 15%;
     position: absolute;
 }
 
 #intestazione {
     top: 0px;
-    position: fixed;
-    height: 50px;
+    position: relative;
     width: 100%;
 	border-bottom: 3px double #7CBE29;
 }
 
 #pagina {
     margin-top: 60px;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
-    overflow-y: scroll;
+    left: 0%;
+    right: 0%;
+    bottom: 0%;
+
 }
 
 #piedipagina {
@@ -82,11 +81,11 @@ th {
 }
 
 #Menu {
-    top: 70px;
-    left: 0px;
-    height: 75%;
+    top: 10%;
+    left: 0%;
+    height: 100%;
     position: absolute;
-	width: 100px;
+	width: 10%;
 	background: url("media/images/sf_menu.png") repeat-x top #ccd1cb;
 	border: 1px solid #7CBE29;
     font-size: 12px;
