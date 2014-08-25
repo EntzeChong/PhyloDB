@@ -101,7 +101,8 @@
 
 
     <h2>List of previously uploaded projects:</h2>
-    <form action="{% url 'upload' %}" method="post">{% csrf_token %}
+    <form method="post" action="{% url 'upload' %}">
+        {% csrf_token %}
         <table>
             <td>
                 {% if projects %}

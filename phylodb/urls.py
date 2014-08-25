@@ -9,8 +9,9 @@ urlpatterns = patterns('',
 
     url(r'^norm/$', 'database.views.norm', name='norm'),
 
-    url(r'^graph/$', 'database.views.graph'),
+    url(r'^graph/$', 'database.views.graph', name='graph'),
 
-    url(r'^getTree/$', 'database.views.getTree', name='getTree')
+    url(r'^getTree/$', 'database.views.getTree', name='getTree'),
+
 )
 

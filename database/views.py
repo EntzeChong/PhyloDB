@@ -1,5 +1,5 @@
 import simplejson
-from django.http import HttpResponse, StreamingHttpResponse
+from django.http import StreamingHttpResponse, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from database.models import Project, Sample
@@ -18,92 +18,6 @@ TAXONOMY = 'database_taxonomy'
 
 def home(request):
     return render_to_response('home.html')
-
-
-def select(request):
-    return render_to_response(
-        'select.html',
-        context_instance=RequestContext(request)
-    )
-
-
-def getTree(request):
-    myTree = {'title': 'All Projects', 'isFolder': 'true', 'children': []}
-
-    projects = Project.objects.all()
-    samples = Sample.objects.all()
-
-    for project in projects:
-        myNode = {
-            'title': 'Project: ' + project.project_name,
-            'tooltip': project.project_desc,
-            'isFolder': 'true',
-            'children': []
-        }
-        for sample in samples:
-            if sample.projectid_id == project.projectid:
-                myNode['children'].append({
-                    'title': 'Sample: ' + sample.sample_name,
-                    'tooltip': sample.title,
-                    'isFolder': 'true'
-                })
-        myTree['children'].append(myNode)
-
-    # Convert result list to a JSON string
-    res = simplejson.dumps(myTree, encoding="Latin-1")
-
-    # Support for the JSONP protocol.
-    response_dict={}
-    if 'callback' in request.GET:
-        response_dict = request.GET['callback'] + "(" + res + ")"
-    return StreamingHttpResponse(response_dict, content_type='application/json')
-
-    response_dict = {}
-    response_dict.update({'children': myTree})
-    return StreamingHttpResponse(response_dict, content_type='application/javascript')
-
-def norm(request):
-    if request.is_ajax():
-        # if request.method == 'POST':
-        # selected_samples = request.POST.getlist('id')
-
-        #samples = Sample.objects.all().filter(sampleid__in=selected_samples)
-        data = request.POST.body
-        print data
-
-    return HttpResponse("OK")
-
-
-def graph(request):
-    organism = Sample.objects.values_list('organism', flat=True).distinct()
-    biome = Sample.objects.values_list('biome', flat=True).distinct()
-    feature = Sample.objects.values_list('feature', flat=True).distinct()
-    geo_loc = Sample.objects.values_list('geo_loc', flat=True).distinct()
-    material = Sample.objects.values_list('material', flat=True).distinct()
-    crop_rotation = Sample.objects.values_list('crop_rotation', flat=True).distinct()
-    cur_land = Sample.objects.values_list('cur_land', flat=True).distinct()
-    cur_crop = Sample.objects.values_list('cur_crop', flat=True).distinct()
-    cur_cultivar = Sample.objects.values_list('cur_cultivar', flat=True).distinct()
-    profile_position = Sample.objects.values_list('profile_position', flat=True).distinct()
-    soil_type = Sample.objects.values_list('soil_type', flat=True).distinct()
-    tillage = Sample.objects.values_list('tillage', flat=True).distinct()
-
-    return render_to_response(
-        'graph.html',
-        {'organism': organism,
-         'biome': biome,
-         'feature': feature,
-         'geo_loc': geo_loc,
-         'material': material,
-         'crop_rotation': crop_rotation,
-         'cur_land': cur_land,
-         'cur_crop': cur_crop,
-         'cur_cultivar': cur_cultivar,
-         'profile_position': profile_position,
-         'soil_type': soil_type,
-         'tillage': tillage
-        }
-    )
 
 
 def upload(request):
@@ -132,6 +46,93 @@ def upload(request):
         {'projects': projects,
          'form': FileUploadForm},
         context_instance=RequestContext(request)
+    )
+
+
+def select(request):
+    return render_to_response(
+        'select.html',
+        context_instance=RequestContext(request)
+    )
+
+
+def getTree(request):
+    myTree = {'title': 'All Projects', 'isFolder': 'true', 'children': []}
+
+    projects = Project.objects.all()
+    samples = Sample.objects.all()
+
+    for project in projects:
+        myNode = {
+            'title': project.project_name,
+            'tooltip': project.project_desc,
+            'isFolder': 'true',
+            'children': []
+        }
+        for sample in samples:
+            if sample.projectid_id == project.projectid:
+                myNode['children'].append({
+                    'title': sample.sample_name,
+                    'tooltip': sample.title,
+                    'id': sample.sampleid,
+                    'isFolder': 'true'
+                })
+        myTree['children'].append(myNode)
+
+    # Convert result list to a JSON string
+    res = simplejson.dumps(myTree, encoding="Latin-1")
+
+    # Support for the JSONP protocol.
+    response_dict = {}
+    if 'callback' in request.GET:
+        response_dict = request.GET['callback'] + "(" + res + ")"
+    return StreamingHttpResponse(response_dict, content_type='application/json')
+
+    response_dict = {}
+    response_dict.update({'children': myTree})
+    return StreamingHttpResponse(response_dict, content_type='application/javascript')
+
+
+def graph(request):
+    items = request.POST.getlist('list')
+#    samples = Sample.objects.filter(sampleid__in=items)
+
+    organism = Sample.objects.values_list('organism', flat=True).filter(sampleid__in=items).distinct()
+    biome = Sample.objects.values_list('biome', flat=True).filter(sampleid__in=items).distinct()
+    feature = Sample.objects.values_list('feature', flat=True).filter(sampleid__in=items).distinct()
+    geo_loc = Sample.objects.values_list('geo_loc', flat=True).filter(sampleid__in=items).distinct()
+    material = Sample.objects.values_list('material', flat=True).filter(sampleid__in=items).distinct()
+    crop_rotation = Sample.objects.values_list('crop_rotation', flat=True).filter(sampleid__in=items).distinct()
+    cur_land = Sample.objects.values_list('cur_land', flat=True).filter(sampleid__in=items).distinct()
+    cur_crop = Sample.objects.values_list('cur_crop', flat=True).filter(sampleid__in=items).distinct()
+    cur_cultivar = Sample.objects.values_list('cur_cultivar', flat=True).filter(sampleid__in=items).distinct()
+    profile_position = Sample.objects.values_list('profile_position', flat=True).filter(sampleid__in=items).distinct()
+    soil_type = Sample.objects.values_list('soil_type', flat=True).filter(sampleid__in=items).distinct()
+    tillage = Sample.objects.values_list('tillage', flat=True).filter(sampleid__in=items).distinct()
+
+ #   t_kingdom = Taxonomy.objects.values_list('t_kingdom', flat=True).distinct()
+ #   t_phyla = Taxonomy.objects.values_list('t_phyla', flat=True).distinct()
+ #   t_class = Taxonomy.objects.values_list('t_class', flat=True).distinct()
+ #   t_order = Taxonomy.objects.values_list('t_order', flat=True).distinct()
+ #   t_family = Taxonomy.objects.values_list('t_family', flat=True).distinct()
+ #   t_genus = Taxonomy.objects.values_list('t_genus', flat=True).distinct()
+ #   t_species = Taxonomy.objects.values_list('t_species', flat=True).distinct()
+
+    return render_to_response(
+        'graph.html',
+        {'organism': organism,
+         'biome': biome,
+         'feature': feature,
+         'geo_loc': geo_loc,
+         'material': material,
+         'crop_rotation': crop_rotation,
+         'cur_land': cur_land,
+         'cur_crop': cur_crop,
+         'cur_cultivar': cur_cultivar,
+         'profile_position': profile_position,
+         'soil_type': soil_type,
+         'tillage': tillage
+        }
     )
 
 
@@ -175,3 +176,12 @@ def remove_list(request):
     )
 
 
+def norm(request):
+    items = request.POST.getlist('list')
+    samples = Sample.objects.filter(sampleid__in=items)
+
+    return render_to_response(
+        'norm.html',
+        {'samples': samples},
+        context_instance=RequestContext(request)
+    )

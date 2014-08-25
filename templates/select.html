@@ -13,40 +13,61 @@
     <script type="text/javascript">
 
         $(function () {
+
             $("#tree").dynatree({
                 checkbox: true,
                 selectMode: 3,
+                generateIds: true,
+
                 initAjax: {
                     url: "/getTree/",
                     dataType: "jsonp",
                     data: {}
                 },
 
-                onSelect: function (flag, node) {
-                    //updateChart();
-                },
+                onSelect: function () {
+                    var selectedNodes = $("#tree").dynatree("getSelectedNodes");
+                    selectedKeys = $.map(selectedNodes, function (node) {
+                        return node.data.id;
+                    });
 
-                onActivate: function (node) {
-                },
+                    // display selectedKeys at <span id="onselect">
+                    //$("#onselect").text(selectedKeys);
 
-                noLink: false,
-                fx: { height: "toggle", duration: 200},
-                onPostInit: function (isReloading, isError) {
-                    if (getSringOfSelectedTreeNodes() != '') {
-                        //updateChart();
-                    }
+                    // clear existing input box
+                    $('#selected .list input').remove();
+                    // add 'hidden' input box for each selectedKeys
+                    $.each(selectedKeys, function (index, value) {
+                        $('#selected .list').append("<input name=\"list\" type=\"hidden\" value=\"" + value + "\"/>")
+
+                    });
+
+                    //clear meassage
+                    $('#selected .list li').remove();
+                    $('#selected .list').append("<li>Your projects/samples selection has been recorded!")
+                    $('#selected .list').append("<li>Click submit button to proceed")
                 }
-            });
-        });
+            }); // end dynatree
+        }); // end original function()
     </script>
 {% endblock %}
 
 {% block content %}
     <h2>Select any combination of data for analysis:</h2>
-    <form id="myform" method="POST">
+    <div id="tree"></div>
+
+    <form method="post" action="{% url 'graph' %}">
         {% csrf_token %}
-        <div id="tree"></div>
-        <p><input type="submit" id="submit" value="Submit selection"/></p>
+
+        <div id="selected">
+            <ul class="list">
+                <li>No projects/samples are currently selected!
+                <input name="list" type="hidden" value="node"/>
+            </ul>
+        </div>
+
+        <p><input name="button" type="submit" value="Submit selection"/></p>
+
     </form>
 {% endblock %}
 
