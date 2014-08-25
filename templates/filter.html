@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block pagetitle %}
+    <title>Filter</title>
+{% endblock %}
+
+{% block content %}
+    <br>
+    <h2>Selected projects/samples:</h2>
+    <ul>
+        {% for project in projects %}
+            <li>Project: {{ project.project_name }}
+                {% for sample in samples %}
+                    {% if sample.projectid_id == project.projectid %}
+                        <ul>{{ sample.sample_name }}</ul>
+                    {% endif %}
+                {% endfor %}
+        {% endfor %}
+    </ul>
+    <br><br>
+
+    <h2>Data filtering:</h2>
+    <p>See 'Metagenassist for details...</p>
+    <form>
+        <!-- main table -->
+        <table width="100%" border="0" cellspacing="0" cellpadding="5">
+            <tr>
+                <td>
+                    <!-- table one -->
+                    <table width="100%" border="2" cellspacing="0" cellpadding="1">
+                        <tr>
+                            <td>
+                                <div>
+                                    <input type="checkbox" name="remove_unassigned" value="unassigned">
+                                    Exclude unassigned & unmapped reads<br>
+                                    <input type="checkbox" name="remove_zeroes" value="abundance">
+                                    Remove variables with over <input type="text" name="cutoff" value="50">input percent
+                                    zeroes<br>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- end table one -->
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <!-- table two -->
+                    <table width="100%" border="2" cellspacing="0" cellpadding="1">
+                        <tr>
+                            <td>
+                                <div id="filter">
+                                    <input type="radio" name="filter" value="IQR">Interquantile range (IQR)<br>
+                                    <input type="radio" name="filter" value="CV">Coefficient of variation(CV)<br>
+                                    <input type="radio" name="filter" value="SD">Standard deviation (SD)<br>
+                                    <input type="radio" name="filter" value="Mean">Mean abundance value<br>
+                                    <input type="radio" name="filter" value="Media">Median abundance value<br>
+                                    <input type="radio" name="filter" value="None">None<br>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- end table two -->
+                </td>
+            </tr>
+        </table>
+    <p><input name="clickMe" type="submit" value="Submit"/></p>
+    </form>
+{% endblock %}

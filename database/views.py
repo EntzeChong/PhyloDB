@@ -176,12 +176,18 @@ def remove_list(request):
     )
 
 
-def norm(request):
+def filter(request):
     items = request.POST.getlist('list')
+
     samples = Sample.objects.filter(sampleid__in=items)
 
+    projectids = Sample.objects.values_list('projectid_id').filter(sampleid__in=samples)
+    projects = Project.objects.filter(projectid__in=projectids)
+    print projectids
+
     return render_to_response(
-        'norm.html',
-        {'samples': samples},
+        'filter.html',
+        {'samples': samples,
+         'projects': projects},
         context_instance=RequestContext(request)
     )

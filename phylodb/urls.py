@@ -7,7 +7,7 @@ urlpatterns = patterns('',
 
     url(r'^select/$', 'database.views.select', name='select'),
 
-    url(r'^norm/$', 'database.views.norm', name='norm'),
+    url(r'^filter/$', 'database.views.filter', name='filter'),
 
     url(r'^graph/$', 'database.views.graph', name='graph'),
 

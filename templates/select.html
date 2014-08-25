@@ -44,7 +44,7 @@
 
                     //clear meassage
                     $('#selected .list li').remove();
-                    $('#selected .list').append("<li>Your projects/samples selection has been recorded!")
+                    $('#selected .list').append("<li>Your selection has been recorded!")
                     $('#selected .list').append("<li>Click submit button to proceed")
                 }
             }); // end dynatree
@@ -56,7 +56,7 @@
     <h2>Select any combination of data for analysis:</h2>
     <div id="tree"></div>
 
-    <form method="post" action="{% url 'graph' %}">
+    <form method="post" action="{% url 'filter' %}">
         {% csrf_token %}
 
         <div id="selected">
