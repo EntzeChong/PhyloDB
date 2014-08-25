@@ -1,29 +1,41 @@
 import utils, re
+import sqlite3 as lite
 
-# views wasnt updated so I am re-parsing samples here to get the sampleids
-OTU, SIZE, TAXA = 0, 1, 2
+PROJECT = 'database_project'
+SAMPLE = 'database_sample'
+TAXONOMY = 'database_taxonomy'
 
+d_sample = utils.parse_to_list(open('../uploads/temp/meta_Sample.csv', 'r'), ',')
+d_project = utils.parse_to_list(open('../uploads/temp/meta_Project.csv', 'r'), ',')
 
-def strip_parens(txt):
-    return re.sub(r'\(.*?\)', '', txt) # strip parents and everything inside
+d_taxas = utils.parse_taxonomy_file(open('../uploads/temp/Test.wang.tx.1.cons.taxonomy', 'r'))
 
-def parse_taxa(taxa_raw):
-    taxa_list = list()
-    for t in taxa_raw.split(';')[:-1]: # get all but last element since it is empty
-        taxa_list.append(strip_parens(t))
-    return taxa_list
-
-def parse_taxonomy_file(f):
-    taxa_dict = dict()
-    for record in utils.parse_to_list(f):
-        taxa_dict[record[OTU]] = parse_taxa(record[TAXA]) # hash otu name to its taxonomy list
-    return taxa_dict
-
-
-d_taxas = parse_taxonomy_file(open('../uploads/temp/Test.wang.tx.1.cons.taxonomy', 'r'))
+'''
 for otu in d_taxas:
     print otu + ':' + str(d_taxas[otu])
+    print d_taxas['Otu001']
+    print d_taxas['Otu014']
+'''
 
-print d_taxas['Otu001']
-print d_taxas['Otu014']
+con = lite.connect('../dbMicrobe')
+
+# clear db
+c = con.cursor()
+c.execute('DELETE FROM database_project')
+con.commit()
+
+c= con.cursor()
+id1 = utils.uniqueID();
+print id1
+for record_p in d_project:
+    record_p.insert(0, id1)
+    print record_p
+    c.execute(utils.build_sql(PROJECT, record_p))
+
+# view all projects in db
+c = con.cursor()
+c.execute('select * from database_project')
+for record in c.fetchall():
+    print record
+
 #print len(utils.uniqueID())

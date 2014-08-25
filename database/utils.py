@@ -1,4 +1,4 @@
-import uuid
+import uuid, re
 from collections import defaultdict
 from django.db import connection
 
@@ -41,3 +41,21 @@ def replace_all(text, dic):
     for i, j in dic.iteritems():
         text = text.replace(i, j)
     return text
+
+
+def strip_parens(txt):
+    return re.sub(r'\(.*?\)', '', txt)  # strip parents and everything inside
+
+def parse_taxa(taxa_raw):
+    taxa_list = list()
+    for t in taxa_raw.split(';')[:-1]:  # get all but last element since it is empty
+        taxa_list.append(strip_parens(t))
+    return taxa_list
+
+OTU, SIZE, TAXA = 0, 1, 2
+def parse_taxonomy_file(f):
+    taxa_dict = dict()
+    for record in parse_to_list(f):
+        taxa_dict[record[OTU]] = parse_taxa(record[TAXA])  # hash otu name to its taxonomy list
+    return taxa_dict
+
