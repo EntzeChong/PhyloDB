@@ -20,10 +20,21 @@ for otu in d_taxas:
 con = lite.connect('../dbMicrobe')
 
 # clear db
-c = con.cursor()
-c.execute('DELETE FROM database_project')
+'''
+stmt = 'update database_sample set projectid_id=\'1\', sampleid=\'3\' where sampleid=\'251970249215267570650668799591669167382\' '
+c.execute(stmt)
+#c.execute('PRAGMA table_info(database_sample)')
+#print c.fetchall()
 con.commit()
+c = con.cursor()
+taxa1 = 'insert into database_taxonomy values(\'3\', \'3\', \'Bacteria\', \'Proteobacteria\', \'Alphaproteobacteria\', \'Rhizobiales\', \'Bradyrhizobiaceae\', \'unclassified\', \'unclassified\', \'100\')'
+c.execute(taxa1)
+#c.execute('PRAGMA table_info(database_taxonomy)')
+#print c.fetchall()
+con.commit()
+'''
 
+'''
 c= con.cursor()
 id1 = utils.uniqueID();
 print id1
@@ -31,11 +42,19 @@ for record_p in d_project:
     record_p.insert(0, id1)
     print record_p
     c.execute(utils.build_sql(PROJECT, record_p))
-
+'''
 # view all projects in db
 c = con.cursor()
 c.execute('select * from database_project')
 for record in c.fetchall():
-    print record
+    print list(record)
+c = con.cursor()
+c.execute('select * from database_sample')
+for record in c.fetchall():
+    print list(record)
+c = con.cursor()
+c.execute('select * from database_taxonomy')
+for record in c.fetchall():
+    print list(record)
 
 #print len(utils.uniqueID())
