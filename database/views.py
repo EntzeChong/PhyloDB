@@ -1,19 +1,13 @@
 import simplejson
-from django.http import StreamingHttpResponse, HttpResponse
+import datetime
+from uuid import uuid4
+from django.http import StreamingHttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from database.models import Project, Sample
-from database.models import Document1
-from database.models import Document2
-from database.models import Document3
-from database.models import Document4
-from database.forms import FileUploadForm
-from utils import uniqueID, parse_to_list, build_sql, execute_sql
-
-PATH_TO_DB = '../dbMicrobe'
-PROJECT = 'database_project'
-SAMPLE = 'database_sample'
-TAXONOMY = 'database_taxonomy'
+from models import Project, Sample, Taxonomy, Document1, Document2, Document3, Document4, Document5, Document6, Document7
+from forms import UploadForm1, UploadForm2, UploadForm3, UploadForm4, UploadForm5
+from utils import handle_uploaded_file, remove_list
+from parsers import parse_project, parse_sample
 
 
 def home(request):
@@ -21,22 +15,116 @@ def home(request):
 
 
 def upload(request):
-    if request.method == 'POST':
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            newdoc1 = Document1(docfile1=request.FILES['docfile1'])
-            newdoc1.save()
-            newdoc2 = Document2(docfile2=request.FILES['docfile2'])
-            newdoc2.save()
-            newdoc3 = Document3(docfile3=request.FILES['docfile3'])
-            newdoc3.save()
-            newdoc4 = Document4(docfile4=request.FILES['docfile4'])
-            newdoc4.save()
+    if request.method == 'POST' and 'Upload' in request.POST:
+        form1 = UploadForm1(request.POST, request.FILES)
+        form2 = UploadForm2(request.POST, request.FILES)
+        form3 = UploadForm3(request.POST, request.FILES)
+        form4 = UploadForm4(request.POST, request.FILES)
+        form5 = UploadForm5(request.POST, request.FILES)
+
+        year = datetime.datetime.now().year
+        month = datetime.datetime.now().month
+        day = datetime.datetime.now().day
+        p_uuid = uuid4().hex
+        date = "-".join([str(year), str(month), str(day)])
+        dest = "/".join(["uploads", str(p_uuid)])
+
+        if form1.is_valid():
+            if form2.is_valid():
+                name = ".".join(["project", "csv"])
+                d = Document1(projectid=p_uuid, path=dest, upload=date, name=name)
+                d.save()
+                file = request.FILES['docfile1']
+                handle_uploaded_file(file, dest, name)
+                parse_project(dest, name, p_uuid)
+
+
+                name = ".".join(["sample", "csv"])
+                d = Document2(projectid=p_uuid, path=dest, upload=date, name=name)
+                d.save()
+                file = request.FILES['docfile2']
+                handle_uploaded_file(file, dest, name)
+                parse_sample(dest, name, p_uuid)
+
+                name = ".".join(["mothur", "taxonomy"])
+                d = Document3(projectid=p_uuid, path=dest, upload=date, name=name)
+                d.save()
+                file = request.FILES['docfile3']
+                handle_uploaded_file(file, dest, name)
+                #parse_taxonomy(dest, name, p_uuid)
+
+                name = ".".join(["mothur", "shared"])
+                d = Document4(projectid=p_uuid, path=dest, upload=date, name=name)
+                d.save()
+                file = request.FILES['docfile4']
+                handle_uploaded_file(file, dest, name)
+                #parse_shared(dest, name, p_uuid)
+
+            # if biom file has metadata then we don't need form1
+            elif form3.is_valid():
+                name = ".".join(["project", "csv"])
+                d = Document1(projectid=p_uuid, path=dest, upload=date, name=name)
+                d.save()
+                file = request.FILES['docfile1']
+                handle_uploaded_file(file, dest, name)
+
+                name = ".".join(["sample", "csv"])
+                d = Document2(projectid=p_uuid, path=dest, upload=date, name=name)
+                d.save()
+                file = request.FILES['docfile2']
+                handle_uploaded_file(file, dest, name)
+
+                name = ".".join(["biom_1.5", "txt"])
+                d = Document5(projectid=p_uuid, path=dest, upload=date, name=name)
+                d.save()
+                file = request.FILES['docfile5']
+                handle_uploaded_file(file, dest, name)
+
+            elif form4.is_valid():
+                name = ".".join(["project", "csv"])
+                d = Document1(projectid=p_uuid, path=dest, upload=date, name=name)
+                d.save()
+                file = request.FILES['docfile1']
+                handle_uploaded_file(file, dest, name)
+
+                name = ".".join(["sample", "csv"])
+                d = Document2(projectid=p_uuid, path=dest, upload=date, name=name)
+                d.save()
+                file = request.FILES['docfile2']
+                handle_uploaded_file(file, dest, name)
+
+                name = ".".join(["biom_1.4", "txt"])
+                d = Document6(projectid=p_uuid, path=dest, upload=date, name=name)
+                d.save()
+                file = request.FILES['docfile6']
+                handle_uploaded_file(file, dest, name)
+
+            elif form5.is_valid():
+                name = ".".join(["project", "csv"])
+                d = Document1(projectid=p_uuid, path=dest, upload=date, name=name)
+                d.save()
+                file = request.FILES['docfile1']
+                handle_uploaded_file(file, dest, name)
+
+                name = ".".join(["sample", "csv"])
+                d = Document2(projectid=p_uuid, path=dest, upload=date, name=name)
+                d.save()
+                file = request.FILES['docfile2']
+                handle_uploaded_file(file, dest, name)
+
+                name = ".".join(["biom_1.4", "txt"])
+                d = Document7(projectid=p_uuid, path=dest, upload=date, name=name)
+                d.save()
+                file = request.FILES['docfile7']
+                handle_uploaded_file(file, dest, name)
+
+            else:
+                print("Please upload taxonomic profile data")
+
+        else:
+            print("Please upload meta files")
 
     projects = Project.objects.all()
-
-    if request.method == 'POST' and 'Upload' in request.POST:
-        parse_files(request)
 
     if request.method == 'POST' and 'clickMe' in request.POST:
         remove_list(request)
@@ -44,7 +132,11 @@ def upload(request):
     return render_to_response(
         'upload.html',
         {'projects': projects,
-         'form': FileUploadForm},
+         'form1': UploadForm1,
+         'form2': UploadForm2,
+         'form3': UploadForm3,
+         'form4': UploadForm4,
+         'form5': UploadForm5},
         context_instance=RequestContext(request)
     )
 
@@ -57,7 +149,7 @@ def select(request):
 
 
 def getTree(request):
-    myTree = {'title': 'All Projects', 'isFolder': 'true', 'children': []}
+    myTree = {'title': 'All Projects', 'isFolder': True, 'expand': True, 'children': []}
 
     projects = Project.objects.all()
     samples = Sample.objects.all()
@@ -66,7 +158,7 @@ def getTree(request):
         myNode = {
             'title': project.project_name,
             'tooltip': project.project_desc,
-            'isFolder': 'true',
+            'isFolder': True,
             'children': []
         }
         for sample in samples:
@@ -75,7 +167,7 @@ def getTree(request):
                     'title': sample.sample_name,
                     'tooltip': sample.title,
                     'id': sample.sampleid,
-                    'isFolder': 'true'
+                    'isFolder': False
                 })
         myTree['children'].append(myNode)
 
@@ -136,46 +228,6 @@ def graph(request):
     )
 
 
-def parse_files(request):
-    f_project = open('uploads/temp/meta_Project.csv', 'r')
-    f_in_project = parse_to_list(f_project, ',')
-    f_sample = open('uploads/temp/meta_Sample.csv', 'r')
-    f_in_sample = parse_to_list(f_sample, ',')
-    for record_project in f_in_project:
-        p_uuid = uniqueID()
-        record_project.insert(0, p_uuid)
-        sql_project = build_sql(PROJECT, record_project)
-        execute_sql(sql_project)
-        for record_sample in f_in_sample:
-            s_uuid = uniqueID()
-            record_sample.insert(0, s_uuid)
-            record_sample.insert(1, p_uuid)
-            sql_sample = build_sql(SAMPLE, record_sample)
-            execute_sql(sql_sample)
-
-    projects = Project.objects.all()
-
-    return render_to_response(
-        'upload.html',
-        {'projects': projects},
-        context_instance=RequestContext(request)
-    )
-
-
-def remove_list(request):
-    items = request.POST.getlist('chkbx')
-    for item in items:
-        Project.objects.get(projectid=item).delete()
-
-    projects = Project.objects.all()
-
-    return render_to_response(
-        'upload.html',
-        {'projects': projects},
-        context_instance=RequestContext(request)
-    )
-
-
 def filter(request):
     items = request.POST.getlist('list')
 
@@ -183,7 +235,9 @@ def filter(request):
 
     projectids = Sample.objects.values_list('projectid_id').filter(sampleid__in=samples)
     projects = Project.objects.filter(projectid__in=projectids)
-    print projectids
+
+    taxa = Taxonomy.objects.all()
+    print taxa
 
     return render_to_response(
         'filter.html',
@@ -191,3 +245,9 @@ def filter(request):
          'projects': projects},
         context_instance=RequestContext(request)
     )
+
+
+#def norm(request):
+    #get post from filter page and do stuff...
+
+

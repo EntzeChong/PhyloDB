@@ -11,13 +11,10 @@
 
 {% block dynatree %}
     <script type="text/javascript">
-
         $(function () {
-
             $("#tree").dynatree({
                 checkbox: true,
                 selectMode: 3,
-                generateIds: true,
 
                 initAjax: {
                     url: "/getTree/",

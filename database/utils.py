@@ -1,61 +1,72 @@
-import uuid, re
-from collections import defaultdict
-from django.db import connection
-
-PATH_TO_DB = '../dbMicrobe'
-PROJECT = 'database_project'
-SAMPLE = 'database_sample'
-TAXONOMY = 'database_taxonomy'
+import os
+import shutil
+from models import Project, Document1, Document2, Document3, Document4, Document5, Document6, Document7
 
 
-def uniqueID():
-    return str(uuid.uuid1().int)
+def handle_uploaded_file(f, path, name):
+    if not os.path.exists(path):
+        os.makedirs(path)
+    dest = "/".join([str(path), str(name)])
+    with open(str(dest), 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 
-def parse_to_list(f, delim='\t'):
-    return [[field.strip() for field in line.split(delim)] for line in f][1:]
+def remove_list(request):
+    items = request.POST.getlist('chkbx')
+    for item in items:
+        Project.objects.get(projectid=item).delete()
+
+        if Document1.objects.filter(projectid=item).exists():
+            query = Document1.objects.get(projectid=item)
+            path = query.path
+            if os.path.exists(path):
+                shutil.rmtree(str(path))
+            Document1.objects.get(projectid=item).delete()
+
+        if Document2.objects.filter(projectid=item).exists():
+            query = Document2.objects.get(projectid=item)
+            path = query.path
+            if os.path.exists(path):
+                shutil.rmtree(str(path))
+            Document2.objects.get(projectid=item).delete()
+
+        if Document3.objects.filter(projectid=item).exists():
+            query = Document3.objects.get(projectid=item)
+            path = query.path
+            if os.path.exists(path):
+                shutil.rmtree(str(path))
+            Document3.objects.get(projectid=item).delete()
+
+        if Document4.objects.filter(projectid=item).exists():
+            query = Document4.objects.get(projectid=item)
+            path = query.path
+            if os.path.exists(path):
+                shutil.rmtree(str(path))
+            Document4.objects.get(projectid=item).delete()
+
+        if Document5.objects.filter(projectid=item).exists():
+            query = Document5.objects.get(projectid=item)
+            path = query.path
+            if os.path.exists(path):
+                shutil.rmtree(str(path))
+            Document5.objects.get(projectid=item).delete()
+
+        if Document6.objects.filter(projectid=item).exists():
+            query = Document6.objects.get(projectid=item)
+            path = query.path
+            if os.path.exists(path):
+                shutil.rmtree(str(path))
+            Document6.objects.get(projectid=item).delete()
+
+        if Document7.objects.filter(projectid=item).exists():
+            query = Document7.objects.get(projectid=item)
+            path = query.path
+            if os.path.exists(path):
+                shutil.rmtree(str(path))
+            Document7.objects.get(projectid=item).delete()
 
 
-def parse_to_defaultdict(f_in, hash_index=0):
-    d = defaultdict(list)
-    for record in parse_to_list(f_in):
-        d[record[hash_index]].append(record[hash_index + 1:])
-    return d
 
 
-def build_sql(table, attributes):
-    lst_attr = attributes[len(attributes) - 1]
-    r_str = 'insert into ' + table + ' values('
-    for attr in attributes:
-        value = str(attr)
-        r_str += '\'' + value + '\');' if attr is lst_attr else '\'' + value + '\', '
-    return r_str
-
-
-def execute_sql(sql_stmt):
-    cursor = connection.cursor()
-    cursor.execute(sql_stmt)
-
-
-def replace_all(text, dic):
-    for i, j in dic.iteritems():
-        text = text.replace(i, j)
-    return text
-
-
-def strip_parens(txt):
-    return re.sub(r'\(.*?\)', '', txt)  # strip parents and everything inside
-
-def parse_taxa(taxa_raw):
-    taxa_list = list()
-    for t in taxa_raw.split(';')[:-1]:  # get all but last element since it is empty
-        taxa_list.append(strip_parens(t))
-    return taxa_list
-
-OTU, SIZE, TAXA = 0, 1, 2
-def parse_taxonomy_file(f):
-    taxa_dict = dict()
-    for record in parse_to_list(f):
-        taxa_dict[record[OTU]] = parse_taxa(record[TAXA])  # hash otu name to its taxonomy list
-    return taxa_dict
 

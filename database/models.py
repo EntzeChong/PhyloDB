@@ -69,17 +69,49 @@ class Taxonomy(models.Model):
 
 
 class Document1(models.Model):
-    docfile1 = models.FileField(upload_to='temp')
+    projectid = models.CharField(max_length=90)
+    path = models.CharField(max_length=90)
+    upload = models.DateField()
+    name = models.CharField(max_length=90)
 
 
 class Document2(models.Model):
-    docfile2 = models.FileField(upload_to='temp')
+    projectid = models.CharField(max_length=90)
+    path = models.CharField(max_length=90)
+    upload = models.DateField()
+    name = models.CharField(max_length=90)
 
 
 class Document3(models.Model):
-    docfile3 = models.FileField(upload_to='temp')
+    projectid = models.CharField(max_length=90)
+    path = models.CharField(max_length=90)
+    upload = models.DateField()
+    name = models.CharField(max_length=90)
 
 
 class Document4(models.Model):
-    docfile4 = models.FileField(upload_to='temp')
+    projectid = models.CharField(max_length=90)
+    path = models.CharField(max_length=90)
+    upload = models.DateField()
+    name = models.CharField(max_length=90)
 
+
+class Document5(models.Model):
+    projectid = models.CharField(max_length=90)
+    path = models.CharField(max_length=90)
+    upload = models.DateField()
+    name = models.CharField(max_length=90)
+
+
+class Document6(models.Model):
+    projectid = models.CharField(max_length=90)
+    path = models.CharField(max_length=90)
+    upload = models.DateField()
+    name = models.CharField(max_length=90)
+
+
+class Document7(models.Model):
+    projectid = models.CharField(max_length=90)
+    path = models.CharField(max_length=90)
+    upload = models.DateField()
+    name = models.CharField(max_length=90)
