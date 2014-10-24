@@ -4,7 +4,7 @@ from uuid import uuid4
 from django.http import StreamingHttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from models import Project, Sample, Taxonomy, Document1, Document2, Document3, Document4, Document5, Document6, Document7
+from models import Project, Sample, Taxonomy
 from forms import UploadForm1, UploadForm2, UploadForm3, UploadForm4, UploadForm5
 from utils import handle_uploaded_file, remove_list
 from parsers import parse_project, parse_sample
@@ -32,30 +32,21 @@ def upload(request):
         if form1.is_valid():
             if form2.is_valid():
                 name = ".".join(["project", "csv"])
-                d = Document1(projectid=p_uuid, path=dest, upload=date, name=name)
-                d.save()
                 file = request.FILES['docfile1']
                 handle_uploaded_file(file, dest, name)
-                parse_project(dest, name, p_uuid)
-
+                parse_project(dest, name, date, p_uuid)
 
                 name = ".".join(["sample", "csv"])
-                d = Document2(projectid=p_uuid, path=dest, upload=date, name=name)
-                d.save()
                 file = request.FILES['docfile2']
                 handle_uploaded_file(file, dest, name)
                 parse_sample(dest, name, p_uuid)
 
                 name = ".".join(["mothur", "taxonomy"])
-                d = Document3(projectid=p_uuid, path=dest, upload=date, name=name)
-                d.save()
                 file = request.FILES['docfile3']
                 handle_uploaded_file(file, dest, name)
                 #parse_taxonomy(dest, name, p_uuid)
 
                 name = ".".join(["mothur", "shared"])
-                d = Document4(projectid=p_uuid, path=dest, upload=date, name=name)
-                d.save()
                 file = request.FILES['docfile4']
                 handle_uploaded_file(file, dest, name)
                 #parse_shared(dest, name, p_uuid)
@@ -63,58 +54,40 @@ def upload(request):
             # if biom file has metadata then we don't need form1
             elif form3.is_valid():
                 name = ".".join(["project", "csv"])
-                d = Document1(projectid=p_uuid, path=dest, upload=date, name=name)
-                d.save()
                 file = request.FILES['docfile1']
                 handle_uploaded_file(file, dest, name)
 
                 name = ".".join(["sample", "csv"])
-                d = Document2(projectid=p_uuid, path=dest, upload=date, name=name)
-                d.save()
                 file = request.FILES['docfile2']
                 handle_uploaded_file(file, dest, name)
 
                 name = ".".join(["biom_1.5", "txt"])
-                d = Document5(projectid=p_uuid, path=dest, upload=date, name=name)
-                d.save()
                 file = request.FILES['docfile5']
                 handle_uploaded_file(file, dest, name)
 
             elif form4.is_valid():
                 name = ".".join(["project", "csv"])
-                d = Document1(projectid=p_uuid, path=dest, upload=date, name=name)
-                d.save()
                 file = request.FILES['docfile1']
                 handle_uploaded_file(file, dest, name)
 
                 name = ".".join(["sample", "csv"])
-                d = Document2(projectid=p_uuid, path=dest, upload=date, name=name)
-                d.save()
                 file = request.FILES['docfile2']
                 handle_uploaded_file(file, dest, name)
 
                 name = ".".join(["biom_1.4", "txt"])
-                d = Document6(projectid=p_uuid, path=dest, upload=date, name=name)
-                d.save()
                 file = request.FILES['docfile6']
                 handle_uploaded_file(file, dest, name)
 
             elif form5.is_valid():
                 name = ".".join(["project", "csv"])
-                d = Document1(projectid=p_uuid, path=dest, upload=date, name=name)
-                d.save()
                 file = request.FILES['docfile1']
                 handle_uploaded_file(file, dest, name)
 
                 name = ".".join(["sample", "csv"])
-                d = Document2(projectid=p_uuid, path=dest, upload=date, name=name)
-                d.save()
                 file = request.FILES['docfile2']
                 handle_uploaded_file(file, dest, name)
 
                 name = ".".join(["biom_1.4", "txt"])
-                d = Document7(projectid=p_uuid, path=dest, upload=date, name=name)
-                d.save()
                 file = request.FILES['docfile7']
                 handle_uploaded_file(file, dest, name)
 
@@ -124,10 +97,11 @@ def upload(request):
         else:
             print("Please upload meta files")
 
-    projects = Project.objects.all()
+    elif request.method == 'POST' and 'clickMe' in request.POST:
 
-    if request.method == 'POST' and 'clickMe' in request.POST:
         remove_list(request)
+
+    projects = Project.objects.all()
 
     return render_to_response(
         'upload.html',

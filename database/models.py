@@ -1,8 +1,10 @@
 from django.db import models
-
+from django_extensions.db.fields import UUIDField
 
 class Project(models.Model):
-    projectid = models.CharField(max_length=45, primary_key=True)
+    projectid = UUIDField(primary_key=True, editable=True)
+    path = models.CharField(max_length=90)
+    upload_date = models.CharField(max_length=45)
     project_name = models.CharField(max_length=45, blank=True)
     project_desc = models.TextField(max_length=255, blank=True)
     start_date = models.DateField(blank=True)
@@ -15,7 +17,7 @@ class Project(models.Model):
 
 
 class Sample(models.Model):
-    sampleid = models.CharField(max_length=45, primary_key=True)
+    sampleid = UUIDField(primary_key=True, editable=True)
     projectid = models.ForeignKey(Project)
     sample_name = models.CharField(max_length=45, blank=True)
     organism = models.CharField(max_length=45, blank=True)
@@ -58,6 +60,7 @@ class Sample(models.Model):
 
 class Taxonomy(models.Model):
     sampleid = models.ForeignKey(Sample)
+    projectid = models.ForeignKey(Project)
     t_kingdom = models.CharField(max_length=45, blank=True)
     t_phylum = models.CharField(max_length=45, blank=True)
     t_class = models.CharField(max_length=45, blank=True)
@@ -68,50 +71,3 @@ class Taxonomy(models.Model):
     seqreads = models.IntegerField(blank=True)
 
 
-class Document1(models.Model):
-    projectid = models.CharField(max_length=90)
-    path = models.CharField(max_length=90)
-    upload = models.DateField()
-    name = models.CharField(max_length=90)
-
-
-class Document2(models.Model):
-    projectid = models.CharField(max_length=90)
-    path = models.CharField(max_length=90)
-    upload = models.DateField()
-    name = models.CharField(max_length=90)
-
-
-class Document3(models.Model):
-    projectid = models.CharField(max_length=90)
-    path = models.CharField(max_length=90)
-    upload = models.DateField()
-    name = models.CharField(max_length=90)
-
-
-class Document4(models.Model):
-    projectid = models.CharField(max_length=90)
-    path = models.CharField(max_length=90)
-    upload = models.DateField()
-    name = models.CharField(max_length=90)
-
-
-class Document5(models.Model):
-    projectid = models.CharField(max_length=90)
-    path = models.CharField(max_length=90)
-    upload = models.DateField()
-    name = models.CharField(max_length=90)
-
-
-class Document6(models.Model):
-    projectid = models.CharField(max_length=90)
-    path = models.CharField(max_length=90)
-    upload = models.DateField()
-    name = models.CharField(max_length=90)
-
-
-class Document7(models.Model):
-    projectid = models.CharField(max_length=90)
-    path = models.CharField(max_length=90)
-    upload = models.DateField()
-    name = models.CharField(max_length=90)
