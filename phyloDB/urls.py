@@ -7,11 +7,11 @@ urlpatterns = patterns('',
 
     url(r'^select/$', 'database.views.select', name='select'),
 
-    url(r'^filter/$', 'database.views.filter', name='filter'),
-
     url(r'^graph/$', 'database.views.graph', name='graph'),
 
-    url(r'^getTree/$', 'database.views.getTree', name='getTree'),
+    url(r'^getProjectTree/$', 'database.views.getProjectTree', name='getProjectTree'),
+
+    url(r'^getTaxaTree/$', 'database.views.getTaxaTree', name='getTaxaTree'),
 
 )
 

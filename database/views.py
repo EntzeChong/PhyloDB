@@ -4,10 +4,10 @@ from uuid import uuid4
 from django.http import StreamingHttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from models import Project, Sample, Taxonomy
+from models import Project, Sample, Profile, Kingdom, Phyla, Class, Order, Family, Genus, Species
 from forms import UploadForm1, UploadForm2, UploadForm3, UploadForm4, UploadForm5
 from utils import handle_uploaded_file, remove_list
-from parsers import parse_project, parse_sample
+from parsers import parse_project, parse_sample, parse_taxonomy, parse_profile
 
 
 def home(request):
@@ -31,25 +31,25 @@ def upload(request):
 
         if form1.is_valid():
             if form2.is_valid():
-                name = ".".join(["project", "csv"])
+                project = ".".join(["project", "csv"])
                 file = request.FILES['docfile1']
-                handle_uploaded_file(file, dest, name)
-                parse_project(dest, name, date, p_uuid)
+                handle_uploaded_file(file, dest, project)
+                parse_project(dest, project, date, p_uuid)
 
-                name = ".".join(["sample", "csv"])
+                sample = ".".join(["sample", "csv"])
                 file = request.FILES['docfile2']
-                handle_uploaded_file(file, dest, name)
-                parse_sample(dest, name, p_uuid)
+                handle_uploaded_file(file, dest, sample)
+                parse_sample(dest, sample, p_uuid)
 
-                name = ".".join(["mothur", "taxonomy"])
+                taxonomy = ".".join(["mothur", "taxonomy"])
                 file = request.FILES['docfile3']
-                handle_uploaded_file(file, dest, name)
-                #parse_taxonomy(dest, name, p_uuid)
+                handle_uploaded_file(file, dest, taxonomy)
+                parse_taxonomy(dest, taxonomy)
 
-                name = ".".join(["mothur", "shared"])
+                shared = ".".join(["mothur", "shared"])
                 file = request.FILES['docfile4']
-                handle_uploaded_file(file, dest, name)
-                #parse_shared(dest, name, p_uuid)
+                handle_uploaded_file(file, dest, shared)
+                parse_profile(dest, taxonomy, shared, p_uuid)
 
             # if biom file has metadata then we don't need form1
             elif form3.is_valid():
@@ -122,7 +122,7 @@ def select(request):
     )
 
 
-def getTree(request):
+def getProjectTree(request):
     myTree = {'title': 'All Projects', 'isFolder': True, 'expand': True, 'children': []}
 
     projects = Project.objects.all()
@@ -160,29 +160,20 @@ def getTree(request):
 
 
 def graph(request):
-    items = request.POST.getlist('list')
-#    samples = Sample.objects.filter(sampleid__in=items)
+    selected_samples = request.POST.getlist('list')
 
-    organism = Sample.objects.values_list('organism', flat=True).filter(sampleid__in=items).distinct()
-    biome = Sample.objects.values_list('biome', flat=True).filter(sampleid__in=items).distinct()
-    feature = Sample.objects.values_list('feature', flat=True).filter(sampleid__in=items).distinct()
-    geo_loc = Sample.objects.values_list('geo_loc', flat=True).filter(sampleid__in=items).distinct()
-    material = Sample.objects.values_list('material', flat=True).filter(sampleid__in=items).distinct()
-    crop_rotation = Sample.objects.values_list('crop_rotation', flat=True).filter(sampleid__in=items).distinct()
-    cur_land = Sample.objects.values_list('cur_land', flat=True).filter(sampleid__in=items).distinct()
-    cur_crop = Sample.objects.values_list('cur_crop', flat=True).filter(sampleid__in=items).distinct()
-    cur_cultivar = Sample.objects.values_list('cur_cultivar', flat=True).filter(sampleid__in=items).distinct()
-    profile_position = Sample.objects.values_list('profile_position', flat=True).filter(sampleid__in=items).distinct()
-    soil_type = Sample.objects.values_list('soil_type', flat=True).filter(sampleid__in=items).distinct()
-    tillage = Sample.objects.values_list('tillage', flat=True).filter(sampleid__in=items).distinct()
-
- #   t_kingdom = Taxonomy.objects.values_list('t_kingdom', flat=True).distinct()
- #   t_phyla = Taxonomy.objects.values_list('t_phyla', flat=True).distinct()
- #   t_class = Taxonomy.objects.values_list('t_class', flat=True).distinct()
- #   t_order = Taxonomy.objects.values_list('t_order', flat=True).distinct()
- #   t_family = Taxonomy.objects.values_list('t_family', flat=True).distinct()
- #   t_genus = Taxonomy.objects.values_list('t_genus', flat=True).distinct()
- #   t_species = Taxonomy.objects.values_list('t_species', flat=True).distinct()
+    organism = Sample.objects.values_list('organism', flat=True).filter(sampleid__in=selected_samples).distinct()
+    biome = Sample.objects.values_list('biome', flat=True).filter(sampleid__in=selected_samples).distinct()
+    feature = Sample.objects.values_list('feature', flat=True).filter(sampleid__in=selected_samples).distinct()
+    geo_loc = Sample.objects.values_list('geo_loc', flat=True).filter(sampleid__in=selected_samples).distinct()
+    material = Sample.objects.values_list('material', flat=True).filter(sampleid__in=selected_samples).distinct()
+    crop_rotation = Sample.objects.values_list('crop_rotation', flat=True).filter(sampleid__in=selected_samples).distinct()
+    cur_land = Sample.objects.values_list('cur_land', flat=True).filter(sampleid__in=selected_samples).distinct()
+    cur_crop = Sample.objects.values_list('cur_crop', flat=True).filter(sampleid__in=selected_samples).distinct()
+    cur_cultivar = Sample.objects.values_list('cur_cultivar', flat=True).filter(sampleid__in=selected_samples).distinct()
+    profile_position = Sample.objects.values_list('profile_position', flat=True).filter(sampleid__in=selected_samples).distinct()
+    soil_type = Sample.objects.values_list('soil_type', flat=True).filter(sampleid__in=selected_samples).distinct()
+    tillage = Sample.objects.values_list('tillage', flat=True).filter(sampleid__in=selected_samples).distinct()
 
     return render_to_response(
         'graph.html',
@@ -197,31 +188,102 @@ def graph(request):
          'cur_cultivar': cur_cultivar,
          'profile_position': profile_position,
          'soil_type': soil_type,
-         'tillage': tillage
+         'tillage': tillage,
         }
     )
 
 
-def filter(request):
-    items = request.POST.getlist('list')
+def getTaxaTree(request):
+    kingdoms = Kingdom.objects.all().order_by('t_kingdom')
+    phylas = Phyla.objects.all().order_by('t_phyla')
+    classes = Class.objects.all().order_by('t_class')
+    orders = Order.objects.all().order_by('t_order')
+    families = Family.objects.all().order_by('t_family')
+    genera = Genus.objects.all().order_by('t_genus')
+    species = Species.objects.all().order_by('t_species')
 
-    samples = Sample.objects.filter(sampleid__in=items)
+    myTree = {'title': 'Root', 'tooltip': "Root", 'isFolder': True, 'expand': True, 'children': []}
 
-    projectids = Sample.objects.values_list('projectid_id').filter(sampleid__in=samples)
-    projects = Project.objects.filter(projectid__in=projectids)
+    for kingdom in kingdoms:
+        myNode = {
+            'title': kingdom.t_kingdom,
+            'id': kingdom.kingdomid,
+            'tooltip': "Kingdom",
+            'isFolder': True,
+            'expand': True,
+            'children': [],
+        }
+        for phyla in phylas:
+            if phyla.kingdomid_id == kingdom.kingdomid:
+                myNode1 = {
+                    'title': phyla.t_phyla,
+                    'id': phyla.phylaid,
+                    'tooltip': "Phyla",
+                    'isFolder': True,
+                    'children': [],
+                }
+                myNode['children'].append(myNode1)
+                for item in classes:
+                    if item.phylaid_id == phyla.phylaid:
+                        myNode2 = {
+                            'title': item.t_class,
+                            'id': item.classid,
+                            'tooltip': "Class",
+                            'isFolder': True,
+                            'children': [],
+                        }
+                        myNode1['children'].append(myNode2)
+                        for order in orders:
+                            if order.classid_id == item.classid:
+                                myNode3 = {
+                                    'title': order.t_order,
+                                    'id': order.orderid,
+                                    'tooltip': "Order",
+                                    'isFolder': True,
+                                    'children': [],
+                                }
+                                myNode2['children'].append(myNode3)
+                                for family in families:
+                                    if family.orderid_id == order.orderid:
+                                        myNode4 = {
+                                            'title': family.t_family,
+                                            'id': family.familyid,
+                                            'tooltip': "Family",
+                                            'isFolder': True,
+                                            'children': [],
+                                        }
+                                        myNode3['children'].append(myNode4)
+                                        for genus in genera:
+                                            if genus.familyid_id == family.familyid:
+                                                myNode5 = {
+                                                    'title': genus.t_genus,
+                                                    'id': genus.genusid,
+                                                    'tooltip': "Genus",
+                                                    'isFolder': True,
+                                                    'children': [],
+                                                }
+                                                myNode4['children'].append(myNode5)
+                                                for spec in species:
+                                                    if spec.genusid_id == genus.genusid:
+                                                        myNode6 = {
+                                                            'title': spec.t_species,
+                                                            'id': spec.speciesid,
+                                                            'tooltip': "Species",
+                                                            'isFolder': False,
+                                                        }
+                                                        myNode5['children'].append(myNode6)
+        myTree['children'].append(myNode)
 
-    taxa = Taxonomy.objects.all()
-    print taxa
 
-    return render_to_response(
-        'filter.html',
-        {'samples': samples,
-         'projects': projects},
-        context_instance=RequestContext(request)
-    )
+    # Convert result list to a JSON string
+    res = simplejson.dumps(myTree, encoding="Latin-1")
 
+    # Support for the JSONP protocol.
+    response_dict = {}
+    if 'callback' in request.GET:
+        response_dict = request.GET['callback'] + "(" + res + ")"
+    return StreamingHttpResponse(response_dict, content_type='application/json')
 
-#def norm(request):
-    #get post from filter page and do stuff...
-
-
+    response_dict = {}
+    response_dict.update({'children': myTree})
+    return StreamingHttpResponse(response_dict, content_type='application/javascript')

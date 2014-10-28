@@ -17,7 +17,7 @@
                 selectMode: 3,
 
                 initAjax: {
-                    url: "/getTree/",
+                    url: "/getProjectTree/",
                     dataType: "jsonp",
                     data: {}
                 },
@@ -27,9 +27,6 @@
                     selectedKeys = $.map(selectedNodes, function (node) {
                         return node.data.id;
                     });
-
-                    // display selectedKeys at <span id="onselect">
-                    //$("#onselect").text(selectedKeys);
 
                     // clear existing input box
                     $('#selected .list input').remove();
@@ -53,7 +50,7 @@
     <h2>Select any combination of data for analysis:</h2>
     <div id="tree"></div>
 
-    <form method="post" action="{% url 'filter' %}">
+    <form method="post" action="{% url 'graph' %}">
         {% csrf_token %}
 
         <div id="selected">
@@ -64,7 +61,8 @@
         </div>
 
         <p><input name="button" type="submit" value="Submit selection"/></p>
-
     </form>
+
+
 {% endblock %}
 

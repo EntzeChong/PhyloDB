@@ -16,24 +16,38 @@
             // Initialize tree
             $("#tree1").dynatree({
                 checkbox: true,
-                selectMode: 3,
-                onSelect: function (node) {
-                    var selKeys = $.map($("#tree1").dynatree("getSelectedNodes"), function (node) {
-                        return node.data.uuid;
+                selectMode: 2,
+
+                onSelect: function () {
+                    var selectedNodes = $("#tree1").dynatree("getSelectedNodes");
+                    selectedKeys = $.map(selectedNodes, function (node) {
+                        return node.data.id;
                     });
-                    $('#textField').val(selKeys.join(","));
                 } // end onSelect
             }); // end tree1
 
             $("#tree2").dynatree({
                 checkbox: true,
-                selectMode: 3,
-                onSelect: function (node) {
-                    var selKeys = $.map($("#tree1").dynatree("getSelectedNodes"), function (node) {
-                        return node.data.uuid;
+                selectMode: 2,
+
+                initAjax: {
+                    url: "/getTaxaTree/",
+                    dataType: "jsonp",
+                    data: {}
+                },
+                onSelect: function () {
+                    var selectedNodes = $("#tree2").dynatree("getSelectedNodes");
+                    selectedKeys = $.map(selectedNodes, function (node) {
+                        return node.data.id;
                     });
-                    $('#textField').val(selKeys.join(","));
-                } // end onSelect
+                }, // end onSelect
+                onLazyRead: function(node){
+                    node.appendAjax({url: "/getTaxaTree/",
+                    data: {"key": node.data.key,
+                        "mode": "all"
+                        }
+                    });
+                 }
             }); // end tree2
 
         }); // end function
@@ -134,64 +148,16 @@
                             </td>
                         </tr>
                     </table>
-
                 </td>
                 <td width="50%" style="padding-right: 10px; vertical-align: top">
-
                     <!-- right table -->
                     <table id="tbl_taxa" width="100%" border="0" cellspacing="0" cellpadding="1">
                         <tr>
                             <td>
-                                <div id="tree2">
-                                    <ul>
-                                        <li title="Kingdom">Kingdom
-                                            <ul>  <!-- change these once taxonomy table is finished -->
-                                                <li title="Archaea">Archaea
-                                                <li title="Bacteria">Bacteria
-                                                <li title="Eukaryota">Eukaryota
-                                            </ul>
-                                        <li title="Phyla">Phyla
-                                            <ul>
-                                                <li title="Phyla1">Phyla1
-                                                <li title="Phyla2">Phyla2
-                                                <li title="Phyla3">Phyla3
-                                            </ul>
-                                        <li title="Class">Class
-                                            <ul>
-                                                {% for item in feature %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="Order">Order
-                                            <ul>
-                                                {% for item in geo_loc %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="Family">Family
-                                            <ul>
-                                                {% for item in material %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="Genus">Genus
-                                            <ul>
-                                                {% for item in crop_rotation %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="Species">Species
-                                            <ul>
-                                                {% for item in cur_land %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                    </ul>
-                                </div>
+                                <div id="tree2"></div>
                             </td>
                         </tr>
                     </table>
-
                     <!-- end of main table -->
                 </td>
             </tr>
@@ -200,15 +166,10 @@
         <p>Things to work on...<br>
             <br>
             General:<br>
-            1. Should there be a list of samples selected on this page?<br>
-            <br>
-            Categorical Data:<br>
-            1. (Should) only one parent node can be selected at a time??<br>
-            <br>
-            Taxa Data:<br>
-            1. Only one parent node can be selected at a time<br>
-            2. All children are automatically selected<br>
-            3. Tooltip shows full taxonomic path<br>
+            1. Categorical tree is dependent on selected samples, but not the taxa tree.<br>
+                -not sure how to fix unless Ajax call is removed...<br>
+            2. Auto-expand nodes upon select.<br>
+            3. Deselect nodes upon collapse.<br>
         </p>
         <br>
 
@@ -231,4 +192,10 @@
         <h3>Get selected data:<input type="button" value="Go!"/></h3>
         <h3>Run ANOVA using above selections:<input type="button" value="Run!"/></h3>
     </form>
+
+
+
+
+
+
 {% endblock %}

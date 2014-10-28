@@ -1,6 +1,6 @@
 import os
 import shutil
-from models import Project, Sample
+from models import Project
 
 
 def handle_uploaded_file(f, path, name):
