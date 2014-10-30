@@ -11,32 +11,102 @@
 {% endblock %}
 
 {% block dynatree %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
-
         $(function () {
-
-            $("#tree_meta").dynatree({
+            // Initialize tree
+            $("#tree1").dynatree({
                 checkbox: true,
                 selectMode: 3,
-                initAjax: {
-                    url: '/getSampleTree/',
-                    dataType: 'jsonp',
-                    data: {}
-                }
 
-            }); // end tree
+                onSelect: function () {
+                    var selectedNodes = $("#tree1").dynatree("getSelectedNodes");
+                    selectedKeys = $.map(selectedNodes, function (node) {
+                        return node.data.id;
+                    });
+                    drawChart();
+                } // end onSelect
+            }); // end tree1
 
-            $("#tree_taxa").dynatree({
+            $("#tree2").dynatree({
                 checkbox: true,
                 selectMode: 2,
+
                 initAjax: {
-                    url: '/getTaxaTree/',
-                    dataType: 'jsonp',
+                    url: "/getTaxaTree/",
+                    dataType: "jsonp",
                     data: {}
+                },
+                onSelect: function () {
+                    var selectedNodes = $("#tree2").dynatree("getSelectedNodes");
+                    selectedKeys = $.map(selectedNodes, function (node) {
+                        return node.data.id;
+                    });
+                    drawChart();
+                }, // end onSelect
+                onLazyRead: function(node){
+                    node.appendAjax({url: "/getTaxaTree/",
+                    data: {"key": node.data.key,
+                        "mode": "all"
+                        }
+                    });
+                 }
+            }); // end tree2
+
+        }); // end function
+                      // Load the Visualization API and the piechart package.
+                      google.load('visualization', '1.0', {'packages':['corechart']});
+
+                      // Set a callback to run when the Google Visualization API is loaded.
+                      google.setOnLoadCallback(drawChart);
+
+                      // Callback that creates and populates a data table,
+                      // instantiates the pie chart, passes in the data and
+                      // draws it.
+            function drawChart() {
+                //var first = $("#tree1").dynatree("getSelectedNodes");
+                //var second = $("#tree2").dynatree("getSelectedNodes");
+                var first = $.map($("#tree1").dynatree("getSelectedNodes"), function (node) {
+                        return node.data.title;
+                    });
+                var second = $.map($("#tree2").dynatree("getSelectedNodes"), function (node) {
+                        return node.data.title;
+                    });
+                var fc = first.length;
+                var sc = second.length;
+                var counts = new Array();
+                for (var c = 0; c<fc; c++)
+                {
+                    //Sample
+                    for (var d=0; d<sc; d++) {
+                        //Data
+                        counts.push(d+1);
+                    }
                 }
 
-            }); // end
-        })
+                // Create the data table.
+                var data = new google.visualization.DataTable();
+                var seq = 0;
+                data.addColumn('string', 'Category');
+                data.addColumn('number', 'Count');
+                for (var c = 0; c < fc; c++) {
+                    for (var d = 0; d < sc; d++) {
+                        data.addRows([
+                            [(first[c].toString() + " - " + second[d].toString()), counts[seq]]
+                        ]);
+                        seq++;
+                    }
+                }
+
+                // Set chart options
+                var options = {'title': first.toString() + " and " +second.toString(),
+                    'width': 400,
+                    'height': 300};
+
+                // Instantiate and draw our chart, passing in some options.
+                var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+                chart.draw(data, options);
+            }
     </script>
 {% endblock %}
 
@@ -52,9 +122,85 @@
 
                     <!-- left tree -->
                     <table id="tbl_meta" width="100%" border="0" cellspacing="0" cellpadding="1">
+
                         <tr>
                             <td>
-                                <div id="tree_meta"></div>
+                                <div id="tree1">
+                                    <ul>
+                                        <li title="Organism">Organism
+                                            <ul>
+                                                {% for item in organism %}
+                                                    <li title="{{ item }}">{{ item }}
+                                                {% endfor %}
+                                            </ul>
+                                        <li title="biome">biome
+                                            <ul>
+                                                {% for item in biome %}
+                                                    <li title="{{ item }}">{{ item }}
+                                                {% endfor %}
+                                            </ul>
+                                        <li title="feature">feature
+                                            <ul>
+                                                {% for item in feature %}
+                                                    <li title="{{ item }}">{{ item }}
+                                                {% endfor %}
+                                            </ul>
+                                        <li title="geo_loc">geo_loc
+                                            <ul>
+                                                {% for item in geo_loc %}
+                                                    <li title="{{ item }}">{{ item }}
+                                                {% endfor %}
+                                            </ul>
+                                        <li title="material">material
+                                            <ul>
+                                                {% for item in material %}
+                                                    <li title="{{ item }}">{{ item }}
+                                                {% endfor %}
+                                            </ul>
+                                        <li title="crop_rotation">crop_rotation
+                                            <ul>
+                                                {% for item in crop_rotation %}
+                                                    <li title="{{ item }}">{{ item }}
+                                                {% endfor %}
+                                            </ul>
+                                        <li title="cur_land_use">cur_land_use
+                                            <ul>
+                                                {% for item in cur_land %}
+                                                    <li title="{{ item }}">{{ item }}
+                                                {% endfor %}
+                                            </ul>
+                                        <li title="cur_crop">cur_crop
+                                            <ul>
+                                                {% for item in cur_crop %}
+                                                    <li title="{{ item }}">{{ item }}
+                                                {% endfor %}
+                                            </ul>
+                                        <li title="cur_cultivar">cur_cultivar
+                                            <ul>
+                                                {% for item in cur_cultivar %}
+                                                    <li title="{{ item }}">{{ item }}
+                                                {% endfor %}
+                                            </ul>
+                                        <li title="profile_position">profile_position
+                                            <ul>
+                                                {% for item in profile_position %}
+                                                    <li title="{{ item }}">{{ item }}
+                                                {% endfor %}
+                                            </ul>
+                                        <li title="soil_type">soil_type
+                                            <ul>
+                                                {% for item in soil_type %}
+                                                    <li title="{{ item }}">{{ item }}
+                                                {% endfor %}
+                                            </ul>
+                                        <li title="tillage">tillage
+                                            <ul>
+                                                {% for item in tillage %}
+                                                    <li title="{{ item }}">{{ item }}
+                                                {% endfor %}
+                                            </ul>
+                                    </ul>
+                                </div>
                             </td>
                         </tr>
                     </table>
@@ -64,7 +210,7 @@
                     <table id="tbl_taxa" width="100%" border="0" cellspacing="0" cellpadding="1">
                         <tr>
                             <td>
-                                <div id="tree_taxa"></div>
+                                <div id="tree2"></div>
                             </td>
                         </tr>
                     </table>
@@ -89,6 +235,7 @@
             <tr>
                 <td style="vertical-align: top">
                     <p>insert graph here</p>
+                    <div id="chart_div"></div>
                 </td>
             </tr>
         </table>
@@ -102,4 +249,10 @@
         <h3>Get selected data:<input type="button" value="Go!"/></h3>
         <h3>Run ANOVA using above selections:<input type="button" value="Run!"/></h3>
     </form>
+
+
+
+
+
+
 {% endblock %}

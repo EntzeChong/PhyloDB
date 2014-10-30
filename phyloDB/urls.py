@@ -16,3 +16,8 @@ urlpatterns = patterns('',
 
 )
 
+#from django.conf.urls import patterns, include, url
+#urlpatterns = patterns('',
+  #modify this to use data from files url(r'^getTree', treePlotter.views.getTree, name='getTree'),
+#)
+
