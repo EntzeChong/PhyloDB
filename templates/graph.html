@@ -12,45 +12,31 @@
 
 {% block dynatree %}
     <script type="text/javascript">
+
         $(function () {
-            // Initialize tree
-            $("#tree1").dynatree({
+
+            $("#tree_meta").dynatree({
                 checkbox: true,
-                selectMode: 2,
-
-                onSelect: function () {
-                    var selectedNodes = $("#tree1").dynatree("getSelectedNodes");
-                    selectedKeys = $.map(selectedNodes, function (node) {
-                        return node.data.id;
-                    });
-                } // end onSelect
-            }); // end tree1
-
-            $("#tree2").dynatree({
-                checkbox: true,
-                selectMode: 2,
-
+                selectMode: 3,
                 initAjax: {
-                    url: "/getTaxaTree/",
-                    dataType: "jsonp",
+                    url: '/getSampleTree/',
+                    dataType: 'jsonp',
                     data: {}
-                },
-                onSelect: function () {
-                    var selectedNodes = $("#tree2").dynatree("getSelectedNodes");
-                    selectedKeys = $.map(selectedNodes, function (node) {
-                        return node.data.id;
-                    });
-                }, // end onSelect
-                onLazyRead: function(node){
-                    node.appendAjax({url: "/getTaxaTree/",
-                    data: {"key": node.data.key,
-                        "mode": "all"
-                        }
-                    });
-                 }
-            }); // end tree2
+                }
 
-        }); // end function
+            }); // end tree
+
+            $("#tree_taxa").dynatree({
+                checkbox: true,
+                selectMode: 2,
+                initAjax: {
+                    url: '/getTaxaTree/',
+                    dataType: 'jsonp',
+                    data: {}
+                }
+
+            }); // end
+        })
     </script>
 {% endblock %}
 
@@ -66,85 +52,9 @@
 
                     <!-- left tree -->
                     <table id="tbl_meta" width="100%" border="0" cellspacing="0" cellpadding="1">
-
                         <tr>
                             <td>
-                                <div id="tree1">
-                                    <ul>
-                                        <li title="Organism">Organism
-                                            <ul>
-                                                {% for item in organism %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="biome">biome
-                                            <ul>
-                                                {% for item in biome %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="feature">feature
-                                            <ul>
-                                                {% for item in feature %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="geo_loc">geo_loc
-                                            <ul>
-                                                {% for item in geo_loc %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="material">material
-                                            <ul>
-                                                {% for item in material %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="crop_rotation">crop_rotation
-                                            <ul>
-                                                {% for item in crop_rotation %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="cur_land_use">cur_land_use
-                                            <ul>
-                                                {% for item in cur_land %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="cur_crop">cur_crop
-                                            <ul>
-                                                {% for item in cur_crop %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="cur_cultivar">cur_cultivar
-                                            <ul>
-                                                {% for item in cur_cultivar %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="profile_position">profile_position
-                                            <ul>
-                                                {% for item in profile_position %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="soil_type">soil_type
-                                            <ul>
-                                                {% for item in soil_type %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                        <li title="tillage">tillage
-                                            <ul>
-                                                {% for item in tillage %}
-                                                    <li title="{{ item }}">{{ item }}
-                                                {% endfor %}
-                                            </ul>
-                                    </ul>
-                                </div>
+                                <div id="tree_meta"></div>
                             </td>
                         </tr>
                     </table>
@@ -154,7 +64,7 @@
                     <table id="tbl_taxa" width="100%" border="0" cellspacing="0" cellpadding="1">
                         <tr>
                             <td>
-                                <div id="tree2"></div>
+                                <div id="tree_taxa"></div>
                             </td>
                         </tr>
                     </table>
@@ -192,10 +102,4 @@
         <h3>Get selected data:<input type="button" value="Go!"/></h3>
         <h3>Run ANOVA using above selections:<input type="button" value="Run!"/></h3>
     </form>
-
-
-
-
-
-
 {% endblock %}
