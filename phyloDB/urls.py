@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 
 urlpatterns = patterns('',
 
@@ -16,8 +16,4 @@ urlpatterns = patterns('',
 
 )
 
-#from django.conf.urls import patterns, include, url
-#urlpatterns = patterns('',
-  #modify this to use data from files url(r'^getTree', treePlotter.views.getTree, name='getTree'),
-#)
 

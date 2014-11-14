@@ -51,7 +51,7 @@ def upload(request):
                 shared = ".".join(["mothur", "shared"])
                 file4 = request.FILES['docfile4']
                 handle_uploaded_file(file4, dest, shared)
-                parse_profile(file3, file4, dest)
+                parse_profile(file3, file4, dest, p_uuid)
                 print("Parsed profile!")
 
             elif form3.is_valid():
