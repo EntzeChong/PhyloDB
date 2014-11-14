@@ -1,124 +1,99 @@
-import re
 import csv
-import fileinput
+import re
 from uuid import uuid4
+from models import Project, Sample, Kingdom, Phyla, Class, Order, Family, Genus, Species
+
+import fileinput
 from itertools import izip
-from models import Project, Sample, Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
 
-
-def parse_project(filepath, filename, upload, p_uuid):
-    inFile = "/".join([str(filepath), str(filename)])
-    f = csv.DictReader(open(inFile, 'r'), delimiter=',')
+def parse_project(filepath, uploaddate, Document, p_uuid):
+    f = csv.DictReader(Document, delimiter=',')
     for row in f:
         row_dict = row
-        m = Project(projectid=p_uuid, path=filepath, upload_date=upload, **row_dict)
+        m = Project(projectid=p_uuid, path=filepath, upload_date=uploaddate, **row_dict)
         m.save()
 
 
-def parse_sample(filepath, filename, p_uuid):
-    inFile = "/".join([str(filepath), str(filename)])
-    f = csv.DictReader(open(inFile, 'r'), delimiter=',')
+def parse_sample(Document, p_uuid):
+    f = csv.DictReader(Document, delimiter=',')
     for row in f:
         s_uuid = uuid4().hex
         row_dict = row
         project = Project.objects.get(projectid=p_uuid)
-        m = Sample(projectid=project, sampleid=str(s_uuid), **row_dict)
+        m = Sample(projectid=project, sampleid=s_uuid, **row_dict)
         m.save()
 
 
-def parse_taxonomy(filepath, filename):
-    inFile = "/".join([str(filepath), str(filename)])
-    for line in fileinput.input(inFile, inplace=True):
-        line = line.rstrip()
-        print(re.sub(r'\(.*?\)', '', line))
-    f = csv.DictReader(open(inFile, 'r'), delimiter='\t')
-    for row in f:
-        taxa = row["Taxonomy"]
-        taxon = taxa.split(';')
-        if not Kingdom.objects.filter(t_kingdom=taxon[0]).exists():
+def parse_taxonomy(Document):
+    f = csv.reader(Document, delimiter='\t')
+    f.next()
+    for line in f:
+        subbed = re.sub(r'\(.*?\)', '', line[2])
+        taxon = subbed.split(';')
+
+        if not Kingdom.objects.filter(kingdomName=taxon[0]).exists():
             id = uuid4().hex
-            dict = {'t_kingdom':taxon[0]}
-            record = Kingdom(kingdomid=id, **dict)
+            record = Kingdom(kingdomid=id, kingdomName=taxon[0])
             record.save()
-        if not Phyla.objects.filter(t_phyla=taxon[1]).exists():
-            id = uuid4().hex
-            dict = {'t_phyla':taxon[1]}
-            id2 = Kingdom.objects.get(t_kingdom=taxon[0])
-            record = Phyla(kingdomid=id2, phylaid=id, **dict)
+
+        if not Phyla.objects.filter(phylaName=taxon[1]).exists():
+            id2 = uuid4().hex
+            id1 = Kingdom.objects.get(kingdomName=taxon[0])
+            record = Phyla(kingdomid=id1, phylaid=id2, phylaName=taxon[1])
             record.save()
-        if not Class.objects.filter(t_class=taxon[2]).exists():
-            id = uuid4().hex
-            dict = {'t_class':taxon[2]}
-            id2 = Phyla.objects.get(t_phyla=taxon[1])
-            record = Class(phylaid=id2, classid=id, **dict)
+
+        if not Class.objects.filter(className=taxon[2]).exists():
+            id3 = uuid4().hex
+            id2 = Phyla.objects.get(phylaName=taxon[1])
+            id1 = Kingdom.objects.get(kingdomName=taxon[0])
+            record = Class(kingdomid=id1, phylaid=id2, classid=id3, className=taxon[2])
             record.save()
-        if not Order.objects.filter(t_order=taxon[3]).exists():
-            id = uuid4().hex
-            dict = {'t_order':taxon[3]}
-            id2 = Class.objects.get(t_class=taxon[2])
-            record = Order(classid=id2, orderid=id, **dict)
+
+        if not Order.objects.filter(orderName=taxon[3]).exists():
+            id4 = uuid4().hex
+            id3 = Class.objects.get(className=taxon[2])
+            id2 = Phyla.objects.get(phylaName=taxon[1])
+            id1 = Kingdom.objects.get(kingdomName=taxon[0])
+            record = Order(kingdomid=id1, phylaid=id2, classid=id3, orderid=id4, orderName=taxon[3])
             record.save()
-        if not Family.objects.filter(t_family=taxon[4]).exists():
-            id = uuid4().hex
-            dict = {'t_family':taxon[4]}
-            id2 = Order.objects.get(t_order=taxon[3])
-            record = Family(orderid=id2, familyid=id, **dict)
+
+        if not Family.objects.filter(familyName=taxon[4]).exists():
+            id5 = uuid4().hex
+            id4 = Order.objects.get(orderName=taxon[3])
+            id3 = Class.objects.get(className=taxon[2])
+            id2 = Phyla.objects.get(phylaName=taxon[1])
+            id1 = Kingdom.objects.get(kingdomName=taxon[0])
+            record = Family(kingdomid=id1, phylaid=id2, classid=id3, orderid=id4, familyid=id5, familyName=taxon[4])
             record.save()
-        if not Genus.objects.filter(t_genus=taxon[5]).exists():
-            id = uuid4().hex
-            dict = {'t_genus':taxon[5]}
-            id2 = Family.objects.get(t_family=taxon[4])
-            record = Genus(familyid=id2, genusid=id, **dict)
+
+        if not Genus.objects.filter(genusName=taxon[5]).exists():
+            id6 = uuid4().hex
+            id5 = Family.objects.get(familyName=taxon[4])
+            id4 = Order.objects.get(orderName=taxon[3])
+            id3 = Class.objects.get(className=taxon[2])
+            id2 = Phyla.objects.get(phylaName=taxon[1])
+            id1 = Kingdom.objects.get(kingdomName=taxon[0])
+            record = Genus(kingdomid=id1, phylaid=id2, classid=id3, orderid=id4, familyid=id5, genusid=id6, genusName=taxon[5])
             record.save()
-        if not Species.objects.filter(t_species=taxon[6]).exists():
-            id = uuid4().hex
-            dict = {'t_species':taxon[6]}
-            id2 = Genus.objects.get(t_genus=taxon[5])
-            record = Species(genusid=id2, speciesid=id, **dict)
+
+        if not Species.objects.filter(speciesName=taxon[6]).exists():
+            id7 = uuid4().hex
+            id6 = Genus.objects.get(genusName=taxon[5])
+            id5 = Family.objects.get(familyName=taxon[4])
+            id4 = Order.objects.get(orderName=taxon[3])
+            id3 = Class.objects.get(className=taxon[2])
+            id2 = Phyla.objects.get(phylaName=taxon[1])
+            id1 = Kingdom.objects.get(kingdomName=taxon[0])
+            record = Species(kingdomid=id1, phylaid=id2, classid=id3, orderid=id4, familyid=id5, genusid=id6, speciesid=id7, speciesName=taxon[6])
             record.save()
 
 
-def parse_profile(filepath, taxonomy, shared, p_uuid):
-    inFile1 = "/".join([str(filepath), str(taxonomy)])
-    taxa_list = []
-    for line in fileinput.input(inFile1):
-        if not fileinput.isfirstline():
-            line = line.rstrip()
-            fields = line.split('\t')
-            taxa_list.append(fields[2])
-    inFile2 = "/".join([str(filepath), str(shared)])
-    lis = izip(*csv.reader(open(inFile2, 'rb'), delimiter='\t'))
-    outfile = "/".join([str(filepath), str(shared+".tr")])
-    csv.writer(open(outfile, 'wb'), delimiter='\t').writerows(lis)
+def parse_profile(taxonomy, shared, path):
+    f = izip(*csv.reader(shared, delimiter='\t'))
+    outfile = "/".join([path, "shared.tr"])
+    csv.writer(open(outfile, 'wb'), delimiter='\t').writerows(f)
     for line in fileinput.input(outfile, inplace=True):
         line = line.rstrip()
         if fileinput.lineno() == 1 or fileinput.lineno() == 3:
             continue
-        print(line)
-    samples_list = {}
-    for line in fileinput.input(outfile):
-        if fileinput.lineno() == 1:
-            line = line.rstrip()
-            samples_list = line.split('\t')
-    samples_list.pop(0)
-    g = csv.reader(open(outfile, 'r'), delimiter='\t')
-    g.next()
-    j = 0
-    for line in g:
-        for i in range(len(samples_list)):
-            count = line[i+1]
-            if count > 0:
-                taxon = taxa_list[j].split(';')
-                name = samples_list[i]
-                project = Project.objects.get(projectid=p_uuid)
-                sample = Sample.objects.filter(projectid=p_uuid).get(sample_name=name)
-                t_kingdom = Kingdom.objects.get(t_kingdom=taxon[0])
-                t_phyla = Phyla.objects.get(t_phyla=taxon[1])
-                t_class = Class.objects.get(t_class=taxon[2])
-                t_order = Order.objects.get(t_order=taxon[3])
-                t_family = Family.objects.get(t_family=taxon[4])
-                t_genus = Genus.objects.get(t_genus=taxon[5])
-                t_species = Species.objects.get(t_species=taxon[6])
-                record = Profile(projectid=project, sampleid=sample, kingdomid=t_kingdom, phylaid=t_phyla, classid=t_class, orderid=t_order, familyid=t_family, genusid=t_genus, speciesid=t_species, count=count)
-                record.save()
-        j += 1
+        print line

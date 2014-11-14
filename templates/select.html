@@ -51,13 +51,8 @@
                     data: $(this).serialize()
                     });
 
-                $.ajax({
-                    type: 'post',
-                    async: false,
-                    url: "/graph/",
-                    data: $(this).serialize()
-                    });
-              });
+                // additional posts can be added here
+            });
 
         }); // end original function()
     </script>

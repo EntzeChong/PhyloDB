@@ -1,6 +1,6 @@
 import simplejson
 from django.http import StreamingHttpResponse
-from models import Project, Sample, Profile, Kingdom, Phyla, Class, Order, Family, Genus, Species
+from models import Project, Sample, Kingdom, Phyla, Class, Order, Family, Genus, Species
 
 
 def getProjectTree(request):
@@ -50,147 +50,28 @@ def getSampleTree(request):
     myTree = {'title': 'root', 'tooltip': 'root', 'isFolder': True, 'expand': True, 'children': []}
 
     selected = open("uploads/selected.txt").readlines()
-    samples = Sample.objects.all().filter(sampleid__in=selected).distinct()
+    selected_samples = Sample.objects.all().filter(sampleid__in=selected)
 
-    myNode = {'title': 'Organism', 'isFolder': True, 'children': []}
-    for sample in samples:
+    myNode = {'title': 'Site', 'isFolder': True, 'children': []}
+    for item in selected_samples:
         myNode1 = {
-            'title': sample.organism,
-            'id': sample.organism,
+            'title': item.site_name,
+            'id': item.site_name,
             'isFolder': False,
         }
         myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
+        myTree['children'].append(myNode)
 
-    myNode = {'title': 'Biome', 'isFolder': True, 'children': []}
-    for sample in samples:
+    myNode = {'title': 'Plot', 'isFolder': True, 'children': []}
+    for item in selected_samples:
         myNode1 = {
-            'title': sample.biome,
-            'id': sample.biome,
+            'title': item.plot_name,
+            'id': item.plot_name,
             'isFolder': False,
         }
         myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
+        myTree['children'].append(myNode)
 
-    myNode = {'title': 'feature', 'isFolder': True, 'children': []}
-    for sample in samples:
-        myNode1 = {
-            'title': sample.feature,
-            'id': sample.feature,
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
-
-    myNode = {'title': 'geo_loc', 'isFolder': True, 'children': []}
-    for sample in samples:
-        myNode1 = {
-            'title': sample.geo_loc,
-            'id': sample.geo_loc,
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
-
-    myNode = {'title': 'material', 'isFolder': True, 'children': []}
-    for sample in samples:
-        myNode1 = {
-            'title': sample.material,
-            'id': sample.material,
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
-
-    myNode = {'title': 'crop_rotation', 'isFolder': True, 'children': []}
-    for sample in samples:
-        myNode1 = {
-            'title': sample.crop_rotation,
-            'id': sample.crop_rotation,
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
-
-    myNode = {'title': 'cur_land', 'isFolder': True, 'children': []}
-    for sample in samples:
-        myNode1 = {
-            'title': sample.cur_land,
-            'id': sample.cur_land,
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
-
-    myNode = {'title': 'cur_crop', 'isFolder': True, 'children': []}
-    for sample in samples:
-        myNode1 = {
-            'title': sample.cur_crop,
-            'id': sample.cur_crop,
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
-
-    myNode = {'title': 'cur_cultivar', 'isFolder': True, 'children': []}
-    for sample in samples:
-        myNode1 = {
-            'title': sample.cur_cultivar,
-            'id': sample.cur_cultivar,
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
-
-    myNode = {'title': 'soil_type', 'isFolder': True, 'children': []}
-    for sample in samples:
-        myNode1 = {
-            'title': sample.soil_type,
-            'id': sample.soil_type,
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
-
-    myNode = {'title': 'tillage', 'isFolder': True, 'children': []}
-    for sample in samples:
-        myNode1 = {
-            'title': sample.tillage,
-            'id': sample.tillage,
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
-
-    myNode = {'title': 'user_1', 'isFolder': True, 'children': []}
-    for sample in samples:
-        myNode1 = {
-            'title': sample.user_1,
-            'id': sample.user_1,
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
-
-    myNode = {'title': 'user_2', 'isFolder': True, 'children': []}
-    for sample in samples:
-        myNode1 = {
-            'title': sample.user_2,
-            'id': sample.user_2 ,
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
-
-    myNode = {'title': 'user_3', 'isFolder': True, 'children': []}
-    for sample in samples:
-        myNode1 = {
-            'title': sample.user_3,
-            'id': sample.user_3,
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
 
     # Convert result list to a JSON string
     res = simplejson.dumps(myTree, encoding="Latin-1")
@@ -208,18 +89,23 @@ def getSampleTree(request):
 
 def getTaxaTree(request):
     myTree = {'title': 'root', 'tooltip': 'root', 'isFolder': True, 'expand': True, 'children': []}
-
-    selected = open("uploads/selected.txt").readlines()
-    selected_taxa = Profile.objects.filter(sampleid__in=selected).distinct()
-
+    selected = [line.rstrip() for line in open("uploads/selected.txt")]
+    selected_taxa = Kingdom.objects.filter(sampleid__in=selected).distinct()
+    print("Selected:")
+    print(selected)
+    print("Selected taxa:")
+    print(selected_taxa)
+    print("Selected kingdoms:")
+    print(selected_taxa.values_list('kingdomid'))
     kingdoms = Kingdom.objects.all().filter(kingdomid__in=selected_taxa.values_list('kingdomid')).order_by('t_kingdom')
+    print("Kingdom!")
     phylas = Phyla.objects.all().filter(phylaid__in=selected_taxa.values_list('phylaid')).order_by('t_phyla')
     classes = Class.objects.all().filter(classid__in=selected_taxa.values_list('classid')).order_by('t_class')
     orders = Order.objects.all().filter(orderid__in=selected_taxa.values_list('orderid')).order_by('t_order')
     families = Family.objects.all().filter(familyid__in=selected_taxa.values_list('familyid')).order_by('t_family')
     genera = Genus.objects.all().filter(genusid__in=selected_taxa.values_list('genusid')).order_by('t_genus')
     species = Species.objects.all().filter(speciesid__in=selected_taxa.values_list('speciesid')).order_by('t_species')
-
+    print("Passed stuff")
     for kingdom in kingdoms:
         myNode = {
             'title': kingdom.t_kingdom,

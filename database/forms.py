@@ -1,5 +1,6 @@
 from django import forms
 
+
 class UploadForm1(forms.Form):
     docfile1 = forms.FileField(label='Select meta_Project.csv file:')
     docfile2 = forms.FileField(label='Select meta_Sample.csv file:')
@@ -16,3 +17,4 @@ class UploadForm4(forms.Form):
 
 class UploadForm5(forms.Form):
     docfile7 = forms.FileField(label='Select MG-RAST table file:')
+
