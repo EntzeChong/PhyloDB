@@ -49,48 +49,16 @@ def getSelectedSamples(request):
 def getSampleTree(request):
     myTree = {'title': 'root', 'tooltip': 'root', 'isFolder': False,  'checkbox': False, 'expand': True, 'children': []}
     selected = [line.rstrip() for line in open('uploads/selected.txt')]
-    selected_samples = Sample.objects.filter(sampleid__in=selected)
 
-    sample_names = selected_samples.values_list('sample_name').distinct()
-    organisms = selected_samples.values_list('organism').distinct()
-    titles = selected_samples.values_list('title').distinct()
-    seq_methods = selected_samples.values_list('seq_method').distinct()
+    q = Sample.objects.values_list('usr_cat1').distinct()
+    print q
 
-    myNode = {'title': 'sample_name', 'isFolder': True, 'children': []}
+    #User-categorical
+    myNode = {'title': 'usr_cat1', 'isFolder': True, 'children': []}
     for item in sample_names:
         myNode1 = {
-            'title': str(item[0]),
-            'id': str(item[0]),
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
-
-    myNode = {'title': 'organism', 'isFolder': True, 'children': []}
-    for item in organisms:
-        myNode1 = {
-            'title': str(item[0]),
-            'id': str(item[0]),
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
-
-    myNode = {'title': 'title', 'isFolder': True, 'children': []}
-    for item in titles:
-        myNode1 = {
-            'title': str(item[0]),
-            'id': str(item[0]),
-            'isFolder': False,
-        }
-        myNode['children'].append(myNode1)
-    myTree['children'].append(myNode)
-
-    myNode = {'title': 'seq_method', 'isFolder': True, 'children': []}
-    for item in seq_methods:
-        myNode1 = {
-            'title': str(item[0]),
-            'id': str(item[0]),
+            'title': item.usr_cat1,
+            'id': item.usr_cat1,
             'isFolder': False,
         }
         myNode['children'].append(myNode1)
