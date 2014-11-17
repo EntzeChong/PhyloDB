@@ -129,5 +129,3 @@ def graph(request):
         'graph.html',
         context_instance=RequestContext(request)
     )
-
-

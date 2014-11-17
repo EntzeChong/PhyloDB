@@ -106,7 +106,7 @@ def parse_profile(taxonomy, shared, path, p_uuid):
                 samples_list.pop(0)
             else:
                 row = line.split('\t')
-                print row[0]
+#                print row[0]
                 for i in range(len(samples_list)):
                     count = int(row[i+1])
                     if count != 0:
@@ -123,5 +123,5 @@ def parse_profile(taxonomy, shared, path, p_uuid):
                         t_species = Species.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyid_id=t_family, genusid_id=t_genus, speciesName=taxon[6])
                         record = Profile(projectid=project, sampleid=sample, kingdomid=t_kingdom, phylaid=t_phyla, classid=t_class, orderid=t_order, familyid=t_family, genusid=t_genus, speciesid=t_species, count=count)
                         record.save()
-                        print str(name) + ' ' + str(taxon) + ' ' + str(count)
+ #                       print str(name) + ' ' + str(taxon) + ' ' + str(count)
                 j += 1

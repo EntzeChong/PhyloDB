@@ -18,3 +18,4 @@ class UploadForm4(forms.Form):
 class UploadForm5(forms.Form):
     docfile7 = forms.FileField(label='Select MG-RAST table file:')
 
+
