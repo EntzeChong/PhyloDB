@@ -1,7 +1,8 @@
 import simplejson
-from django.shortcuts import render_to_response
-from django.http import StreamingHttpResponse, HttpResponse
-from models import Project, Sample, Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
+import pickle
+from django.http import StreamingHttpResponse
+from models import Project, Sample, Collect, Climate, Soil_class, Soil_nutrient, Management, Microbial, User
+from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
 
 
 def getProjectTree(request):
@@ -41,16 +42,18 @@ def getProjectTree(request):
     return StreamingHttpResponse(response_dict, content_type='application/javascript')
 
 
-def getSelectedSamples(request):
-    selected = request.POST.getlist('list')
-    with open('uploads/selected.txt', 'wb+') as outfile:
-        outfile.write('\n'.join(selected))
+#def getSelectedSamples(request):
+#    selected = request.POST.getlist('list')
+#    with open('uploads/selected.txt', 'wb+') as outfile:
+#        outfile.write('\n'.join(selected))
 
 
 def getSampleTree(request):
-    myTree = {'title': 'root', 'tooltip': 'root', 'isFolder': False,  'hideCheckbox': True, 'expand': True, 'children': []}
-    selected = [line.rstrip() for line in open('uploads/selected.txt')]
+    samples = Sample.objects.all()
+    samples.query = pickle.loads(request.session['selected_samples'])
+    selected = samples.values_list('sampleid')
 
+    myTree = {'title': 'root', 'tooltip': 'root', 'isFolder': False,  'hideCheckbox': True, 'expand': True, 'children': []}
     mimark = {'title': 'MIMARKs', 'tooltip': 'MIMARKs', 'isFolder': True,  'hideCheckbox': True, 'children': []}
     collect = {'title': 'Sample Collection', 'tooltip': 'Sample Collection', 'isFolder': True,  'hideCheckbox': True, 'children': []}
     climate = {'title': 'Climate', 'tooltip': 'Climate', 'isFolder': True,  'hideCheckbox': True, 'children': []}
@@ -82,7 +85,7 @@ def getSampleTree(request):
     list = ['depth', 'pool_dna_extracts', 'samp_collection_device', 'sieving', 'storage_cond']
     for i in range(len(list)):
         myNode = {'title': list[i], 'isFolder': True, 'tooltip': list[i], 'children': []}
-        items = Sample.objects.values_list(str(list[i]), flat='True').filter(sampleid__in=selected).distinct()
+        items = Collect.objects.values_list(str(list[i]), flat='True').filter(sampleid_id__in=selected).distinct()
         for j in range(len(items)):
             myNode1 = {
                 'title': items[j],
@@ -106,7 +109,7 @@ def getSampleTree(request):
     list = ['drainage_class', 'fao_class', 'horizon', 'local_class', 'profile_position', 'slope_aspect', 'soil_type', 'texture_class']
     for i in range(len(list)):
         myNode = {'title': list[i], 'isFolder': True, 'tooltip': list[i], 'children': []}
-        items = Sample.objects.values_list(str(list[i]), flat='True').filter(sampleid__in=selected).distinct()
+        items = Soil_class.objects.values_list(str(list[i]), flat='True').filter(sampleid__in=selected).distinct()
         for j in range(len(items)):
             myNode1 = {
                 'title': items[j],
@@ -122,7 +125,7 @@ def getSampleTree(request):
         myNode = {'title': list[i], 'tooltip': list[i], 'isFolder': False}
         soil_class['children'].append(myNode)
 
-    list = ['pH', 'EC', 'tot_C', 'tot_OM', 'tot_N', 'NO3_N', 'NH4_N', 'P', 'K', 'S', 'Zn']
+    list = ['pH', 'EC', 'tot_C', 'tot_OM', 'tot_N', 'NO3_N', 'NH4_N', 'P', 'K', 'S', 'Zn', 'Fe', 'Cu', 'Mn', 'Ca', 'Mg', 'Na', 'B']
     for i in range(len(list)):
         myNode = {'title': list[i], 'tooltip': list[i], 'isFolder': False}
         soil_nutrient['children'].append(myNode)
@@ -130,7 +133,7 @@ def getSampleTree(request):
     list = ['agrochem_addition', 'biological_amendment', 'cover_crop', 'crop_rotation', 'cur_land_use', 'cur_vegetation', 'cur_crop', 'cur_cultivar', 'organic', 'previous_land_use', 'soil_amendments', 'tillage']
     for i in range(len(list)):
         myNode = {'title': list[i], 'isFolder': True, 'tooltip': list[i], 'children': []}
-        items = Sample.objects.values_list(str(list[i]), flat='True').filter(sampleid__in=selected).distinct()
+        items = Management.objects.values_list(str(list[i]), flat='True').filter(sampleid__in=selected).distinct()
         for j in range(len(items)):
             myNode1 = {
                 'title': items[j],
@@ -149,7 +152,7 @@ def getSampleTree(request):
     list = ['usr_cat1', 'usr_cat2', 'usr_cat3', 'usr_cat4', 'usr_cat5', 'usr_cat6']
     for i in range(len(list)):
         myNode = {'title': list[i], 'isFolder': True, 'tooltip': list[i], 'children': []}
-        items = Sample.objects.values_list(str(list[i]), flat='True').filter(sampleid__in=selected).distinct()
+        items = User.objects.values_list(str(list[i]), flat='True').filter(sampleid__in=selected).distinct()
         for j in range(len(items)):
             myNode1 = {
                 'title': items[j],
@@ -189,9 +192,13 @@ def getSampleTree(request):
 
 
 def getTaxaTree(request):
+    samples = Sample.objects.all()
+    samples.query = pickle.loads(request.session['selected_samples'])
+    selected = samples.values_list('sampleid')
+    selected_taxa = Profile.objects.filter(sampleid_id__in=selected)
+
     myTree = {'title': 'root', 'tooltip': 'root', 'isFolder': False, 'hideCheckbox': True, 'expand': True, 'children': []}
-    selected = [line.rstrip() for line in open("uploads/selected.txt")]
-    selected_taxa = Profile.objects.filter(sampleid_id__in=selected).distinct()
+
     kingdoms = Kingdom.objects.all().filter(kingdomid__in=selected_taxa.values_list('kingdomid')).order_by('kingdomName')
     phylas = Phyla.objects.all().filter(phylaid__in=selected_taxa.values_list('phylaid')).order_by('phylaName')
     classes = Class.objects.all().filter(classid__in=selected_taxa.values_list('classid')).order_by('className')
@@ -285,29 +292,55 @@ def getTaxaTree(request):
 
 
 def getMetaData(request):
+    samples = Sample.objects.all()
+    samples.query = pickle.loads(request.session['selected_samples'])
+    selected = samples.values_list('sampleid')
+
     if request.GET:
         response_dict = {}
         selKeys = request.GET['name']
-        print selKeys
+        #print selKeys
         count = int(100)
         response_dict.update({'success': True, 'keys': selKeys, 'count': count})
         return StreamingHttpResponse(response_dict)
 
 
 def getGraphData(request):
+    samples = Sample.objects.all()
+    samples.query = pickle.loads(request.session['selected_samples'])
+    selected = samples.values_list('sampleid')
+
     if request.method == 'GET':
-        formData = dict(request.GET.iterlists())
-        print 'All Data: ' + str(formData)
+        allJson =request.GET["all"]
+        all = simplejson.loads(allJson)
 
-        meta = (formData['metaValues'])[0].split('|')
-        print 'Meta: ' + str(meta)
+        meta = all["meta"]
+        taxa = all["taxa"]
 
-        taxa = (formData['taxaNames'])[0].split('|')
-        print 'Taxa: ' + str(taxa)
+        print meta
+        print taxa
 
-        #need to create a variable to replace sample_name
+        myDict = {}
+        var2 = str(meta)
+        var2 = var2.replace("[", "")
+        var2 = var2.replace("]", "")
+        var2 = var2.replace("u'", "")
+        var2 = var2.replace("'", "")
+        new = var2.split("|")
 
-        samples = Sample.objects.all().filter(sample_name__in=meta)
+        c = 0
+        while c < new.__len__():
+            data = new[c].split(":")
+            key = str(data[0])
+            myDict.setdefault(key, [])
+            value = str(data[1])
+            myDict[key].append(value)
+            c+=1
+
+        #print ("THIS IS THE DICTIONARY:")
+        #print myDict
+
+        samples = Sample.objects.all().filter(sample_name__in=meta).filter(sampleid__in=selected)
         for sample in samples:
             print sample.sample_name
 

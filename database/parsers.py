@@ -1,7 +1,8 @@
 import csv
 import re
 from uuid import uuid4
-from models import Project, Sample, Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
+from models import Project, Sample, Collect, Climate, Soil_class, Soil_nutrient, Management, Microbial, User
+from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
 
 import fileinput
 from itertools import izip
@@ -23,6 +24,23 @@ def parse_sample(Document, p_uuid):
         row_dict = row
         project = Project.objects.get(projectid=p_uuid)
         m = Sample(projectid=project, sampleid=s_uuid, **row_dict)
+        m.save()
+        sample = Sample.objects.get(sampleid=s_uuid)
+        m = Collect(projectid=project, sampleid=sample, **row_dict)
+        m.save()
+        m = Collect(projectid=project, sampleid=sample, **row_dict)
+        m.save()
+        m = Climate(projectid=project, sampleid=sample, **row_dict)
+        m.save()
+        m = Soil_class(projectid=project, sampleid=sample, **row_dict)
+        m.save()
+        m = Soil_nutrient(projectid=project, sampleid=sample, **row_dict)
+        m.save()
+        m = Management(projectid=project, sampleid=sample, **row_dict)
+        m.save()
+        m = Microbial(projectid=project, sampleid=sample, **row_dict)
+        m.save()
+        m = User(projectid=project, sampleid=sample, **row_dict)
         m.save()
 
 
@@ -106,7 +124,6 @@ def parse_profile(taxonomy, shared, path, p_uuid):
                 samples_list.pop(0)
             else:
                 row = line.split('\t')
-#                print row[0]
                 for i in range(len(samples_list)):
                     count = int(row[i+1])
                     if count != 0:
@@ -123,5 +140,21 @@ def parse_profile(taxonomy, shared, path, p_uuid):
                         t_species = Species.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyid_id=t_family, genusid_id=t_genus, speciesName=taxon[6])
                         record = Profile(projectid=project, sampleid=sample, kingdomid=t_kingdom, phylaid=t_phyla, classid=t_class, orderid=t_order, familyid=t_family, genusid=t_genus, speciesid=t_species, count=count)
                         record.save()
- #                       print str(name) + ' ' + str(taxon) + ' ' + str(count)
                 j += 1
+
+def taxaprofile(p_uuid):
+    samples = Sample.objects.all().filter(projectid_id=p_uuid)
+    kingdoms = Kingdom.objects.get('kingdomid').distinct()
+    #phylas = Phyla.objects.get('phylaid').distinct()
+    #class = Class.objects.get('phylaid').distinct()
+    #order = Order.objects.get('phylaid').distinct()
+    #family = Family.objects.get('phylaid').distinct()
+    #genus = Genus.objects.get('phylaid').distinct()
+    #species = Species.objects.get('phylaid').distinct()
+
+    for kingdom in kingdoms:
+        for sample in samples:
+            count = Profile.objects.aggregate('count').filter(sampleid_id=sample.sampleid).filter(kingdomid_id=kingdom.kingdomid)
+            print count
+            #create Dict
+            #save

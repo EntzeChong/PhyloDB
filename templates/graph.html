@@ -26,7 +26,7 @@
                     updateChart(node);
                     //updateDataTable();
                 }
-            }); // end tree
+        }); // end tree
 
             $("#tree_taxa").dynatree({
                 checkbox: true,
@@ -43,56 +43,41 @@
             }); // end tree
         }); // end function
 
-        function getMetaField(){
-            for (i in nodes) {
-               if (nodes[i].hasChildren() == true) {
-                   values = nodes[i].data.title + "|" + values;
-               }
-            }
-            return values.substring(0, values.length - 1);
-        }
-
         function getMetaValues() {
-            var values = "";
-
+            var string = "";
             var nodes = $("#tree_meta").dynatree("getSelectedNodes");
             for (i in nodes) {
-               if (nodes[i].hasChildren() == false) {
-                   values = nodes[i].data.title + "|" + values;
-               }
+                var value = nodes[i].data.title;
+                var parent = nodes[i].getParent();
+                var key = parent.data.title;
+                string = key + ":" + value  + "|" + string;
             }
-            return values.substring(0, values.length - 1);
+            return string.substring(0, string.length - 1);
         }
 
-        function getTaxaLevel() {
-            //do something
-        }
-
-        function getTaxaNames() {
-            var values = "";
+        function getTaxaValues() {
+            var string = "";
             var nodes = $("#tree_taxa").dynatree("getSelectedNodes");
-                for (i in nodes) {
-                    values = nodes[i].data.title + "|" + values;
-                }
-                return values.substring(0, values.length - 1);
+            for (i in nodes) {
+                var value = nodes[i].data.title;
+                var parent = nodes[i].getParent();
+                var key = parent.data.title;
+                string = key + ":" + value  + "|" + string;
+            }
+            return string.substring(0, string.length - 1);
         }
 
         function updateChart() {
-            var returnDict = {};
-            returnDict['metaValues'] = getMetaValues()
-            returnDict['taxaNames'] = getTaxaNames();
-
-            // above works but would prefer??
-            // but how do we deal with the changing key name in views...
-//            returnDict[getMetaField()] = getMetaValues();
-//            returnDict[getTaxaLevel()] = getTaxaLevel();
-
+            var myDict = {};
+            myDict['meta'] = getMetaValues();
+            myDict['taxa'] = getTaxaValues();
+            jsonDict = JSON.stringify(myDict);
 
             $.ajax({
                 url: '/getGraphData/',
                 type: 'GET',
                 dataType: 'jsonp',
-                data: returnDict,
+                data: {all: jsonDict},
                 success: function(result) {
                     alert(result);
                 }

@@ -1,6 +1,7 @@
 from django.db import models
 from django_extensions.db.fields import UUIDField
 
+
 class Project(models.Model):
     projectid = UUIDField(primary_key=True, editable=True)
     path = models.CharField(max_length=90)
@@ -30,6 +31,11 @@ class Sample(models.Model):
     lat_lon = models.CharField(max_length=45, blank=True)
     material = models.CharField(max_length=45, blank=True)
     elevation = models.CharField(max_length=45, blank=True)
+
+
+class Collect(models.Model):
+    sampleid = models.ForeignKey(Sample)
+    projectid = models.ForeignKey(Project)
     depth = models.CharField(max_length=45, blank=True)
     pool_dna_extracts = models.CharField(max_length=45, blank=True)
     samp_size = models.CharField(max_length=45, blank=True)
@@ -37,8 +43,18 @@ class Sample(models.Model):
     samp_weight_dna_ext = models.CharField(max_length=45, blank=True)
     sieving = models.CharField(max_length=45, blank=True)
     storage_cond = models.CharField(max_length=45, blank=True)
+
+
+class Climate(models.Model):
+    sampleid = models.ForeignKey(Sample)
+    projectid = models.ForeignKey(Project)
     annual_season_precpt = models.CharField(max_length=45, blank=True)
     annual_season_temp = models.CharField(max_length=45, blank=True)
+
+
+class Soil_class(models.Model):
+    sampleid = models.ForeignKey(Sample)
+    projectid = models.ForeignKey(Project)
     bulk_density = models.CharField(max_length=45, blank=True)
     drainage_class = models.CharField(max_length=45, blank=True)
     fao_class = models.CharField(max_length=45, blank=True)
@@ -51,6 +67,11 @@ class Sample(models.Model):
     soil_type = models.CharField(max_length=45, blank=True)
     texture_class = models.CharField(max_length=45, blank=True)
     water_content_soil = models.CharField(max_length=45, blank=True)
+
+
+class Soil_nutrient(models.Model):
+    sampleid = models.ForeignKey(Sample)
+    projectid = models.ForeignKey(Project)
     pH = models.CharField(max_length=45, blank=True)
     EC = models.CharField(max_length=45, blank=True)
     tot_C = models.CharField(max_length=45, blank=True)
@@ -69,6 +90,11 @@ class Sample(models.Model):
     Mg = models.CharField(max_length=45, blank=True)
     Na = models.CharField(max_length=45, blank=True)
     B = models.CharField(max_length=45, blank=True)
+
+
+class Management(models.Model):
+    sampleid = models.ForeignKey(Sample)
+    projectid = models.ForeignKey(Project)
     agrochem_addition = models.CharField(max_length=45, blank=True)
     biological_amendment = models.CharField(max_length=45, blank=True)
     cover_crop = models.CharField(max_length=45, blank=True)
@@ -81,10 +107,19 @@ class Sample(models.Model):
     previous_land_use = models.CharField(max_length=45, blank=True)
     soil_amendments = models.CharField(max_length=45, blank=True)
     tillage = models.CharField(max_length=45, blank=True)
+
+
+class Microbial(models.Model):
+    sampleid = models.ForeignKey(Sample)
+    projectid = models.ForeignKey(Project)
     rRNA_copies = models.CharField(max_length=45, blank=True)
     microbial_biomass_C = models.CharField(max_length=45, blank=True)
     microbial_biomass_N = models.CharField(max_length=45, blank=True)
     microbial_respiration = models.CharField(max_length=45, blank=True)
+
+class User(models.Model):
+    sampleid = models.ForeignKey(Sample)
+    projectid = models.ForeignKey(Project)
     usr_cat1 = models.CharField(max_length=45, blank=True)
     usr_cat2 = models.CharField(max_length=45, blank=True)
     usr_cat3 = models.CharField(max_length=45, blank=True)
@@ -97,7 +132,6 @@ class Sample(models.Model):
     usr_quant4 = models.CharField(max_length=45, blank=True)
     usr_quant5 = models.CharField(max_length=45, blank=True)
     usr_quant6 = models.CharField(max_length=45, blank=True)
-
 
 class Kingdom(models.Model):
     kingdomid = UUIDField(primary_key=True, editable=True)
@@ -167,3 +201,51 @@ class Profile(models.Model):
     speciesid = models.ForeignKey(Species)
     count = models.IntegerField()
 
+
+class ProfileKingdom(models.Model):
+    projectid = models.ForeignKey(Project)
+    sampleid = models.ForeignKey(Sample)
+    kingdomid = models.ForeignKey(Kingdom)
+    count = models.IntegerField()
+
+
+class ProfilePhyla(models.Model):
+    projectid = models.ForeignKey(Project)
+    sampleid = models.ForeignKey(Sample)
+    phylaid = models.ForeignKey(Phyla)
+    count = models.IntegerField()
+
+
+class ProfileClass(models.Model):
+    projectid = models.ForeignKey(Project)
+    sampleid = models.ForeignKey(Sample)
+    classid = models.ForeignKey(Class)
+    count = models.IntegerField()
+
+
+class ProfileOrder(models.Model):
+    projectid = models.ForeignKey(Project)
+    sampleid = models.ForeignKey(Sample)
+    orderid = models.ForeignKey(Order)
+    count = models.IntegerField()
+
+
+class ProfileFamily(models.Model):
+    projectid = models.ForeignKey(Project)
+    sampleid = models.ForeignKey(Sample)
+    familyid = models.ForeignKey(Family)
+    count = models.IntegerField()
+
+
+class ProfileGenus(models.Model):
+    projectid = models.ForeignKey(Project)
+    sampleid = models.ForeignKey(Sample)
+    genusid = models.ForeignKey(Genus)
+    count = models.IntegerField()
+
+
+class ProfileSpecies(models.Model):
+    projectid = models.ForeignKey(Project)
+    sampleid = models.ForeignKey(Sample)
+    speciesid = models.ForeignKey(Species)
+    count = models.IntegerField()

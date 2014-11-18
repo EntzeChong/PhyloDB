@@ -42,17 +42,6 @@
                     $('#selected .list').append("<li>Click submit button to proceed")
                 }
             }); // end dynatree
-
-            $('#form').submit(function(){
-                $.ajax({
-                    type: 'post',
-                    async: false,
-                    url: '/getSelectedSamples/',
-                    data: $(this).serialize()
-                    });
-
-            });
-
         }); // end original function()
     </script>
 {% endblock %}
@@ -61,7 +50,7 @@
     <h2>Select any combination of data for analysis:</h2>
     <div id="tree"></div>
 
-    <form id="form" action="{% url 'graph' %}">
+    <form id="form" method="post" action="{% url 'graph' %}">
         {% csrf_token %}
         <div id="selected">
             <ul class="list">

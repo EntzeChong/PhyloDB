@@ -1,11 +1,12 @@
 import datetime
+import pickle
 from uuid import uuid4
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from models import Project
+from models import Project, Sample
 from forms import UploadForm1, UploadForm2, UploadForm3, UploadForm4, UploadForm5
 from utils import handle_uploaded_file, remove_list
-from parsers import parse_project, parse_sample, parse_taxonomy, parse_profile
+from parsers import parse_project, parse_sample, parse_taxonomy, parse_profile, taxaprofile
 
 
 def home(request):
@@ -53,6 +54,9 @@ def upload(request):
                 handle_uploaded_file(file4, dest, shared)
                 parse_profile(file3, file4, dest, p_uuid)
                 print("Parsed profile!")
+
+                taxaprofile(p_uuid)
+
 
             elif form3.is_valid():
                 name = ".".join(["project", "csv"])
@@ -125,6 +129,12 @@ def select(request):
 
 
 def graph(request):
+    list_unicode = request.POST.getlist('list')
+    list_asci = [s.encode('asci') for s in list_unicode]
+
+    qs = Sample.objects.all().filter(sampleid_in=list_asci).values_list('sampleid')
+    request.session['selected_samples'] = pickle.dumps(qs.query)
+
     return render_to_response(
         'graph.html',
         context_instance=RequestContext(request)
