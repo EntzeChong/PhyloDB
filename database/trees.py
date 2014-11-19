@@ -42,12 +42,6 @@ def getProjectTree(request):
     return StreamingHttpResponse(response_dict, content_type='application/javascript')
 
 
-#def getSelectedSamples(request):
-#    selected = request.POST.getlist('list')
-#    with open('uploads/selected.txt', 'wb+') as outfile:
-#        outfile.write('\n'.join(selected))
-
-
 def getSampleTree(request):
     samples = Sample.objects.all()
     samples.query = pickle.loads(request.session['selected_samples'])
@@ -291,20 +285,6 @@ def getTaxaTree(request):
     return StreamingHttpResponse(response_dict, content_type='application/javascript')
 
 
-def getMetaData(request):
-    samples = Sample.objects.all()
-    samples.query = pickle.loads(request.session['selected_samples'])
-    selected = samples.values_list('sampleid')
-
-    if request.GET:
-        response_dict = {}
-        selKeys = request.GET['name']
-        #print selKeys
-        count = int(100)
-        response_dict.update({'success': True, 'keys': selKeys, 'count': count})
-        return StreamingHttpResponse(response_dict)
-
-
 def getGraphData(request):
     samples = Sample.objects.all()
     samples.query = pickle.loads(request.session['selected_samples'])
@@ -313,34 +293,39 @@ def getGraphData(request):
     if request.method == 'GET':
         allJson =request.GET["all"]
         all = simplejson.loads(allJson)
-
         meta = all["meta"]
         taxa = all["taxa"]
 
-        print meta
-        print taxa
-
-        myDict = {}
-        var2 = str(meta)
-        var2 = var2.replace("[", "")
-        var2 = var2.replace("]", "")
-        var2 = var2.replace("u'", "")
-        var2 = var2.replace("'", "")
-        new = var2.split("|")
-
+        metaList = meta.split("|")
+        metaDict = {}
         c = 0
-        while c < new.__len__():
-            data = new[c].split(":")
-            key = str(data[0])
-            myDict.setdefault(key, [])
-            value = str(data[1])
-            myDict[key].append(value)
-            c+=1
+        while c < metaList.__len__():
+            data = metaList[c].split(":")
+            key = data[0]
+            metaDict.setdefault(key, [])
+            value = data[1]
+            metaDict[key].append(value)
+            c += 1
 
-        #print ("THIS IS THE DICTIONARY:")
-        #print myDict
+        taxaList = taxa.split("|")
+        taxaDict = {}
+        c = 0
+        while c < taxaList.__len__():
+            data = taxaList[c].split(":")
+            key = data[0]
+            taxaDict.setdefault(key, [])
+            value = data[1]
+            taxaDict[key].append(value)
+            c += 1
 
-        samples = Sample.objects.all().filter(sample_name__in=meta).filter(sampleid__in=selected)
+        print metaDict
+        print taxaDict
+
+        metaSel = metaDict['sample_name']
+        taxaSel = taxaDict['Phyla']
+
+        # Add loop or wildcards here...
+        samples = Sample.objects.all().filter(sample_name__in=metaSel).filter(sampleid__in=selected)
         for sample in samples:
             print sample.sample_name
 

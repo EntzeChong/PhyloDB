@@ -249,3 +249,4 @@ class ProfileSpecies(models.Model):
     sampleid = models.ForeignKey(Sample)
     speciesid = models.ForeignKey(Species)
     count = models.IntegerField()
+

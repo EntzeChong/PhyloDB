@@ -11,7 +11,6 @@ urlpatterns = patterns('',
     url(r'^getSampleTree/$', 'database.trees.getSampleTree', name='getSampleTree'),
     url(r'^getTaxaTree/$', 'database.trees.getTaxaTree', name='getTaxaTree'),
 
-    url(r'^getMetaData/$', 'database.trees.getMetaData', name='getMetaData'),
     url(r'^getGraphData', 'database.trees.getGraphData', name='getGraphData'),
 
 )

@@ -3,6 +3,8 @@ import re
 from uuid import uuid4
 from models import Project, Sample, Collect, Climate, Soil_class, Soil_nutrient, Management, Microbial, User
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
+from models import ProfileKingdom, ProfilePhyla, ProfileClass, ProfileOrder, ProfileFamily, ProfileGenus, ProfileSpecies
+from django.db.models import Sum
 
 import fileinput
 from itertools import izip
@@ -21,26 +23,47 @@ def parse_sample(Document, p_uuid):
     Document.close()
     for row in f:
         s_uuid = uuid4().hex
-        row_dict = row
+        rowDict = row
         project = Project.objects.get(projectid=p_uuid)
-        m = Sample(projectid=project, sampleid=s_uuid, **row_dict)
+        wanted_keys = ['sample_name', 'organism', 'title', 'seq_method', 'collection_date', 'biome', 'feature', 'geo_loc', 'lat_lon', 'material', 'elevation']
+        sampleDict = {x: rowDict[x] for x in wanted_keys if x in rowDict}
+        m = Sample(projectid=project, sampleid=s_uuid, **sampleDict)
         m.save()
         sample = Sample.objects.get(sampleid=s_uuid)
-        m = Collect(projectid=project, sampleid=sample, **row_dict)
+
+        wanted_keys = ['depth', 'pool_dna_extracts', 'samp_size', 'samp_collection_device', 'samp_weight_dna_ext', 'sieving', 'storage_cond']
+        collectDict = {x: rowDict[x] for x in wanted_keys if x in rowDict}
+        m = Collect(projectid=project, sampleid=sample, **collectDict)
         m.save()
-        m = Collect(projectid=project, sampleid=sample, **row_dict)
+
+        wanted_keys = ['annual_season_precpt', 'annual_season_temp']
+        climateDict = {x: rowDict[x] for x in wanted_keys if x in rowDict}
+        m = Climate(projectid=project, sampleid=sample, **climateDict)
         m.save()
-        m = Climate(projectid=project, sampleid=sample, **row_dict)
+
+        wanted_keys = ['bulk_density', 'drainage_class', 'fao_class', 'horizon', 'local_class', 'porosity', 'profile_position', 'slope_aspect', 'slope_gradient', 'soil_type', 'texture_class', 'water_content_soil']
+        soil_classDict = {x: rowDict[x] for x in wanted_keys if x in rowDict}
+        m = Soil_class(projectid=project, sampleid=sample, **soil_classDict)
         m.save()
-        m = Soil_class(projectid=project, sampleid=sample, **row_dict)
+
+        wanted_keys = ['pH', 'EC', 'tot_C', 'tot_OM', 'tot_N', 'NO3_N', 'NH4_mN', 'P', 'K', 'S', 'Zn', 'Fe', 'Cu', 'Mn', 'Ca', 'Mg', 'Na', 'B']
+        soil_nutrDict = {x: rowDict[x] for x in wanted_keys if x in rowDict}
+        m = Soil_nutrient(projectid=project, sampleid=sample, **soil_nutrDict)
         m.save()
-        m = Soil_nutrient(projectid=project, sampleid=sample, **row_dict)
+
+        wanted_keys = ['agrochem_addition', 'biological_amendment', 'cover_crop', 'crop_rotation', 'cur_land_use', 'cur_vegetation', 'cur_crop', 'cur_cultivar', 'organic', 'previous_land_use', 'soil_amendments', 'tillage']
+        mgtDict = {x: rowDict[x] for x in wanted_keys if x in rowDict}
+        m = Management(projectid=project, sampleid=sample, **mgtDict)
         m.save()
-        m = Management(projectid=project, sampleid=sample, **row_dict)
+
+        wanted_keys = ['rRNA_copies', 'microbial_biomass_C', 'microbial_biomass_N', 'microbial_respiration']
+        microbeDict = {x: rowDict[x] for x in wanted_keys if x in rowDict}
+        m = Microbial(projectid=project, sampleid=sample, **microbeDict)
         m.save()
-        m = Microbial(projectid=project, sampleid=sample, **row_dict)
-        m.save()
-        m = User(projectid=project, sampleid=sample, **row_dict)
+
+        wanted_keys = ['usr_cat1', 'usr_cat2', 'usr_cat3', 'usr_cat4', 'usr_cat5', 'usr_cat6', 'usr_quant1', 'usr_quant2', 'usr_quant3', 'usr_quant4', 'usr_quant5', 'usr_quant6']
+        userDict = {x: rowDict[x] for x in wanted_keys if x in rowDict}
+        m = User(projectid=project, sampleid=sample, **userDict)
         m.save()
 
 
@@ -143,18 +166,95 @@ def parse_profile(taxonomy, shared, path, p_uuid):
                 j += 1
 
 def taxaprofile(p_uuid):
-    samples = Sample.objects.all().filter(projectid_id=p_uuid)
-    kingdoms = Kingdom.objects.get('kingdomid').distinct()
-    #phylas = Phyla.objects.get('phylaid').distinct()
-    #class = Class.objects.get('phylaid').distinct()
-    #order = Order.objects.get('phylaid').distinct()
-    #family = Family.objects.get('phylaid').distinct()
-    #genus = Genus.objects.get('phylaid').distinct()
-    #species = Species.objects.get('phylaid').distinct()
+    project = Project.objects.get(projectid=p_uuid)
 
-    for kingdom in kingdoms:
-        for sample in samples:
-            count = Profile.objects.aggregate('count').filter(sampleid_id=sample.sampleid).filter(kingdomid_id=kingdom.kingdomid)
-            print count
-            #create Dict
-            #save
+    count = Profile.objects.values('kingdomid', 'sampleid').annotate(sum=Sum('count'))
+    for i in count:
+        myDict = i
+        myDict['count'] = myDict.pop('sum')
+        s_uuid = myDict['sampleid']
+        sample = Sample.objects.get(sampleid=s_uuid)
+        del myDict['sampleid']
+        k_uuid = myDict['kingdomid']
+        kingdom = Kingdom.objects.get(kingdomid=k_uuid)
+        del myDict['kingdomid']
+        m = ProfileKingdom(projectid=project, sampleid=sample, kingdomid=kingdom, **myDict)
+        m.save()
+
+    count = Profile.objects.values('phylaid', 'sampleid').annotate(sum=Sum('count'))
+    for i in count:
+        myDict = i
+        myDict['count'] = myDict.pop('sum')
+        s_uuid = myDict['sampleid']
+        sample = Sample.objects.get(sampleid=s_uuid)
+        del myDict['sampleid']
+        p_uuid = myDict['phylaid']
+        phyla = Phyla.objects.get(phylaid=p_uuid)
+        del myDict['phylaid']
+        m = ProfilePhyla(projectid=project, sampleid=sample, phylaid=phyla, **myDict)
+        m.save()
+
+    count = Profile.objects.values('classid', 'sampleid').annotate(sum=Sum('count'))
+    for i in count:
+        myDict = i
+        myDict['count'] = myDict.pop('sum')
+        s_uuid = myDict['sampleid']
+        sample = Sample.objects.get(sampleid=s_uuid)
+        del myDict['sampleid']
+        c_uuid = myDict['classid']
+        tclass = Class.objects.get(classid=c_uuid)
+        del myDict['classid']
+        m = ProfileClass(projectid=project, sampleid=sample, classid=tclass, **myDict)
+        m.save()
+
+    count = Profile.objects.values('orderid', 'sampleid').annotate(sum=Sum('count'))
+    for i in count:
+        myDict = i
+        myDict['count'] = myDict.pop('sum')
+        s_uuid = myDict['sampleid']
+        sample = Sample.objects.get(sampleid=s_uuid)
+        del myDict['sampleid']
+        o_uuid = myDict['orderid']
+        order = Order.objects.get(orderid=o_uuid)
+        del myDict['orderid']
+        m = ProfileOrder(projectid=project, sampleid=sample, orderid=order, **myDict)
+        m.save()
+
+    count = Profile.objects.values('familyid', 'sampleid').annotate(sum=Sum('count'))
+    for i in count:
+        myDict = i
+        myDict['count'] = myDict.pop('sum')
+        s_uuid = myDict['sampleid']
+        sample = Sample.objects.get(sampleid=s_uuid)
+        del myDict['sampleid']
+        f_uuid = myDict['familyid']
+        family = Family.objects.get(familyid=f_uuid)
+        del myDict['familyid']
+        m = ProfileFamily(projectid=project, sampleid=sample, familyid=family, **myDict)
+        m.save()
+
+    count = Profile.objects.values('genusid', 'sampleid').annotate(sum=Sum('count'))
+    for i in count:
+        myDict = i
+        myDict['count'] = myDict.pop('sum')
+        s_uuid = myDict['sampleid']
+        sample = Sample.objects.get(sampleid=s_uuid)
+        del myDict['sampleid']
+        g_uuid = myDict['genusid']
+        genus = Genus.objects.get(genusid=g_uuid)
+        del myDict['genusid']
+        m = ProfileGenus(projectid=project, sampleid=sample, genusid=genus, **myDict)
+        m.save()
+
+    count = Profile.objects.values('speciesid', 'sampleid').annotate(sum=Sum('count'))
+    for i in count:
+        myDict = i
+        myDict['count'] = myDict.pop('sum')
+        s_uuid = myDict['sampleid']
+        sample = Sample.objects.get(sampleid=s_uuid)
+        del myDict['sampleid']
+        sp_uuid = myDict['speciesid']
+        species = Species.objects.get(speciesid=sp_uuid)
+        del myDict['speciesid']
+        m = ProfileSpecies(projectid=project, sampleid=sample, speciesid=species, **myDict)
+        m.save()

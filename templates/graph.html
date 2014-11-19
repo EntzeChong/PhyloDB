@@ -59,9 +59,8 @@
             var string = "";
             var nodes = $("#tree_taxa").dynatree("getSelectedNodes");
             for (i in nodes) {
-                var value = nodes[i].data.title;
-                var parent = nodes[i].getParent();
-                var key = parent.data.title;
+                var value = nodes[i].data.id;
+                var key = nodes[i].data.tooltip;
                 string = key + ":" + value  + "|" + string;
             }
             return string.substring(0, string.length - 1);

@@ -56,7 +56,7 @@ def upload(request):
                 print("Parsed profile!")
 
                 taxaprofile(p_uuid)
-
+                print("Taxa profiles created")
 
             elif form3.is_valid():
                 name = ".".join(["project", "csv"])
@@ -130,9 +130,9 @@ def select(request):
 
 def graph(request):
     list_unicode = request.POST.getlist('list')
-    list_asci = [s.encode('asci') for s in list_unicode]
+    list_ascii = [s.encode('ascii') for s in list_unicode]
 
-    qs = Sample.objects.all().filter(sampleid_in=list_asci).values_list('sampleid')
+    qs = Sample.objects.all().filter(sampleid__in=list_ascii).values_list('sampleid')
     request.session['selected_samples'] = pickle.dumps(qs.query)
 
     return render_to_response(
