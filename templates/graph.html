@@ -50,7 +50,7 @@
                 var value = nodes[i].data.title;
                 var parent = nodes[i].getParent();
                 var key = parent.data.title;
-                string = key + ":" + value  + "|" + string;
+                string = key + "//" + value  + "|" + string;
             }
             return string.substring(0, string.length - 1);
         }
@@ -61,7 +61,7 @@
             for (i in nodes) {
                 var value = nodes[i].data.id;
                 var key = nodes[i].data.tooltip;
-                string = key + ":" + value  + "|" + string;
+                string = key + "//" + value  + "|" + string;
             }
             return string.substring(0, string.length - 1);
         }

@@ -1,9 +1,10 @@
 import simplejson
 import pickle
 from django.http import StreamingHttpResponse
+from django.db.models import Sum
 from models import Project, Sample, Collect, Climate, Soil_class, Soil_nutrient, Management, Microbial, User
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
-
+from models import ProfileKingdom, ProfilePhyla, ProfileClass, ProfileOrder, ProfileFamily, ProfileGenus, ProfileSpecies
 
 def getProjectTree(request):
     myTree = {'title': 'All Projects', 'isFolder': True, 'expand': True, 'children': []}
@@ -290,45 +291,72 @@ def getGraphData(request):
     samples.query = pickle.loads(request.session['selected_samples'])
     selected = samples.values_list('sampleid')
 
+
     if request.method == 'GET':
         allJson =request.GET["all"]
         all = simplejson.loads(allJson)
-        meta = all["meta"]
-        taxa = all["taxa"]
 
-        metaList = meta.split("|")
-        metaDict = {}
-        c = 0
-        while c < metaList.__len__():
-            data = metaList[c].split(":")
-            key = data[0]
-            metaDict.setdefault(key, [])
-            value = data[1]
-            metaDict[key].append(value)
-            c += 1
+        if all["meta"]:
+            meta = all["meta"]
+            metaList = meta.split("|")
+            metaDict = {}
+            c = 0
+            while c < metaList.__len__():
+                data = metaList[c].split("//")
+                key = data[0]
+                metaDict.setdefault(key, [])
+                value = data[1]
+                metaDict[key].append(value)
+                c += 1
+        else:
+            metaDict = {}
 
-        taxaList = taxa.split("|")
-        taxaDict = {}
-        c = 0
-        while c < taxaList.__len__():
-            data = taxaList[c].split(":")
-            key = data[0]
-            taxaDict.setdefault(key, [])
-            value = data[1]
-            taxaDict[key].append(value)
-            c += 1
+        if all["taxa"]:
+            taxa = all["taxa"]
+            taxaList = taxa.split("|")
+            taxaDict = {}
+            c = 0
+            while c < taxaList.__len__():
+                data = taxaList[c].split("//")
+                key = data[0]
+                taxaDict.setdefault(key, [])
+                value = data[1]
+                taxaDict[key].append(value)
+                c += 1
 
-        print metaDict
-        print taxaDict
+        else:
+            taxaDict = {}
 
-        metaSel = metaDict['sample_name']
-        taxaSel = taxaDict['Phyla']
+        phylas = ProfilePhyla.objects.all().filter(sampleid_id__in=selected)
+        for item in phylas:
+            print item.sampleid
+            print item.phylaid
+            print item.count
 
-        # Add loop or wildcards here...
-        samples = Sample.objects.all().filter(sample_name__in=metaSel).filter(sampleid__in=selected)
-        for sample in samples:
-            print sample.sample_name
+        #phyla = taxaDict['Phyla']
+        #phylas = ProfilePhyla.objects.all().filter(phylaid_id__in=phyla).filter(sampleid_id__in=selected)
 
+        if metaDict['MIMARKs']:
+            finalmimarkDict = {}
+            mimarkDict = metaDict['MIMARKs']    # list of fields in Dict/Table
+            for item in mimarkDict:
+                if metaDict[item]:
+                    list = metaDict[item]     # list of values with the above field
+                    for i in list:
+                        qs1 = selected.filter(**{item: i})
+                        qs2 = phylas.filter(sampleid_id=qs1).values('count')
+                        count = str(qs2[0]['count'])
+                        finalmimarkDict.setdefault(item, [])
+                        value = str(i) + ":" + str(count)
+                        finalmimarkDict[item].append(value)
+                else:
+                    pass
+        else:
+            finalmimarkDict = {}
+
+        print finalmimarkDict
+
+    # not sure what where doing here or if needed...
     elif request.method == 'POST':
         formData = dict(request.POST.iterlists())
         nodes = (formData['nodes'])[0].split('|')
