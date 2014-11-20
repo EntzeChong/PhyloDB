@@ -167,82 +167,94 @@ def parse_profile(taxonomy, shared, path, p_uuid):
 
 def taxaprofile(p_uuid):
     project = Project.objects.get(projectid=p_uuid)
-    sample_list = Sample.objects.values_list('sampleid')
 
-    for item in sample_list:
-        count = Profile.objects.filter(sampleid=item).values('kingdomid').annotate(sum=Sum('count'))
-        for i in count:
-            myDict = i
-            myDict['count'] = myDict.pop('sum')
-            sample = Sample.objects.get(sampleid=item)
-            k_uuid = myDict['kingdomid']
-            kingdom = Kingdom.objects.get(kingdomid=k_uuid)
-            del myDict['kingdomid']
-            m = ProfileKingdom(projectid=project, sampleid=sample, kingdomid=kingdom, **myDict)
-            m.save()
+    count = Profile.objects.values('kingdomid', 'sampleid').annotate(sum=Sum('count'))
+    for i in count:
+        myDict = i
+        myDict['count'] = myDict.pop('sum')
+        s_uuid = myDict['sampleid']
+        sample = Sample.objects.get(sampleid=s_uuid)
+        del myDict['sampleid']
+        k_uuid = myDict['kingdomid']
+        kingdom = Kingdom.objects.get(kingdomid=k_uuid)
+        del myDict['kingdomid']
+        m = ProfileKingdom(projectid=project, sampleid=sample, kingdomid=kingdom, **myDict)
+        m.save()
 
-        count = Profile.objects.filter(sampleid=item).values('phylaid').annotate(sum=Sum('count'))
-        for i in count:
-            myDict = i
-            myDict['count'] = myDict.pop('sum')
-            sample = Sample.objects.get(sampleid=item)
-            p_uuid = myDict['phylaid']
-            phyla = Phyla.objects.get(phylaid=p_uuid)
-            del myDict['phylaid']
-            m = ProfilePhyla(projectid=project, sampleid=sample, phylaid=phyla, **myDict)
-            m.save()
+    count = Profile.objects.values('phylaid', 'sampleid').annotate(sum=Sum('count'))
+    for i in count:
+         myDict = i
+         myDict['count'] = myDict.pop('sum')
+         s_uuid = myDict['sampleid']
+         sample = Sample.objects.get(sampleid=s_uuid)
+         del myDict['sampleid']
+         p_uuid = myDict['phylaid']
+         phyla = Phyla.objects.get(phylaid=p_uuid)
+         del myDict['phylaid']
+         m = ProfilePhyla(projectid=project, sampleid=sample, phylaid=phyla, **myDict)
+         m.save()
 
-        count = Profile.objects.filter(sampleid=item).values('classid').annotate(sum=Sum('count'))
-        for i in count:
-            myDict = i
-            myDict['count'] = myDict.pop('sum')
-            sample = Sample.objects.get(sampleid=item)
-            c_uuid = myDict['classid']
-            tclass = Class.objects.get(classid=c_uuid)
-            del myDict['classid']
-            m = ProfileClass(projectid=project, sampleid=sample, classid=tclass, **myDict)
-            m.save()
+    count = Profile.objects.values('classid', 'sampleid').annotate(sum=Sum('count'))
+    for i in count:
+         myDict = i
+         myDict['count'] = myDict.pop('sum')
+         s_uuid = myDict['sampleid']
+         sample = Sample.objects.get(sampleid=s_uuid)
+         del myDict['sampleid']
+         c_uuid = myDict['classid']
+         tclass = Class.objects.get(classid=c_uuid)
+         del myDict['classid']
+         m = ProfileClass(projectid=project, sampleid=sample, classid=tclass, **myDict)
+         m.save()
 
-        count = Profile.objects.filter(sampleid=item).values('orderid').annotate(sum=Sum('count'))
-        for i in count:
-            myDict = i
-            myDict['count'] = myDict.pop('sum')
-            sample = Sample.objects.get(sampleid=item)
-            o_uuid = myDict['orderid']
-            order = Order.objects.get(orderid=o_uuid)
-            del myDict['orderid']
-            m = ProfileOrder(projectid=project, sampleid=sample, orderid=order, **myDict)
-            m.save()
+    count = Profile.objects.values('orderid', 'sampleid').annotate(sum=Sum('count'))
+    for i in count:
+         myDict = i
+         myDict['count'] = myDict.pop('sum')
+         s_uuid = myDict['sampleid']
+         sample = Sample.objects.get(sampleid=s_uuid)
+         del myDict['sampleid']
+         o_uuid = myDict['orderid']
+         order = Order.objects.get(orderid=o_uuid)
+         del myDict['orderid']
+         m = ProfileOrder(projectid=project, sampleid=sample, orderid=order, **myDict)
+         m.save()
 
-        count = Profile.objects.filter(sampleid=item).values('familyid').annotate(sum=Sum('count'))
-        for i in count:
-            myDict = i
-            myDict['count'] = myDict.pop('sum')
-            sample = Sample.objects.get(sampleid=item)
-            f_uuid = myDict['familyid']
-            family = Family.objects.get(familyid=f_uuid)
-            del myDict['familyid']
-            m = ProfileFamily(projectid=project, sampleid=sample, familyid=family, **myDict)
-            m.save()
+    count = Profile.objects.values('familyid', 'sampleid').annotate(sum=Sum('count'))
+    for i in count:
+         myDict = i
+         myDict['count'] = myDict.pop('sum')
+         s_uuid = myDict['sampleid']
+         sample = Sample.objects.get(sampleid=s_uuid)
+         del myDict['sampleid']
+         f_uuid = myDict['familyid']
+         family = Family.objects.get(familyid=f_uuid)
+         del myDict['familyid']
+         m = ProfileFamily(projectid=project, sampleid=sample, familyid=family, **myDict)
+         m.save()
 
-        count = Profile.objects.filter(sampleid=item).values('genusid').annotate(sum=Sum('count'))
-        for i in count:
-            myDict = i
-            myDict['count'] = myDict.pop('sum')
-            sample = Sample.objects.get(sampleid=item)
-            g_uuid = myDict['genusid']
-            genus = Genus.objects.get(genusid=g_uuid)
-            del myDict['genusid']
-            m = ProfileGenus(projectid=project, sampleid=sample, genusid=genus, **myDict)
-            m.save()
+    count = Profile.objects.values('genusid', 'sampleid').annotate(sum=Sum('count'))
+    for i in count:
+         myDict = i
+         myDict['count'] = myDict.pop('sum')
+         s_uuid = myDict['sampleid']
+         sample = Sample.objects.get(sampleid=s_uuid)
+         del myDict['sampleid']
+         g_uuid = myDict['genusid']
+         genus = Genus.objects.get(genusid=g_uuid)
+         del myDict['genusid']
+         m = ProfileGenus(projectid=project, sampleid=sample, genusid=genus, **myDict)
+         m.save()
 
-        count = Profile.objects.filter(sampleid=item).values('speciesid').annotate(sum=Sum('count'))
-        for i in count:
-            myDict = i
-            myDict['count'] = myDict.pop('sum')
-            sample = Sample.objects.get(sampleid=item)
-            sp_uuid = myDict['speciesid']
-            species = Species.objects.get(speciesid=sp_uuid)
-            del myDict['speciesid']
-            m = ProfileSpecies(projectid=project, sampleid=sample, speciesid=species, **myDict)
-            m.save()
+    count = Profile.objects.values('speciesid', 'sampleid').annotate(sum=Sum('count'))
+    for i in count:
+         myDict = i
+         myDict['count'] = myDict.pop('sum')
+         s_uuid = myDict['sampleid']
+         sample = Sample.objects.get(sampleid=s_uuid)
+         del myDict['sampleid']
+         sp_uuid = myDict['speciesid']
+         species = Species.objects.get(speciesid=sp_uuid)
+         del myDict['speciesid']
+         m = ProfileSpecies(projectid=project, sampleid=sample, speciesid=species, **myDict)
+         m.save()

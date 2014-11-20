@@ -1,7 +1,8 @@
 import simplejson
 import pickle
 from django.http import StreamingHttpResponse
-from django.db.models import Sum
+from django.db.models import Sum, Avg
+from itertools import izip
 from models import Project, Sample, Collect, Climate, Soil_class, Soil_nutrient, Management, Microbial, User
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
 from models import ProfileKingdom, ProfilePhyla, ProfileClass, ProfileOrder, ProfileFamily, ProfileGenus, ProfileSpecies
@@ -290,7 +291,28 @@ def getGraphData(request):
     samples = Sample.objects.all()
     samples.query = pickle.loads(request.session['selected_samples'])
     selected = samples.values_list('sampleid')
+    selected_samples = Sample.objects.all().filter(sampleid__in=selected)
 
+
+    # iterate through metaDict and taxaDict with the following...
+    # this will only work if we select a single phyla (taxa) at a time first...
+    table = Sample
+    field = 'organism'
+    annotate_field = 'profilephyla' + '__count'
+    items = table.objects.filter(sampleid__in=selected).values('sampleid', field).annotate(sum=Sum(annotate_field))
+
+    #in same loop, filter with taxa-specific list of sample ids
+    items = items.filter(sampleid='17a74c628bbc4e8886c5be2fb1ca8368')
+    for i in range(len(items)):
+        print items[i]['sampleid']
+        print items[i]['sum']
+
+
+    # get sums
+
+    #average sums
+
+    #create json list with taxa, field and ave
 
     if request.method == 'GET':
         allJson =request.GET["all"]
@@ -327,34 +349,26 @@ def getGraphData(request):
         else:
             taxaDict = {}
 
-        phylas = ProfilePhyla.objects.all().filter(sampleid_id__in=selected)
-        for item in phylas:
-            print item.sampleid
-            print item.phylaid
-            print item.count
-
-        #phyla = taxaDict['Phyla']
-        #phylas = ProfilePhyla.objects.all().filter(phylaid_id__in=phyla).filter(sampleid_id__in=selected)
+        print metaDict
+        print taxaDict
 
         if metaDict['MIMARKs']:
             finalmimarkDict = {}
             mimarkDict = metaDict['MIMARKs']    # list of fields in Dict/Table
             for item in mimarkDict:
+                print item
                 if metaDict[item]:
                     list = metaDict[item]     # list of values with the above field
-                    for i in list:
-                        qs1 = selected.filter(**{item: i})
-                        qs2 = phylas.filter(sampleid_id=qs1).values('count')
-                        count = str(qs2[0]['count'])
-                        finalmimarkDict.setdefault(item, [])
-                        value = str(i) + ":" + str(count)
-                        finalmimarkDict[item].append(value)
-                else:
-                    pass
+                    print list
+                    #for i in list:
+                    #    finalmimarkDict.setdefault(item, [])        #don't need the finaldict only the lists
+                    #    finalmimarkDict[item].append(i)
+                #else:
+                #    pass
         else:
             finalmimarkDict = {}
 
-        print finalmimarkDict
+        #print finalmimarkDict
 
     # not sure what where doing here or if needed...
     elif request.method == 'POST':
