@@ -1,7 +1,9 @@
 import simplejson
 import pickle
+import operator
 from django.http import StreamingHttpResponse
 from django.db.models import Sum, Avg
+from django.core import serializers
 from itertools import izip
 from models import Project, Sample, Collect, Climate, Soil_class, Soil_nutrient, Management, Microbial, User
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
@@ -293,27 +295,22 @@ def getGraphData(request):
     selected = samples.values_list('sampleid')
     selected_samples = Sample.objects.all().filter(sampleid__in=selected)
 
+    # create and parse json
+    #phylas = ProfilePhyla.objects.filter(sampleid_id__in=selected)
+    #phylaJSON = serializers.serialize('json', phylas)
+    #data = simplejson.loads(phylaJSON)
 
-    # iterate through metaDict and taxaDict with the following...
-    # this will only work if we select a single phyla (taxa) at a time first...
-    table = Sample
-    field = 'organism'
-    annotate_field = 'profilephyla' + '__count'
-    items = table.objects.filter(sampleid__in=selected).values('sampleid', field).annotate(sum=Sum(annotate_field))
+    #phylaid = '77cdd99938e34e2e8b235f1abcf50848'
+    #for i in range(len(data)):
+    #    if data[i]['fields']['phylaid'] == phylaid:
+    #        node = data[i]['fields']['count']
+    #        print str(node)
 
-    #in same loop, filter with taxa-specific list of sample ids
-    items = items.filter(sampleid='17a74c628bbc4e8886c5be2fb1ca8368')
-    for i in range(len(items)):
-        print items[i]['sampleid']
-        print items[i]['sum']
+    # need to move this code after meta/taxa parsing below then...
+    # iterate through metaDict and taxaDict to get the right metatable/field and profile table...
 
 
-    # get sums
-
-    #average sums
-
-    #create json list with taxa, field and ave
-
+    # get info from selected tree nodes
     if request.method == 'GET':
         allJson =request.GET["all"]
         all = simplejson.loads(allJson)
@@ -345,34 +342,53 @@ def getGraphData(request):
                 value = data[1]
                 taxaDict[key].append(value)
                 c += 1
-
         else:
             taxaDict = {}
 
-        print metaDict
-        print taxaDict
 
-        if metaDict['MIMARKs']:
-            finalmimarkDict = {}
-            mimarkDict = metaDict['MIMARKs']    # list of fields in Dict/Table
-            for item in mimarkDict:
-                print item
-                if metaDict[item]:
-                    list = metaDict[item]     # list of values with the above field
-                    print list
-                    #for i in list:
-                    #    finalmimarkDict.setdefault(item, [])        #don't need the finaldict only the lists
-                    #    finalmimarkDict[item].append(i)
-                #else:
-                #    pass
-        else:
-            finalmimarkDict = {}
 
-        #print finalmimarkDict
+        phylaIDList = taxaDict['Phyla']
 
-    # not sure what where doing here or if needed...
-    elif request.method == 'POST':
-        formData = dict(request.POST.iterlists())
-        nodes = (formData['nodes'])[0].split('|')
-        print 'Post: ' + str(nodes)
+
+        for i in range(len(phylaIDList)):
+            phylaid = phylaIDList[i]
+            if metaDict['MIMARKs']:
+                mimarkDict = metaDict['MIMARKs']    # list of fields in Dict/Table
+                for item in mimarkDict:
+                    if metaDict[item]:
+                        list = metaDict[item]     # list of values with the above field
+                        print 'list'
+                        print list
+                        table_selected = Sample
+                        annotate_field = 'profilephyla' + '__count'
+                        qs1 = table_selected.objects.all().filter(profilephyla__phylaid=phylaid)
+
+                        args_list = []
+                        fields = ('sample_name', 'organism')
+                        query_string = ('RENG8', 'ESRBG18')
+                        for query in query_string:
+                            for field in fields:
+                                x = 'Q(**{' + field + ':' + query + '})'
+                                args_list.append(x)
+                        print args_list
+                        args_list = (reduce(operator.or_, args_list))
+                        print args_list
+                        args = Q()
+                        for each in args_list:
+                            args = args | each
+
+                        print args
+                        args = ( Q(**{sample_name:'RENG8'}) )
+                        qs2 = Sample.objects.filter(*(args,))
+                        print 'qs2'
+                        print qs2
+                        #qs3 = qs2.filter(sampleid__in=selected).values('sampleid', item).annotate(sum=Sum(annotate_field))
+                        #print qs3
+                        #qs4 = qs2.aggregate('sum')
+                        #print 'test'
+                        #print qs3
+            else:
+                pass
+
+
 

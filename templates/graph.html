@@ -11,6 +11,7 @@
 {% endblock %}
 
 {% block dynatree %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
 
         $(function () {
@@ -65,7 +66,15 @@
             }
             return string.substring(0, string.length - 1);
         }
+        // Load the Visualization API and the piechart package.
+                      google.load('visualization', '1.0', {'packages':['corechart']});
 
+                      // Set a callback to run when the Google Visualization API is loaded.
+                      google.setOnLoadCallback(drawChart);
+
+                      // Callback that creates and populates a data table,
+                      // instantiates the pie chart, passes in the data and
+                      // draws it.
         function updateChart() {
             var myDict = {};
             myDict['meta'] = getMetaValues();
@@ -78,10 +87,50 @@
                 dataType: 'jsonp',
                 data: {all: jsonDict},
                 success: function(result) {
-                    alert(result);
+                    //alert(result);
                 }
             });
+            var first = myDict['meta'].split('|');
+            //alert(first);
+                var second = myDict['taxa'].split('|');
+            //alert(second);
+                var fc = first.length;
+                var sc = second.length;
+                var counts = new Array();
+                for (var c = 0; c<fc; c++)
+                {
+                    //Sample
+                    for (var d=0; d<sc; d++) {
+                        //Data
+                        counts.push(d+1);//d+1 is a temp value, to be substituted for actual data
+                    }
+                }
+                // Create the data table.
+                var data = new google.visualization.DataTable();
+                var seq = 0;
+                data.addColumn('string', 'Category');
+                data.addColumn('number', 'Count');
+                for (var c = 0; c < fc; c++) {
+                    var thisSample = first[c].split('//');
+                    for (var d = 0; d < sc; d++) {
+                        var thisTaxa = second[d].split('//');
+                        data.addRows([
+                            [(thisSample[1].toString() + " - " + thisTaxa[1].toString()), counts[seq]]
+                        ]);
+                        //alert("ADDED ROW");
+                        seq++;
+                    }
+                }
+                // Set chart options
+                var options = {'title': first.toString() + " and " +second.toString(),
+                    'width': 400,
+                    'height': 300};
+
+                // Instantiate and draw our chart, passing in some options.
+                var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+                chart.draw(data, options);
         }
+
 
     </script>
 {% endblock %}
