@@ -2,9 +2,7 @@ import simplejson
 import pickle
 import operator
 from django.http import StreamingHttpResponse
-from django.db.models import Sum, Avg
-from django.core import serializers
-from itertools import izip
+from django.db.models import Q, Count, Sum, Avg
 from models import Project, Sample, Collect, Climate, Soil_class, Soil_nutrient, Management, Microbial, User
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
 from models import ProfileKingdom, ProfilePhyla, ProfileClass, ProfileOrder, ProfileFamily, ProfileGenus, ProfileSpecies
@@ -345,50 +343,43 @@ def getGraphData(request):
         else:
             taxaDict = {}
 
-
-
-        phylaIDList = taxaDict['Phyla']
-
-
-        for i in range(len(phylaIDList)):
-            phylaid = phylaIDList[i]
-            if metaDict['MIMARKs']:
-                mimarkDict = metaDict['MIMARKs']    # list of fields in Dict/Table
-                for item in mimarkDict:
-                    if metaDict[item]:
-                        list = metaDict[item]     # list of values with the above field
-                        print 'list'
-                        print list
-                        table_selected = Sample
-                        annotate_field = 'profilephyla' + '__count'
-                        qs1 = table_selected.objects.all().filter(profilephyla__phylaid=phylaid)
-
-                        args_list = []
-                        fields = ('sample_name', 'organism')
-                        query_string = ('RENG8', 'ESRBG18')
-                        for query in query_string:
-                            for field in fields:
-                                x = 'Q(**{' + field + ':' + query + '})'
-                                args_list.append(x)
-                        print args_list
-                        args_list = (reduce(operator.or_, args_list))
-                        print args_list
-                        args = Q()
-                        for each in args_list:
-                            args = args | each
-
-                        print args
-                        args = ( Q(**{sample_name:'RENG8'}) )
-                        qs2 = Sample.objects.filter(*(args,))
-                        print 'qs2'
-                        print qs2
-                        #qs3 = qs2.filter(sampleid__in=selected).values('sampleid', item).annotate(sum=Sum(annotate_field))
-                        #print qs3
-                        #qs4 = qs2.aggregate('sum')
-                        #print 'test'
-                        #print qs3
-            else:
-                pass
-
+        ### move the code below to it's own module
+        ### parse out the meta and taxaDicts and feed info to the new module?!
+        ### otherwise its will be tons of loops (taxa levels and meta tables)
+        resultDict = {}
+        if taxaDict['Phyla']:
+            idList = taxaDict['Phyla']
+            for i in range(len(idList)):
+                phylaid = idList[i]
+                phylaName = Phyla.objects.values('phylaName').get(phylaid=phylaid)
+                annotate_field = 'profilephyla' + '__count'
+                tableDict = {}
+                if metaDict['MIMARKs']:
+                    tableDict = metaDict['MIMARKs']
+                    table_selected = Sample
+                    qs1 = table_selected.objects.all().filter(profilephyla__phylaid=phylaid)
+                    for item in tableDict:
+                        if metaDict[item]:
+                            list = metaDict[item]
+                            args_list = []
+                            fields = tableDict
+                            query_string = list
+                            for query in query_string:
+                                for field in fields:
+                                    args_list.append(Q(**{field: query}))
+                            qs2 = qs1.filter(reduce(operator.or_, args_list))
+                            qs3 = qs2.filter(sampleid__in=selected).values(item).annotate(sum=Sum(annotate_field), count=Count(annotate_field), ave=Avg(annotate_field))
+                            print str(phylaName['phylaName']) + ":" + str(qs3)
+                            resultDict.setdefault('phyla', [])
+                            resultDict['phyla'].append(phylaName)
+                            resultDict.setdefault('MIMARKs', [])
+                            resultDict['MIMARKs'].append(qs3)
+                            print resultDict    # this should get passed back to the tree for graphing
+                        else:
+                            pass
+                else:
+                    pass
+        else:
+            pass
 
 
