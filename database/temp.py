@@ -26,7 +26,9 @@ finalDict = {
         {
             "x_values": ["CBG", "ESR", "REN"],
             "name": "Proteobacteria",
-            "y_values": [0.3958213, 0.3859393, 0.36084]
+            "y_values": [0.3958213, 0.3859393, 0.36084],
+            "sd": [],
+            "n": []
         },
         {
             "x_values": ["CBG", "ESR", "REN"],
@@ -71,3 +73,104 @@ for i in richness:
     print 'series -> ' + str(i['name'])
     print 'x-values -> ' + str(i['x_values'])
     print 'y-values -> ' + str(i['y_values'])
+
+
+
+
+test = [
+                {
+                    "key": "Actinobacteria",
+                    "values": [
+                            {
+                                "label": "CBG1",
+                                "mean": 4,
+                                "sd": 1.5,
+                                "n": 6
+                            },
+                            {
+                                "label": "B",
+                                "value": 3.75
+                            },
+                            {
+                                "label": "C",
+                                "value": 3.8
+                            }
+                        ]
+                    },
+                {
+                    "key": "Series #2",
+                    "values": [
+                            {
+                                "label": "A",
+                                "value": 2
+                            },
+                            {
+                                "label": "B",
+                                "value": 3
+                            },
+                            {
+                                "label": "C",
+                                "value": 4
+                            }
+                        ]
+                    }
+                ]
+
+
+
+
+
+field = "C"
+abund = 0.03
+dict2 = {}
+dict2["label"] = field
+dict2["value"] = abund
+print dict2
+print
+values = []
+values.append(dict2)
+print 'value_list: ' + str(values)
+print
+
+
+dict3 = {}
+dict3["key"] = 'Acidobacteria'
+dict3["values"] = values
+print 'Dict3: ' + str(dict3)
+
+final = []
+final.append(dict3)
+final.append(dict3)
+print 'Final: ' + str(final)
+
+
+[
+    {
+        "values": [
+            {
+                "count": 1,
+                "ave_rel_abund": 0.042347,
+                "ave_rich": 7.0,
+                "label": "CBG10"
+            },
+            {
+                "count": 1,
+                "ave_rel_abund": 0.027472,
+                "ave_rich": 2.0,
+                "label": "CBG13"
+            },
+            {
+                "count": 1,
+                "ave_rel_abund": 0.026144,
+                "ave_rich": 2.0,
+                "label": "CBG16"
+            },
+            {
+                "count": 1,
+                "ave_rel_abund": 0.099113,
+                "ave_rich": 20.0,
+                "label": "RENG8"
+            }
+        ]
+    }
+]

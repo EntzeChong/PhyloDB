@@ -358,7 +358,6 @@ def getCatGraphData(request):
     samples = Sample.objects.all()
     samples.query = pickle.loads(request.session['selected_samples'])
     selected = samples.values_list('sampleid')
-    finalDict = {'rel_abund': [], 'richness': []}
 
     if request.is_ajax():
         allJson = request.GET["all"]
@@ -395,22 +394,15 @@ def getCatGraphData(request):
         else:
             pass
 
+        finalList = []
         for rank in taxaDict:
             idList = taxaDict[rank]
 
-            abundDict = {'x_values': [], 'y_values': [], 'sd': [], 'n': []}
-            richDict = {'x_values': [], 'y_values': [], 'sd': [], 'n': []}
             for field in metaDict:
                 fieldList = metaDict[field]
                 table = ""
                 sampleTableList = ['sample_name', 'organism', 'seq_method', 'biome', 'feature', 'geo_loc', 'material']
 
-                x_values = []
-                y_rel_abund = []
-                sd_rel_abund = []
-                y_rich = []
-                sd_rich = []
-                number_samples = []
                 for x in sampleTableList:
                     if field == x:
                         table = 'Sample'
@@ -446,47 +438,48 @@ def getCatGraphData(request):
                 qs1 = Sample.objects.all().filter(sampleid__in=selected)
 
                 for id in idList:
-                    name = ""
+                    seriesDict = {}
+
                     if (rank == 'Kingdom'):
-                        name = Kingdom.objects.filter(**{'kingdomid': id}).values_list('kingdomName')
-                        name = name[0]
+                        name = Kingdom.objects.filter(**{'kingdomid': id}).values('kingdomName')
+                        seriesDict["key"] = name[0]['kingdomName']
                     elif (rank == 'Phyla'):
-                        name = Phyla.objects.filter(**{'phylaid': id}).values_list('phylaName')
-                        name = name[0]
+                        name = Phyla.objects.filter(**{'phylaid': id}).values('phylaName')
+                        seriesDict["key"] = name[0]['phylaName']
                     elif (rank == 'Class'):
-                        name = Class.objects.filter(**{'classid': id}).values_list('className')
-                        name = name[0]
+                        name = Class.objects.filter(**{'classid': id}).values('className')
+                        seriesDict["key"] = name[0]['className']
                     elif (rank == 'Order'):
-                        name = Order.objects.filter(**{'orderid': id}).values_list('orderName')
-                        name = name[0]
+                        name = Order.objects.filter(**{'orderid': id}).values('orderName')
+                        seriesDict["key"] = name[0]['orderName']
                     elif (rank == 'Family'):
-                        name = Family.objects.filter(**{'familyid': id}).values_list('familyName')
-                        name = name[0]
+                        name = Family.objects.filter(**{'familyid': id}).values('familyName')
+                        seriesDict["key"] = name[0]['familyName']
                     elif (rank == 'Genus'):
-                        name = Genus.objects.filter(**{'genusid': id}).values_list('genusName')
-                        name = name[0]
+                        name = Genus.objects.filter(**{'genusid': id}).values('genusName')
+                        seriesDict["key"] = name[0]['genusName']
                     elif (rank == 'Species'):
-                        name = Species.objects.filter(**{'speciesid': id}).values_list('speciesName')
-                        name = name[0]
+                        name = Species.objects.filter(**{'speciesid': id}).values('speciesName')
+                        seriesDict["key"] = name[0]['speciesName']
 
                     taxa_table = 'profile' + rank.lower() + '__' + rank.lower() + 'id'
                     qs2 = qs1.filter(Q(**{taxa_table: id}))
 
+                    valuesList = []
                     if table == 'Sample':
                         args_list = []
                         for query in fieldList:
                             args_list.append(Q(**{field: query}))
                         qs3 = qs2.filter(reduce(operator.or_, args_list))
-
-                        ### StdDev doesn't work in sqlite3
                         qs4 = qs3.values(field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
                         for i in qs4:
-                            x_values.append(i[field])
-                            y_rel_abund.append(i['ave_rel_abund'])
-                            #sd_rel_abund.append(i['sd_rel_abund'])
-                            y_rich.append(i['ave_rich'])
-                            #sd_rich.append(i['sd_rich'])
-                            number_samples.append(i['count'])
+                            valueDict = {
+                                "label": i[field],
+                                "ave_rel_abund": i['ave_rel_abund'],
+                                "ave_rich": i['ave_rich'],
+                                "count": i['count']
+                            }
+                            valuesList.append(valueDict)
 
                     elif table == 'Collect':
                         args_list = []
@@ -496,12 +489,13 @@ def getCatGraphData(request):
                         qs3 = qs2.filter(reduce(operator.or_, args_list))
                         qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
                         for i in qs4:
-                            x_values.append(i[table_field])
-                            y_rel_abund.append(i['ave_rel_abund'])
-                            #sd_rel_abund.append(i['sd_rel_abund'])
-                            y_rich.append(i['ave_rich'])
-                            #sd_rich.append(i['sd_rich'])
-                            number_samples.append(i['count'])
+                            valueDict = {
+                                "label": i[table_field],
+                                "ave_rel_abund": i['ave_rel_abund'],
+                                "ave_rich": i['ave_rich'],
+                                "count": i['count']
+                            }
+                            valuesList.append(valueDict)
 
                     elif table == 'Soil_class':
                         args_list = []
@@ -511,12 +505,13 @@ def getCatGraphData(request):
                         qs3 = qs2.filter(reduce(operator.or_, args_list))
                         qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
                         for i in qs4:
-                            x_values.append(i[table_field])
-                            y_rel_abund.append(i['ave_rel_abund'])
-                            #sd_rel_abund.append(i['sd_rel_abund'])
-                            y_rich.append(i['ave_rich'])
-                            #sd_rich.append(i['sd_rich'])
-                            number_samples.append(i['count'])
+                            valueDict = {
+                                "label": i[table_field],
+                                "ave_rel_abund": i['ave_rel_abund'],
+                                "ave_rich": i['ave_rich'],
+                                "count": i['count']
+                            }
+                            valuesList.append(valueDict)
 
                     elif table == 'Management':
                         args_list = []
@@ -526,12 +521,13 @@ def getCatGraphData(request):
                         qs3 = qs2.filter(reduce(operator.or_, args_list))
                         qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
                         for i in qs4:
-                            x_values.append(i[table_field])
-                            y_rel_abund.append(i['ave_rel_abund'])
-                            #sd_rel_abund.append(i['sd_rel_abund'])
-                            y_rich.append(i['ave_rich'])
-                            #sd_rich.append(i['sd_rich'])
-                            number_samples.append(i['count'])
+                            valueDict = {
+                                "label": i[table_field],
+                                "ave_rel_abund": i['ave_rel_abund'],
+                                "ave_rich": i['ave_rich'],
+                                "count": i['count']
+                            }
+                            valuesList.append(valueDict)
 
                     elif table == 'User':
                         args_list = []
@@ -541,35 +537,15 @@ def getCatGraphData(request):
                         qs3 = qs2.filter(reduce(operator.or_, args_list))
                         qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
                         for i in qs4:
-                            x_values.append(i[table_field])
-                            y_rel_abund.append(i['ave_rel_abund'])
-                            #sd_rel_abund.append(i['sd_rel_abund'])
-                            y_rich.append(i['ave_rich'])
-                            #sd_rich.append(i['sd_rich'])
-                            number_samples.append(i['count'])
+                            valueDict = {
+                                "label": i[table_field],
+                                "ave_rel_abund": i['ave_rel_abund'],
+                                "ave_rich": i['ave_rich'],
+                                "count": i['count']
+                            }
+                            valuesList.append(valueDict)
 
-                    #build final json string
-                    for i in name:
-                        abundDict['name'] = i
-                        richDict['name'] = i
-                    for i in number_samples:
-                        abundDict['n'].append(i)
-                        richDict['n'].append(i)
-                    for i in x_values:
-                        abundDict['x_values'].append(i)
-                        richDict['x_values'].append(i)
-                    for i in y_rel_abund:
-                        abundDict['y_values'].append(i)
-                    #for i in sd_rel_abund:
-                    #    abundDict['sd_rel_abund'].append(i)
-                    for i in y_rich:
-                        richDict['y_values'].append(i)
-                    #for i in sd_rich:
-                    #    abundDict['sd_rich'].append(i)
-
-            finalDict['rel_abund'].append(abundDict)
-            finalDict['richness'].append(richDict)
-        res = simplejson.dumps(finalDict)
-
-        print 'finalDict ->' + str(res)
+                    seriesDict["values"] = valuesList
+                finalList.append(seriesDict)
+        res = simplejson.dumps(finalList)
         return HttpResponse(res, content_type='application/json')

@@ -97,39 +97,17 @@
                 },
                 success: function(data) {
                     var result = JSON.stringify(data);
-
-                    // parse returned JSON string
                     var obj = $.parseJSON(result);
-
-                    // get rel_abund list
-                    var rel_abund = obj['rel_abund'];
-
-                    // each list item is a new data series
-                    $.each(rel_abund, function() {
-                        alert('rel_abund: ' + this['name']);
-                        alert('x_values: ' + this['x_values']);
-                        alert('y_values: ' + this['y_values']);
-                        alert('sd: ' + this['sd_rel_abund']);
-                        alert('#_samples: ' + this['n']);
-                    });
-
-                    // get richness list
-                    //var richness = obj['richness'];
-
                     nvd3Chart(obj);
                 } // end success
             }); // end Ajax
         } // end getData()
 
         function nvd3Chart(obj) {
-            var rel_abund = obj['rel_abund'];
-            //var x_values = rel_abund[0].x_values;
-            //var y_values = rel_abund[0].y_values;
-
             nv.addGraph(function () {
                 var chart = nv.models.multiBarChart()
                         .x(function(d) {return d.label})
-                        .y(function(d) {return d.value})
+                        .y(function(d) {return d.ave_rel_abund})
                         .transitionDuration(350)
                         .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
                         .rotateLabels(90)      //Angle to rotate x-axis labels.
@@ -144,42 +122,7 @@
                         .tickFormat(d3.format(',.2f'));
 
                 d3.select('#chart svg')
-                    .datum( [
-                    {
-                        "key": "Series #1",
-                        "values": [
-                                {
-                                    "label": "A",
-                                    "value": 4
-                                },
-                                {
-                                    "label": "B",
-                                    "value": 3.75
-                                },
-                                {
-                                    "label": "C",
-                                    "value": 3.8
-                                }
-                            ]
-                        },
-                    {
-                        "key": "Series #2",
-                        "values": [
-                                {
-                                    "label": "A",
-                                    "value": 2
-                                },
-                                {
-                                    "label": "B",
-                                    "value": 3
-                                },
-                                {
-                                    "label": "C",
-                                    "value": 4
-                                }
-                            ]
-                        }
-                    ])
+                    .datum(obj)
                     .transition().duration(500)
                     .call(chart);
 
