@@ -4,6 +4,18 @@
     <!-- dynatree -->
     <link rel='stylesheet' type='text/css' href="../media/dynatree/ui.dynatree.css">
     <script src="../media/dynatree/jquery.dynatree.js" type="text/javascript"></script>
+
+    <!-- nvd3 stuff -->
+    <script src="/media/nvd3/nvd3.lib/d3.v2.js"></script>
+    <script src="/media/nvd3/nv.d3.js"></script>
+    <script src="/media/nvd3/nvd3.src/tooltip.js"></script>
+    <script src="/media/nvd3/nvd3.src/utils.js"></script>
+    <script src="/media/nvd3/nvd3.src/models/legend.js"></script>
+    <script src="/media/nvd3/nvd3.src/models/axis.js"></script>
+    <script src="/media/nvd3/nvd3.src/models/scatter.js"></script>
+    <script src="/media/nvd3/nvd3.src/models/line.js"></script>
+    <link href="/media/nvd3/nvd3.src/nv.d3.css" rel="stylesheet" type="text/css">
+
 {% endblock %}
 
 {% block pagetitle %}
@@ -15,16 +27,17 @@
     <script type="text/javascript">
 
         $(function () {
+
             $("#tree_meta").dynatree({
                 checkbox: true,
                 selectMode: 3,
                 initAjax: {
-                    url: '/getSampleTree/',
+                    url: '/getSampleCatTree/',
                     dataType: 'jsonp',
                     data: {}
                 },
                 onSelect: function (node) {
-                    updateChart(node);
+                    getData(node);
                     //updateDataTable();
                 }
         }); // end tree
@@ -38,7 +51,7 @@
                     data: {}
                 },
                 onSelect: function (node) {
-                    updateChart(node);
+                    getData(node);
                     //updateDataTable();
                 }
             }); // end tree
@@ -51,7 +64,9 @@
                 var value = nodes[i].data.title;
                 var parent = nodes[i].getParent();
                 var key = parent.data.title;
-                string = key + "//" + value  + "|" + string;
+                if (nodes[i].getLevel() == 4) {
+                    string = key + "//" + value + "|" + string;
+                }
             }
             return string.substring(0, string.length - 1);
         }
@@ -66,72 +81,113 @@
             }
             return string.substring(0, string.length - 1);
         }
-        // Load the Visualization API and the piechart package.
-                      google.load('visualization', '1.0', {'packages':['corechart']});
 
-                      // Set a callback to run when the Google Visualization API is loaded.
-                      google.setOnLoadCallback(drawChart);
-
-                      // Callback that creates and populates a data table,
-                      // instantiates the pie chart, passes in the data and
-                      // draws it.
-        function updateChart() {
+        function getData() {
             var myDict = {};
             myDict['meta'] = getMetaValues();
             myDict['taxa'] = getTaxaValues();
             jsonDict = JSON.stringify(myDict);
 
             $.ajax({
-                url: '/getGraphData/',
+                url: '/getCatGraphData/',
                 type: 'GET',
-                dataType: 'jsonp',
-                data: {all: jsonDict},
-                success: function(result) {
-                    //alert(result);
-                }
+                dataType: 'json',
+                data: {
+                    all: jsonDict
+                },
+                success: function(data) {
+                    var result = JSON.stringify(data);
+
+                    // parse returned JSON string
+                    var obj = $.parseJSON(result);
+
+                    // get rel_abund list
+                    var rel_abund = obj['rel_abund'];
+
+                    // each list item is a new data series
+                    $.each(rel_abund, function() {
+                        alert('rel_abund: ' + this['name']);
+                        alert('x_values: ' + this['x_values']);
+                        alert('y_values: ' + this['y_values']);
+                        alert('sd: ' + this['sd_rel_abund']);
+                        alert('#_samples: ' + this['n']);
+                    });
+
+                    // get richness list
+                    //var richness = obj['richness'];
+
+                    nvd3Chart(obj);
+                } // end success
+            }); // end Ajax
+        } // end getData()
+
+        function nvd3Chart(obj) {
+            var rel_abund = obj['rel_abund'];
+            //var x_values = rel_abund[0].x_values;
+            //var y_values = rel_abund[0].y_values;
+
+            nv.addGraph(function () {
+                var chart = nv.models.multiBarChart()
+                        .x(function(d) {return d.label})
+                        .y(function(d) {return d.value})
+                        .transitionDuration(350)
+                        .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
+                        .rotateLabels(90)      //Angle to rotate x-axis labels.
+                        .showControls(true)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
+                        .groupSpacing(0.1)    //Distance between each group of bars.
+                        ;
+
+                //chart.xAxis
+                //        .tickFormat(d3.format(',f'));
+
+                chart.yAxis
+                        .tickFormat(d3.format(',.2f'));
+
+                d3.select('#chart svg')
+                    .datum( [
+                    {
+                        "key": "Series #1",
+                        "values": [
+                                {
+                                    "label": "A",
+                                    "value": 4
+                                },
+                                {
+                                    "label": "B",
+                                    "value": 3.75
+                                },
+                                {
+                                    "label": "C",
+                                    "value": 3.8
+                                }
+                            ]
+                        },
+                    {
+                        "key": "Series #2",
+                        "values": [
+                                {
+                                    "label": "A",
+                                    "value": 2
+                                },
+                                {
+                                    "label": "B",
+                                    "value": 3
+                                },
+                                {
+                                    "label": "C",
+                                    "value": 4
+                                }
+                            ]
+                        }
+                    ])
+                    .transition().duration(500)
+                    .call(chart);
+
+                nv.utils.windowResize(chart.update);
+
+                return chart;
             });
-            var first = myDict['meta'].split('|');
-            //alert(first);
-                var second = myDict['taxa'].split('|');
-            //alert(second);
-                var fc = first.length;
-                var sc = second.length;
-                var counts = new Array();
-                for (var c = 0; c<fc; c++)
-                {
-                    //Sample
-                    for (var d=0; d<sc; d++) {
-                        //Data
-                        counts.push(d+1);//d+1 is a temp value, to be substituted for actual data
-                    }
-                }
-                // Create the data table.
-                var data = new google.visualization.DataTable();
-                var seq = 0;
-                data.addColumn('string', 'Category');
-                data.addColumn('number', 'Count');
-                for (var c = 0; c < fc; c++) {
-                    var thisSample = first[c].split('//');
-                    for (var d = 0; d < sc; d++) {
-                        var thisTaxa = second[d].split('//');
-                        data.addRows([
-                            [(thisSample[1].toString() + " - " + thisTaxa[1].toString()), counts[seq]]
-                        ]);
-                        //alert("ADDED ROW");
-                        seq++;
-                    }
-                }
-                // Set chart options
-                var options = {'title': first.toString() + " and " +second.toString(),
-                    'width': 400,
-                    'height': 300};
-
-                // Instantiate and draw our chart, passing in some options.
-                var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-                chart.draw(data, options);
         }
-
-
     </script>
 {% endblock %}
 
@@ -140,8 +196,10 @@
         <br>
         <!-- tree tables -->
         <table width="100%" border="2" cellspacing="0" cellpadding="5">
-            <th>Select Meta Data</th>
-            <th>Select Taxa level</th>
+            <tr>
+                <th>Select Meta Data</th>
+                <th>Select Taxa level</th>
+            </tr>
             <tr>
                 <td width="50%" style="padding-right: 10px; vertical-align: top">
 
@@ -171,12 +229,15 @@
         <br>
 
         <!-- graph table -->
-        <table id="chart" border="2">
-            <th style="padding-right: 10px;">Title should reflect selections</th>
+        <table width="100%" border="2">
             <tr>
-                <td style="vertical-align: top">
-                    <div id="chart_div"></div>
-                    <svg></svg>
+                <th style="padding-right: 10px;">Graph Data</th>
+            </tr>
+            <tr>
+                <td width="100%" style="vertical-align: top">
+                    <div id="chart">
+                        <svg style="height: 500px"></svg>
+                    </div>
                 </td>
             </tr>
         </table>

@@ -1,11 +1,11 @@
 import simplejson
 import pickle
 import operator
-from django.http import StreamingHttpResponse
-from django.db.models import Q, Count, Sum, Avg
+from django.http import HttpResponse, StreamingHttpResponse
+from django.db.models import Q, Avg, Count, StdDev
 from models import Project, Sample, Collect, Climate, Soil_class, Soil_nutrient, Management, Microbial, User
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
-from models import ProfileKingdom, ProfilePhyla, ProfileClass, ProfileOrder, ProfileFamily, ProfileGenus, ProfileSpecies
+
 
 def getProjectTree(request):
     myTree = {'title': 'All Projects', 'isFolder': True, 'expand': True, 'children': []}
@@ -44,7 +44,7 @@ def getProjectTree(request):
     return StreamingHttpResponse(response_dict, content_type='application/javascript')
 
 
-def getSampleTree(request):
+def getSampleCatTree(request):
     samples = Sample.objects.all()
     samples.query = pickle.loads(request.session['selected_samples'])
     selected = samples.values_list('sampleid')
@@ -187,6 +187,73 @@ def getSampleTree(request):
     return StreamingHttpResponse(response_dict, content_type='application/javascript')
 
 
+def getSampleQuantTree(request):
+    myTree = {'title': 'root', 'tooltip': 'root', 'isFolder': False,  'hideCheckbox': True, 'expand': True, 'children': []}
+    mimark = {'title': 'MIMARKs', 'tooltip': 'MIMARKs', 'isFolder': True,  'hideCheckbox': True, 'children': []}
+    collect = {'title': 'Sample Collection', 'tooltip': 'Sample Collection', 'isFolder': True,  'hideCheckbox': True, 'children': []}
+    climate = {'title': 'Climate', 'tooltip': 'Climate', 'isFolder': True,  'hideCheckbox': True, 'children': []}
+    soil_class = {'title': 'Soil Classification', 'tooltip': 'Soil Classification', 'isFolder': True,  'hideCheckbox': True, 'children': []}
+    soil_nutrient = {'title': 'Soil Nutrient', 'tooltip': 'Soil Nutrient', 'isFolder': True,  'hideCheckbox': True, 'children': []}
+    microbial = {'title': 'Microbial Biomass', 'tooltip': 'Microbial Biomass', 'isFolder': True,  'hideCheckbox': True, 'children': []}
+    user = {'title': 'User-defined', 'tooltip': 'User_defined', 'isFolder': True,  'hideCheckbox': True, 'children': []}
+
+    list = ['collection_date', 'lat_lon', 'elevation']
+    for i in range(len(list)):
+        myNode = {'title': list[i], 'tooltip': list[i], 'isFolder': False}
+        mimark['children'].append(myNode)
+
+    list = ['samp_size', 'samp_weight_dna_ext']
+    for i in range(len(list)):
+        myNode = {'title': list[i], 'tooltip': list[i], 'isFolder': False}
+        collect['children'].append(myNode)
+
+    list = ['annual_season_precpt', 'annual_season_temp']
+    for i in range(len(list)):
+        myNode = {'title': list[i], 'tooltip': list[i], 'isFolder': False}
+        climate['children'].append(myNode)
+
+    list = ['bulk_density', 'porosity', 'slope_gradient', 'water_content_soil']
+    for i in range(len(list)):
+        myNode = {'title': list[i], 'tooltip': list[i], 'isFolder': False}
+        soil_class['children'].append(myNode)
+
+    list = ['pH', 'EC', 'tot_C', 'tot_OM', 'tot_N', 'NO3_N', 'NH4_N', 'P', 'K', 'S', 'Zn', 'Fe', 'Cu', 'Mn', 'Ca', 'Mg', 'Na', 'B']
+    for i in range(len(list)):
+        myNode = {'title': list[i], 'tooltip': list[i], 'isFolder': False}
+        soil_nutrient['children'].append(myNode)
+
+    list = ['rRNA_copies', 'microbial_biomass_C', 'microbial_biomass_N', 'microbial_respiration']
+    for i in range(len(list)):
+        myNode = {'title': list[i], 'tooltip': list[i], 'isFolder': False}
+        microbial['children'].append(myNode)
+
+    list = ['usr_quant1', 'usr_quant2', 'usr_quant3', 'usr_quant4', 'usr_quant5', 'usr_quant6']
+    for i in range(len(list)):
+        myNode = {'title': list[i], 'tooltip': list[i], 'isFolder': False}
+        user['children'].append(myNode)
+
+    myTree['children'].append(mimark)
+    myTree['children'].append(collect)
+    myTree['children'].append(climate)
+    myTree['children'].append(soil_class)
+    myTree['children'].append(soil_nutrient)
+    myTree['children'].append(microbial)
+    myTree['children'].append(user)
+
+    # Convert result list to a JSON string
+    res = simplejson.dumps(myTree, encoding="Latin-1")
+
+    # Support for the JSONP protocol.
+    response_dict = {}
+    if 'callback' in request.GET:
+        response_dict = request.GET['callback'] + "(" + res + ")"
+    return StreamingHttpResponse(response_dict, content_type='application/json')
+
+    response_dict = {}
+    response_dict.update({'children': myTree})
+    return StreamingHttpResponse(response_dict, content_type='application/javascript')
+
+
 def getTaxaTree(request):
     samples = Sample.objects.all()
     samples.query = pickle.loads(request.session['selected_samples'])
@@ -287,36 +354,20 @@ def getTaxaTree(request):
     return StreamingHttpResponse(response_dict, content_type='application/javascript')
 
 
-def getGraphData(request):
+def getCatGraphData(request):
     samples = Sample.objects.all()
     samples.query = pickle.loads(request.session['selected_samples'])
     selected = samples.values_list('sampleid')
-    selected_samples = Sample.objects.all().filter(sampleid__in=selected)
+    finalDict = {'rel_abund': [], 'richness': []}
 
-    # create and parse json
-    #phylas = ProfilePhyla.objects.filter(sampleid_id__in=selected)
-    #phylaJSON = serializers.serialize('json', phylas)
-    #data = simplejson.loads(phylaJSON)
-
-    #phylaid = '77cdd99938e34e2e8b235f1abcf50848'
-    #for i in range(len(data)):
-    #    if data[i]['fields']['phylaid'] == phylaid:
-    #        node = data[i]['fields']['count']
-    #        print str(node)
-
-    # need to move this code after meta/taxa parsing below then...
-    # iterate through metaDict and taxaDict to get the right metatable/field and profile table...
-
-
-    # get info from selected tree nodes
-    if request.method == 'GET':
-        allJson =request.GET["all"]
+    if request.is_ajax():
+        allJson = request.GET["all"]
         all = simplejson.loads(allJson)
 
+        metaDict = {}
         if all["meta"]:
             meta = all["meta"]
             metaList = meta.split("|")
-            metaDict = {}
             c = 0
             while c < metaList.__len__():
                 data = metaList[c].split("//")
@@ -326,8 +377,9 @@ def getGraphData(request):
                 metaDict[key].append(value)
                 c += 1
         else:
-            metaDict = {}
+            pass
 
+        taxaDict = {}
         if all["taxa"]:
             taxa = all["taxa"]
             taxaList = taxa.split("|")
@@ -341,45 +393,183 @@ def getGraphData(request):
                 taxaDict[key].append(value)
                 c += 1
         else:
-            taxaDict = {}
-
-        ### move the code below to it's own module
-        ### parse out the meta and taxaDicts and feed info to the new module?!
-        ### otherwise its will be tons of loops (taxa levels and meta tables)
-        resultDict = {}
-        if taxaDict['Phyla']:
-            idList = taxaDict['Phyla']
-            for i in range(len(idList)):
-                phylaid = idList[i]
-                phylaName = Phyla.objects.values('phylaName').get(phylaid=phylaid)
-                annotate_field = 'profilephyla' + '__count'
-                tableDict = {}
-                if metaDict['MIMARKs']:
-                    tableDict = metaDict['MIMARKs']
-                    table_selected = Sample
-                    qs1 = table_selected.objects.all().filter(profilephyla__phylaid=phylaid)
-                    for item in tableDict:
-                        if metaDict[item]:
-                            list = metaDict[item]
-                            args_list = []
-                            fields = tableDict
-                            query_string = list
-                            for query in query_string:
-                                for field in fields:
-                                    args_list.append(Q(**{field: query}))
-                            qs2 = qs1.filter(reduce(operator.or_, args_list))
-                            qs3 = qs2.filter(sampleid__in=selected).values(item).annotate(sum=Sum(annotate_field), count=Count(annotate_field), ave=Avg(annotate_field))
-                            print str(phylaName['phylaName']) + ":" + str(qs3)
-                            resultDict.setdefault('phyla', [])
-                            resultDict['phyla'].append(phylaName)
-                            resultDict.setdefault('MIMARKs', [])
-                            resultDict['MIMARKs'].append(qs3)
-                            print resultDict    # this should get passed back to the tree for graphing
-                        else:
-                            pass
-                else:
-                    pass
-        else:
             pass
 
+        for rank in taxaDict:
+            idList = taxaDict[rank]
 
+            abundDict = {'x_values': [], 'y_values': [], 'sd': [], 'n': []}
+            richDict = {'x_values': [], 'y_values': [], 'sd': [], 'n': []}
+            for field in metaDict:
+                fieldList = metaDict[field]
+                table = ""
+                sampleTableList = ['sample_name', 'organism', 'seq_method', 'biome', 'feature', 'geo_loc', 'material']
+
+                x_values = []
+                y_rel_abund = []
+                sd_rel_abund = []
+                y_rich = []
+                sd_rich = []
+                number_samples = []
+                for x in sampleTableList:
+                    if field == x:
+                        table = 'Sample'
+                    else:
+                        pass
+                collectTableList = ['depth', 'pool_dna_extracts', 'samp_collection_device', 'sieving', 'storage_cond']
+                for x in collectTableList:
+                    if field == x:
+                        table = 'Collect'
+                    else:
+                        pass
+                soil_classTableList = ['drainage_class', 'fao_class', 'horizon', 'local_class', 'profile_position', 'slope_aspect', 'soil_type', 'texture_class']
+                for x in soil_classTableList:
+                    if field == x:
+                        table = 'Soil_class'
+                    else:
+                        pass
+                mgtTableList = ['agrochem_addition', 'biological_amendment', 'cover_crop', 'crop_rotation', 'cur_land_use', 'cur_vegetation', 'cur_crop', 'cur_cultivar', 'organic', 'previous_land_use', 'soil_amendments', 'tillage']
+                for x in mgtTableList:
+                    if field == x:
+                        table = 'Management'
+                    else:
+                        pass
+                usrTableList = ['usr_cat1', 'usr_cat2', 'usr_cat3', 'usr_cat4', 'usr_cat5', 'usr_cat6']
+                for x in usrTableList:
+                    if field == x:
+                        table = 'User'
+                    else:
+                        pass
+
+                annotate_field1 = 'profile' + rank.lower() + '__rel_abund'
+                annotate_field2 = 'profile' + rank.lower() + '__rich'
+                qs1 = Sample.objects.all().filter(sampleid__in=selected)
+
+                for id in idList:
+                    name = ""
+                    if (rank == 'Kingdom'):
+                        name = Kingdom.objects.filter(**{'kingdomid': id}).values_list('kingdomName')
+                        name = name[0]
+                    elif (rank == 'Phyla'):
+                        name = Phyla.objects.filter(**{'phylaid': id}).values_list('phylaName')
+                        name = name[0]
+                    elif (rank == 'Class'):
+                        name = Class.objects.filter(**{'classid': id}).values_list('className')
+                        name = name[0]
+                    elif (rank == 'Order'):
+                        name = Order.objects.filter(**{'orderid': id}).values_list('orderName')
+                        name = name[0]
+                    elif (rank == 'Family'):
+                        name = Family.objects.filter(**{'familyid': id}).values_list('familyName')
+                        name = name[0]
+                    elif (rank == 'Genus'):
+                        name = Genus.objects.filter(**{'genusid': id}).values_list('genusName')
+                        name = name[0]
+                    elif (rank == 'Species'):
+                        name = Species.objects.filter(**{'speciesid': id}).values_list('speciesName')
+                        name = name[0]
+
+                    taxa_table = 'profile' + rank.lower() + '__' + rank.lower() + 'id'
+                    qs2 = qs1.filter(Q(**{taxa_table: id}))
+
+                    if table == 'Sample':
+                        args_list = []
+                        for query in fieldList:
+                            args_list.append(Q(**{field: query}))
+                        qs3 = qs2.filter(reduce(operator.or_, args_list))
+
+                        ### StdDev doesn't work in sqlite3
+                        qs4 = qs3.values(field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
+                        for i in qs4:
+                            x_values.append(i[field])
+                            y_rel_abund.append(i['ave_rel_abund'])
+                            #sd_rel_abund.append(i['sd_rel_abund'])
+                            y_rich.append(i['ave_rich'])
+                            #sd_rich.append(i['sd_rich'])
+                            number_samples.append(i['count'])
+
+                    elif table == 'Collect':
+                        args_list = []
+                        table_field = 'collect__' + str(field)
+                        for query in fieldList:
+                            args_list.append(Q(**{table_field: query}))
+                        qs3 = qs2.filter(reduce(operator.or_, args_list))
+                        qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
+                        for i in qs4:
+                            x_values.append(i[table_field])
+                            y_rel_abund.append(i['ave_rel_abund'])
+                            #sd_rel_abund.append(i['sd_rel_abund'])
+                            y_rich.append(i['ave_rich'])
+                            #sd_rich.append(i['sd_rich'])
+                            number_samples.append(i['count'])
+
+                    elif table == 'Soil_class':
+                        args_list = []
+                        table_field = 'soil_class__' + str(field)
+                        for query in fieldList:
+                            args_list.append(Q(**{table_field: query}))
+                        qs3 = qs2.filter(reduce(operator.or_, args_list))
+                        qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
+                        for i in qs4:
+                            x_values.append(i[table_field])
+                            y_rel_abund.append(i['ave_rel_abund'])
+                            #sd_rel_abund.append(i['sd_rel_abund'])
+                            y_rich.append(i['ave_rich'])
+                            #sd_rich.append(i['sd_rich'])
+                            number_samples.append(i['count'])
+
+                    elif table == 'Management':
+                        args_list = []
+                        table_field = 'management__' + str(field)
+                        for query in fieldList:
+                            args_list.append(Q(**{table_field: query}))
+                        qs3 = qs2.filter(reduce(operator.or_, args_list))
+                        qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
+                        for i in qs4:
+                            x_values.append(i[table_field])
+                            y_rel_abund.append(i['ave_rel_abund'])
+                            #sd_rel_abund.append(i['sd_rel_abund'])
+                            y_rich.append(i['ave_rich'])
+                            #sd_rich.append(i['sd_rich'])
+                            number_samples.append(i['count'])
+
+                    elif table == 'User':
+                        args_list = []
+                        table_field = 'user__' + str(field)
+                        for query in fieldList:
+                            args_list.append(Q(**{table_field: query}))
+                        qs3 = qs2.filter(reduce(operator.or_, args_list))
+                        qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
+                        for i in qs4:
+                            x_values.append(i[table_field])
+                            y_rel_abund.append(i['ave_rel_abund'])
+                            #sd_rel_abund.append(i['sd_rel_abund'])
+                            y_rich.append(i['ave_rich'])
+                            #sd_rich.append(i['sd_rich'])
+                            number_samples.append(i['count'])
+
+                    #build final json string
+                    for i in name:
+                        abundDict['name'] = i
+                        richDict['name'] = i
+                    for i in number_samples:
+                        abundDict['n'].append(i)
+                        richDict['n'].append(i)
+                    for i in x_values:
+                        abundDict['x_values'].append(i)
+                        richDict['x_values'].append(i)
+                    for i in y_rel_abund:
+                        abundDict['y_values'].append(i)
+                    #for i in sd_rel_abund:
+                    #    abundDict['sd_rel_abund'].append(i)
+                    for i in y_rich:
+                        richDict['y_values'].append(i)
+                    #for i in sd_rich:
+                    #    abundDict['sd_rich'].append(i)
+
+            finalDict['rel_abund'].append(abundDict)
+            finalDict['richness'].append(richDict)
+        res = simplejson.dumps(finalDict)
+
+        print 'finalDict ->' + str(res)
+        return HttpResponse(res, content_type='application/json')

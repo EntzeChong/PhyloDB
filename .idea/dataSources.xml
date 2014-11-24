@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="1002377350">
+    <data-source source="LOCAL" name="Django default" uuid="8e33788a-d82a-441a-ac24-3c5723e7627e">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\daniel.manter\Documents\GitHub\phyloDB\dbMicrobe</jdbc-url>
+      <libraries />
+    </data-source>
+  </component>
+</project>
+

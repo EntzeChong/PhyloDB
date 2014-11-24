@@ -5,11 +5,11 @@ from django_extensions.db.fields import UUIDField
 class Project(models.Model):
     projectid = UUIDField(primary_key=True, editable=True)
     path = models.CharField(max_length=90)
-    upload_date = models.CharField( max_length=45, blank=True)
+    upload_date = models.CharField(max_length=15, blank=True)
     project_name = models.CharField(max_length=90, blank=True)
     project_desc = models.TextField(blank=True)
-    start_date = models.CharField( max_length=45, blank=True)
-    end_date = models.CharField( max_length=45, blank=True)
+    start_date = models.CharField(max_length=15, blank=True)
+    end_date = models.CharField(max_length=15, blank=True)
     pi_last = models.CharField(max_length=45, blank=True)
     pi_first = models.CharField(max_length=45, blank=True)
     pi_affiliation = models.CharField(max_length=45, blank=True)
@@ -24,7 +24,7 @@ class Sample(models.Model):
     organism = models.CharField(max_length=90, blank=True)
     title = models.TextField(blank=True)
     seq_method = models.CharField(max_length=45, blank=True)
-    collection_date = models.CharField( max_length=45, blank=True)
+    collection_date = models.CharField(max_length=15, blank=True)
     biome = models.CharField(max_length=45, blank=True)
     feature = models.CharField(max_length=45, blank=True)
     geo_loc = models.CharField(max_length=45, blank=True)
@@ -207,6 +207,8 @@ class ProfileKingdom(models.Model):
     sampleid = models.ForeignKey(Sample)
     kingdomid = models.ForeignKey(Kingdom)
     count = models.IntegerField()
+    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
+    rich = models.IntegerField()
 
 
 class ProfilePhyla(models.Model):
@@ -214,6 +216,8 @@ class ProfilePhyla(models.Model):
     sampleid = models.ForeignKey(Sample)
     phylaid = models.ForeignKey(Phyla)
     count = models.IntegerField()
+    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
+    rich = models.IntegerField()
 
 
 class ProfileClass(models.Model):
@@ -221,6 +225,8 @@ class ProfileClass(models.Model):
     sampleid = models.ForeignKey(Sample)
     classid = models.ForeignKey(Class)
     count = models.IntegerField()
+    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
+    rich = models.IntegerField()
 
 
 class ProfileOrder(models.Model):
@@ -228,6 +234,8 @@ class ProfileOrder(models.Model):
     sampleid = models.ForeignKey(Sample)
     orderid = models.ForeignKey(Order)
     count = models.IntegerField()
+    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
+    rich = models.IntegerField()
 
 
 class ProfileFamily(models.Model):
@@ -235,6 +243,8 @@ class ProfileFamily(models.Model):
     sampleid = models.ForeignKey(Sample)
     familyid = models.ForeignKey(Family)
     count = models.IntegerField()
+    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
+    rich = models.IntegerField()
 
 
 class ProfileGenus(models.Model):
@@ -242,6 +252,8 @@ class ProfileGenus(models.Model):
     sampleid = models.ForeignKey(Sample)
     genusid = models.ForeignKey(Genus)
     count = models.IntegerField()
+    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
+    rich = models.IntegerField()
 
 
 class ProfileSpecies(models.Model):
@@ -249,4 +261,5 @@ class ProfileSpecies(models.Model):
     sampleid = models.ForeignKey(Sample)
     speciesid = models.ForeignKey(Species)
     count = models.IntegerField()
-
+    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
+    rich = models.IntegerField()

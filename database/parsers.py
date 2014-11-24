@@ -1,10 +1,11 @@
 import csv
 import re
 from uuid import uuid4
+from decimal import *
 from models import Project, Sample, Collect, Climate, Soil_class, Soil_nutrient, Management, Microbial, User
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
 from models import ProfileKingdom, ProfilePhyla, ProfileClass, ProfileOrder, ProfileFamily, ProfileGenus, ProfileSpecies
-from django.db.models import Sum
+from django.db.models import Sum, Count
 
 import fileinput
 from itertools import izip
@@ -166,95 +167,133 @@ def parse_profile(taxonomy, shared, path, p_uuid):
                 j += 1
 
 def taxaprofile(p_uuid):
+    getcontext().prec = 6
     project = Project.objects.get(projectid=p_uuid)
 
-    count = Profile.objects.values('kingdomid', 'sampleid').annotate(sum=Sum('count'))
+    totalDict = {}
+    total = Profile.objects.filter(projectid_id=project).values('sampleid').annotate(total=Sum('count'))
+    for i in total:
+        id = i['sampleid']
+        total = i['total']
+        totalDict.setdefault(id, [])
+        totalDict[id].append(total)
+
+    count = Profile.objects.filter(projectid_id=project).values('kingdomid', 'sampleid').annotate(sum=Sum('count'), rich=Count('count'))
     for i in count:
         myDict = i
         myDict['count'] = myDict.pop('sum')
         s_uuid = myDict['sampleid']
         sample = Sample.objects.get(sampleid=s_uuid)
+        total = totalDict[s_uuid]
+        total = total[0]
+        sum = myDict['count']
+        proportion = Decimal(sum) / Decimal(total)
         del myDict['sampleid']
         k_uuid = myDict['kingdomid']
         kingdom = Kingdom.objects.get(kingdomid=k_uuid)
         del myDict['kingdomid']
-        m = ProfileKingdom(projectid=project, sampleid=sample, kingdomid=kingdom, **myDict)
+        m = ProfileKingdom(projectid=project, sampleid=sample, kingdomid=kingdom, rel_abund=proportion, **myDict)
         m.save()
 
-    count = Profile.objects.values('phylaid', 'sampleid').annotate(sum=Sum('count'))
-    for i in count:
-         myDict = i
-         myDict['count'] = myDict.pop('sum')
-         s_uuid = myDict['sampleid']
-         sample = Sample.objects.get(sampleid=s_uuid)
-         del myDict['sampleid']
-         p_uuid = myDict['phylaid']
-         phyla = Phyla.objects.get(phylaid=p_uuid)
-         del myDict['phylaid']
-         m = ProfilePhyla(projectid=project, sampleid=sample, phylaid=phyla, **myDict)
-         m.save()
 
-    count = Profile.objects.values('classid', 'sampleid').annotate(sum=Sum('count'))
+    count = Profile.objects.filter(projectid_id=project).values('phylaid', 'sampleid').annotate(sum=Sum('count'), rich=Count('count'))
     for i in count:
-         myDict = i
-         myDict['count'] = myDict.pop('sum')
-         s_uuid = myDict['sampleid']
-         sample = Sample.objects.get(sampleid=s_uuid)
-         del myDict['sampleid']
-         c_uuid = myDict['classid']
-         tclass = Class.objects.get(classid=c_uuid)
-         del myDict['classid']
-         m = ProfileClass(projectid=project, sampleid=sample, classid=tclass, **myDict)
-         m.save()
+        myDict = i
+        myDict['count'] = myDict.pop('sum')
+        s_uuid = myDict['sampleid']
+        sample = Sample.objects.get(sampleid=s_uuid)
+        total = totalDict[s_uuid]
+        total = total[0]
+        sum = myDict['count']
+        proportion = Decimal(sum) / Decimal(total)
+        del myDict['sampleid']
+        p_uuid = myDict['phylaid']
+        phyla = Phyla.objects.get(phylaid=p_uuid)
+        del myDict['phylaid']
+        m = ProfilePhyla(projectid=project, sampleid=sample, phylaid=phyla, rel_abund=proportion, **myDict)
+        m.save()
 
-    count = Profile.objects.values('orderid', 'sampleid').annotate(sum=Sum('count'))
+    count = Profile.objects.filter(projectid_id=project).values('classid', 'sampleid').annotate(sum=Sum('count'), rich=Count('count'))
     for i in count:
-         myDict = i
-         myDict['count'] = myDict.pop('sum')
-         s_uuid = myDict['sampleid']
-         sample = Sample.objects.get(sampleid=s_uuid)
-         del myDict['sampleid']
-         o_uuid = myDict['orderid']
-         order = Order.objects.get(orderid=o_uuid)
-         del myDict['orderid']
-         m = ProfileOrder(projectid=project, sampleid=sample, orderid=order, **myDict)
-         m.save()
+        myDict = i
+        myDict['count'] = myDict.pop('sum')
+        s_uuid = myDict['sampleid']
+        sample = Sample.objects.get(sampleid=s_uuid)
+        total = totalDict[s_uuid]
+        total = total[0]
+        sum = myDict['count']
+        proportion = Decimal(sum) / Decimal(total)
+        del myDict['sampleid']
+        c_uuid = myDict['classid']
+        tclass = Class.objects.get(classid=c_uuid)
+        del myDict['classid']
+        m = ProfileClass(projectid=project, sampleid=sample, classid=tclass, rel_abund=proportion, **myDict)
+        m.save()
 
-    count = Profile.objects.values('familyid', 'sampleid').annotate(sum=Sum('count'))
+    count = Profile.objects.filter(projectid_id=project).values('orderid', 'sampleid').annotate(sum=Sum('count'), rich=Count('count'))
     for i in count:
-         myDict = i
-         myDict['count'] = myDict.pop('sum')
-         s_uuid = myDict['sampleid']
-         sample = Sample.objects.get(sampleid=s_uuid)
-         del myDict['sampleid']
-         f_uuid = myDict['familyid']
-         family = Family.objects.get(familyid=f_uuid)
-         del myDict['familyid']
-         m = ProfileFamily(projectid=project, sampleid=sample, familyid=family, **myDict)
-         m.save()
+        myDict = i
+        myDict['count'] = myDict.pop('sum')
+        s_uuid = myDict['sampleid']
+        sample = Sample.objects.get(sampleid=s_uuid)
+        total = totalDict[s_uuid]
+        total = total[0]
+        sum = myDict['count']
+        proportion = Decimal(sum) / Decimal(total)
+        del myDict['sampleid']
+        o_uuid = myDict['orderid']
+        order = Order.objects.get(orderid=o_uuid)
+        del myDict['orderid']
+        m = ProfileOrder(projectid=project, sampleid=sample, orderid=order, rel_abund=proportion, **myDict)
+        m.save()
 
-    count = Profile.objects.values('genusid', 'sampleid').annotate(sum=Sum('count'))
+    count = Profile.objects.filter(projectid_id=project).values('familyid', 'sampleid').annotate(sum=Sum('count'), rich=Count('count'))
     for i in count:
-         myDict = i
-         myDict['count'] = myDict.pop('sum')
-         s_uuid = myDict['sampleid']
-         sample = Sample.objects.get(sampleid=s_uuid)
-         del myDict['sampleid']
-         g_uuid = myDict['genusid']
-         genus = Genus.objects.get(genusid=g_uuid)
-         del myDict['genusid']
-         m = ProfileGenus(projectid=project, sampleid=sample, genusid=genus, **myDict)
-         m.save()
+        myDict = i
+        myDict['count'] = myDict.pop('sum')
+        s_uuid = myDict['sampleid']
+        sample = Sample.objects.get(sampleid=s_uuid)
+        total = totalDict[s_uuid]
+        total = total[0]
+        sum = myDict['count']
+        proportion = Decimal(sum) / Decimal(total)
+        del myDict['sampleid']
+        f_uuid = myDict['familyid']
+        family = Family.objects.get(familyid=f_uuid)
+        del myDict['familyid']
+        m = ProfileFamily(projectid=project, sampleid=sample, familyid=family, rel_abund=proportion, **myDict)
+        m.save()
 
-    count = Profile.objects.values('speciesid', 'sampleid').annotate(sum=Sum('count'))
+    count = Profile.objects.filter(projectid_id=project).values('genusid', 'sampleid').annotate(sum=Sum('count'), rich=Count('count'))
     for i in count:
-         myDict = i
-         myDict['count'] = myDict.pop('sum')
-         s_uuid = myDict['sampleid']
-         sample = Sample.objects.get(sampleid=s_uuid)
-         del myDict['sampleid']
-         sp_uuid = myDict['speciesid']
-         species = Species.objects.get(speciesid=sp_uuid)
-         del myDict['speciesid']
-         m = ProfileSpecies(projectid=project, sampleid=sample, speciesid=species, **myDict)
-         m.save()
+        myDict = i
+        myDict['count'] = myDict.pop('sum')
+        s_uuid = myDict['sampleid']
+        sample = Sample.objects.get(sampleid=s_uuid)
+        total = totalDict[s_uuid]
+        total = total[0]
+        sum = myDict['count']
+        proportion = Decimal(sum) / Decimal(total)
+        del myDict['sampleid']
+        g_uuid = myDict['genusid']
+        genus = Genus.objects.get(genusid=g_uuid)
+        del myDict['genusid']
+        m = ProfileGenus(projectid=project, sampleid=sample, genusid=genus, rel_abund=proportion, **myDict)
+        m.save()
+
+    count = Profile.objects.filter(projectid_id=project).values('speciesid', 'sampleid').annotate(sum=Sum('count'), rich=Count('count'))
+    for i in count:
+        myDict = i
+        myDict['count'] = myDict.pop('sum')
+        s_uuid = myDict['sampleid']
+        sample = Sample.objects.get(sampleid=s_uuid)
+        total = totalDict[s_uuid]
+        total = total[0]
+        sum = myDict['count']
+        proportion = Decimal(sum) / Decimal(total)
+        del myDict['sampleid']
+        sp_uuid = myDict['speciesid']
+        species = Species.objects.get(speciesid=sp_uuid)
+        del myDict['speciesid']
+        m = ProfileSpecies(projectid=project, sampleid=sample, speciesid=species, rel_abund=proportion, **myDict)
+        m.save()

@@ -8,10 +8,10 @@ urlpatterns = patterns('',
     url(r'^graph/$', 'database.views.graph', name='graph'),
 
     url(r'^getProjectTree/$', 'database.trees.getProjectTree', name='getProjectTree'),
-    url(r'^getSampleTree/$', 'database.trees.getSampleTree', name='getSampleTree'),
+    url(r'^getSampleCatTree/$', 'database.trees.getSampleCatTree', name='getSampleCatTree'),
     url(r'^getTaxaTree/$', 'database.trees.getTaxaTree', name='getTaxaTree'),
 
-    url(r'^getGraphData', 'database.trees.getGraphData', name='getGraphData'),
+    url(r'^getCatGraphData', 'database.trees.getCatGraphData', name='getCatGraphData'),
 
 )
 

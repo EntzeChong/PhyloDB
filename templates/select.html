@@ -47,8 +47,16 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Select any combination of data for analysis:</h2>
-    <div id="tree"></div>
+    <table width="100%" border="2" cellspacing="0" cellpadding="5">
+        <tr>
+            <th>Select any combination of data for analysis:</th>
+        </tr>
+        <tr>
+            <td width="60%" style="padding-right: 10px; vertical-align: top">
+                <div id="tree"></div>
+            </td>
+        </tr>
+    </table>
 
     <form id="form" method="post" action="{% url 'graph' %}">
         {% csrf_token %}
