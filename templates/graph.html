@@ -23,12 +23,14 @@
 {% endblock %}
 
 {% block dynatree %}
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
 
         $(function () {
+            $("button").click(function () {
+                $("tree").toggle();
+            });
 
-            $("#tree_meta").dynatree({
+            $("#tree_metaCat").dynatree({
                 checkbox: true,
                 selectMode: 3,
                 initAjax: {
@@ -40,7 +42,21 @@
                     getData(node);
                     //updateDataTable();
                 }
-        }); // end tree
+            }); // end tree
+
+            $("#tree_metaQuant").dynatree({
+                checkbox: true,
+                selectMode: 3,
+                initAjax: {
+                    url: '/getSampleQuantTree/',
+                    dataType: 'jsonp',
+                    data: {}
+                },
+                onSelect: function (node) {
+                    getData(node);
+                    //updateDataTable();
+                }
+            }); // end tree
 
             $("#tree_taxa").dynatree({
                 checkbox: true,
@@ -55,32 +71,8 @@
                     //updateDataTable();
                 }
             }); // end tree
+
         }); // end function
-
-        function getMetaValues() {
-            var string = "";
-            var nodes = $("#tree_meta").dynatree("getSelectedNodes");
-            for (i in nodes) {
-                var value = nodes[i].data.title;
-                var parent = nodes[i].getParent();
-                var key = parent.data.title;
-                if (nodes[i].getLevel() == 4) {
-                    string = key + "//" + value + "|" + string;
-                }
-            }
-            return string.substring(0, string.length - 1);
-        }
-
-        function getTaxaValues() {
-            var string = "";
-            var nodes = $("#tree_taxa").dynatree("getSelectedNodes");
-            for (i in nodes) {
-                var value = nodes[i].data.id;
-                var key = nodes[i].data.tooltip;
-                string = key + "//" + value  + "|" + string;
-            }
-            return string.substring(0, string.length - 1);
-        }
 
         function getData() {
             var myDict = {};
@@ -103,54 +95,94 @@
             }); // end Ajax
         } // end getData()
 
+
+        function getMetaValues() {
+            var string = "";
+            var nodes = $("#tree_metaCat").dynatree("getSelectedNodes");
+            for (i in nodes) {
+                var value = nodes[i].data.title;
+                var parent = nodes[i].getParent();
+                var key = parent.data.title;
+                if (nodes[i].getLevel() == 4) {
+                    string = key + "//" + value + "|" + string;
+                }
+            }
+            return string.substring(0, string.length - 1);
+        }
+
+        function getTaxaValues() {
+            var string = "";
+            var nodes = $("#tree_taxa").dynatree("getSelectedNodes");
+            for (i in nodes) {
+                var value = nodes[i].data.id;
+                var key = nodes[i].data.tooltip;
+                string = key + "//" + value  + "|" + string;
+            }
+            return string.substring(0, string.length - 1);
+        }
+
         function nvd3Chart(obj) {
             nv.addGraph(function () {
-                var chart = nv.models.multiBarChart()
-                        .x(function(d) {return d.label})
-                        .y(function(d) {return d.ave_rel_abund})
-                        .transitionDuration(350)
-                        .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
-                        .rotateLabels(90)      //Angle to rotate x-axis labels.
-                        .showControls(true)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
-                        .groupSpacing(0.1)    //Distance between each group of bars.
-                        ;
+            var chart = nv.models.multiBarChart()
+                            .x(function(d) {return d.label})
+                            .y(function(d) {return d.ave_rel_abund})
+                            .transitionDuration(1)
+                            .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
+                            .rotateLabels(0)      //Angle to rotate x-axis labels.
+                            .showControls(true)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
+                            .groupSpacing(0.1)    //Distance between each group of bars.
+                    ;
 
-                //chart.xAxis
-                //        .tickFormat(d3.format(',f'));
+            //chart.xAxis
+            //        .tickFormat(d3.format(',f'));
 
-                chart.yAxis
-                        .tickFormat(d3.format(',.2f'));
+            chart.yAxis
+                    .tickFormat(d3.format(',.2f'));
 
-                d3.select('#chart svg')
+            d3.select('#chart svg')
                     .datum(obj)
-                    .transition().duration(500)
+                    .transition().duration(1)
                     .call(chart);
 
-                nv.utils.windowResize(chart.update);
+            nv.utils.windowResize(chart.update);
 
-                return chart;
+            return chart;
             });
-        }
+         }
+
+
+
+
     </script>
 {% endblock %}
 
 {% block content %}
+
+    <br>
+    <button>Toggle</button><br>
+    <tree><h2>Categorical Data Selected</h2></tree>
+    <tree style="display: none"><h2>Quantitative Data Selected</h2></tree>
+
     <form>
-        <br>
         <!-- tree tables -->
         <table width="100%" border="2" cellspacing="0" cellpadding="5">
             <tr>
-                <th>Select Meta Data</th>
+                <th>Select Meta Data<br>
+                </th>
                 <th>Select Taxa level</th>
             </tr>
             <tr>
                 <td width="50%" style="padding-right: 10px; vertical-align: top">
-
                     <!-- left tree -->
                     <table id="tbl_meta" width="100%" border="0" cellspacing="0" cellpadding="1">
                         <tr>
                             <td>
-                                <div id="tree_meta"></div>
+                                <tree>
+                                    <div id="tree_metaCat"></div>
+                                </tree>
+                                <tree id="tree" style="display: none">
+                                    <div id="tree_metaQuant"></div>
+                                </tree>
                             </td>
                         </tr>
                     </table>
