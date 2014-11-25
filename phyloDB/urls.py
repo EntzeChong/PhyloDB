@@ -10,9 +10,11 @@ urlpatterns = patterns('',
     url(r'^getProjectTree/$', 'database.trees.getProjectTree', name='getProjectTree'),
     url(r'^getSampleCatTree/$', 'database.trees.getSampleCatTree', name='getSampleCatTree'),
     url(r'^getSampleQuantTree/$', 'database.trees.getSampleQuantTree', name='getSampleQuantTree'),
-    url(r'^getTaxaTree/$', 'database.trees.getTaxaTree', name='getTaxaTree'),
 
     url(r'^getCatGraphData', 'database.trees.getCatGraphData', name='getCatGraphData'),
+    url(r'^getQuantGraphData', 'database.trees.getQuantGraphData', name='getQuantGraphData'),
+
+    url(r'^getTaxaTree/$', 'database.trees.getTaxaTree', name='getTaxaTree'),
 
 )
 

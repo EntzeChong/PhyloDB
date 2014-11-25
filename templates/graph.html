@@ -27,7 +27,7 @@
 
         $(function () {
             $("button").click(function () {
-                $("tree").toggle();
+                $("toggle").toggle();
             });
 
             $("#tree_metaCat").dynatree({
@@ -38,23 +38,21 @@
                     dataType: 'jsonp',
                     data: {}
                 },
-                onSelect: function (node) {
-                    getData(node);
-                    //updateDataTable();
+                onSelect: function () {
+                    chooseData();
                 }
             }); // end tree
 
             $("#tree_metaQuant").dynatree({
                 checkbox: true,
-                selectMode: 3,
+                selectMode: 1,
                 initAjax: {
                     url: '/getSampleQuantTree/',
                     dataType: 'jsonp',
                     data: {}
                 },
-                onSelect: function (node) {
-                    getData(node);
-                    //updateDataTable();
+                onSelect: function () {
+                    chooseData();
                 }
             }); // end tree
 
@@ -66,17 +64,28 @@
                     dataType: 'jsonp',
                     data: {}
                 },
-                onSelect: function (node) {
-                    getData(node);
-                    //updateDataTable();
+                onSelect: function () {
+                   chooseData();
                 }
             }); // end tree
 
         }); // end function
 
-        function getData() {
+        function chooseData() {
+            var nodesCat = $("#tree_metaCat").dynatree("getSelectedNodes");
+            var nodesQuant = $("#tree_metaQuant").dynatree("getSelectedNodes");
+            var nodesTaxa = $("#tree_taxa").dynatree("getSelectedNodes");
+            if ((nodesCat != "") && (nodesTaxa != "")) {
+                getCatData();
+            }
+            if ((nodesQuant != "") && (nodesTaxa != "")) {
+                getQuantData();
+            }
+        }
+
+        function getCatData() {
             var myDict = {};
-            myDict['meta'] = getMetaValues();
+            myDict['meta'] = getCatMetaValues();
             myDict['taxa'] = getTaxaValues();
             jsonDict = JSON.stringify(myDict);
 
@@ -90,13 +99,33 @@
                 success: function(data) {
                     var result = JSON.stringify(data);
                     var obj = $.parseJSON(result);
-                    nvd3Chart(obj);
-                } // end success
-            }); // end Ajax
-        } // end getData()
+                    nvd3BarChart(obj);
+                }
+            });
+        }
 
+        function getQuantData() {
+            var myDict = {};
+            myDict['meta'] = getQuantMetaValues();
+            myDict['taxa'] = getTaxaValues();
+            jsonDict = JSON.stringify(myDict);
 
-        function getMetaValues() {
+            $.ajax({
+                url: '/getQuantGraphData/',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    all: jsonDict
+                },
+                success: function(data) {
+                    var result = JSON.stringify(data);
+                    var obj = $.parseJSON(result);
+                    nvd3LineChart(obj);
+                }
+            });
+        }
+
+        function getCatMetaValues() {
             var string = "";
             var nodes = $("#tree_metaCat").dynatree("getSelectedNodes");
             for (i in nodes) {
@@ -104,6 +133,20 @@
                 var parent = nodes[i].getParent();
                 var key = parent.data.title;
                 if (nodes[i].getLevel() == 4) {
+                    string = key + "//" + value + "|" + string;
+                }
+            }
+            return string.substring(0, string.length - 1);
+        }
+
+        function getQuantMetaValues() {
+            var string = "";
+            var nodes = $("#tree_metaQuant").dynatree("getSelectedNodes");
+            for (i in nodes) {
+                var value = nodes[i].data.title;
+                var parent = nodes[i].getParent();
+                var key = parent.data.title;
+                if (nodes[i].getLevel() == 3) {
                     string = key + "//" + value + "|" + string;
                 }
             }
@@ -121,14 +164,14 @@
             return string.substring(0, string.length - 1);
         }
 
-        function nvd3Chart(obj) {
+        function nvd3BarChart(obj) {
             nv.addGraph(function () {
             var chart = nv.models.multiBarChart()
                             .x(function(d) {return d.label})
                             .y(function(d) {return d.ave_rel_abund})
-                            .transitionDuration(1)
+                            .transitionDuration(50)
                             .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
-                            .rotateLabels(0)      //Angle to rotate x-axis labels.
+                            .rotateLabels(-900)      //Angle to rotate x-axis labels.
                             .showControls(true)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
                             .groupSpacing(0.1)    //Distance between each group of bars.
                     ;
@@ -139,7 +182,7 @@
             chart.yAxis
                     .tickFormat(d3.format(',.2f'));
 
-            d3.select('#chart svg')
+            d3.select('#barchart svg')
                     .datum(obj)
                     .transition().duration(1)
                     .call(chart);
@@ -150,6 +193,20 @@
             });
          }
 
+        function nvd3LineChart(obj) {
+            nv.addGraph(function () {
+            var chart = nv.models.BarChart();
+
+            d3.select('#linechart svg')
+                    .datum(obj)
+                    .transition().duration(50)
+                    .call(chart);
+
+            nv.utils.windowResize(chart.update);
+
+            return chart;
+            });
+         }
 
 
 
@@ -159,9 +216,10 @@
 {% block content %}
 
     <br>
-    <button>Toggle</button><br>
-    <tree><h2>Categorical Data Selected</h2></tree>
-    <tree style="display: none"><h2>Quantitative Data Selected</h2></tree>
+    <p>Use button to change between Categorical and Quantitative variables</p>
+    <button>Toggle</button>
+    <toggle><h2>Categorical Data Selected</h2></toggle>
+    <toggle style="display: none"><h2>Quantitative Data Selected</h2></toggle>
 
     <form>
         <!-- tree tables -->
@@ -174,22 +232,22 @@
             <tr>
                 <td width="50%" style="padding-right: 10px; vertical-align: top">
                     <!-- left tree -->
-                    <table id="tbl_meta" width="100%" border="0" cellspacing="0" cellpadding="1">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="1">
                         <tr>
                             <td>
-                                <tree>
+                                <toggle>
                                     <div id="tree_metaCat"></div>
-                                </tree>
-                                <tree id="tree" style="display: none">
+                                </toggle>
+                                <toggle style="display: none">
                                     <div id="tree_metaQuant"></div>
-                                </tree>
+                                </toggle>
                             </td>
                         </tr>
                     </table>
                 </td>
                 <td width="50%" style="padding-right: 10px; vertical-align: top">
                     <!-- right table -->
-                    <table id="tbl_taxa" width="100%" border="0" cellspacing="0" cellpadding="1">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="1">
                         <tr>
                             <td>
                                 <div id="tree_taxa"></div>
@@ -210,18 +268,18 @@
             </tr>
             <tr>
                 <td width="100%" style="vertical-align: top">
-                    <div id="chart">
-                        <svg style="height: 500px"></svg>
-                    </div>
+                    <toggle>
+                        <div id="barchart">  <svg style="height: 500px"></svg> </div>
+                    </toggle>
+                    <toggle style="display: none">
+                        <div id="linechart">  <svg style="height: 500px"></svg> </div>
+                    </toggle>
                 </td>
             </tr>
         </table>
         <p> TO DO:<br>
-        Graph:<br>
-        1. Y-axis = abundance<br>
-        2. X-axis = categorical variables (quantitative could be added without children?)<br>
-        3. Series = selected taxa<br>
-        4. Categorical = Bar chart; Quantitative = Scatter plot<br>
+        1. Add button to switch to richness
+        2. Add data table
         </p>
         <h3>Get selected data:<input type="button" value="Go!"/></h3>
         <h3>Run ANOVA using above selections:<input type="button" value="Run!"/></h3>

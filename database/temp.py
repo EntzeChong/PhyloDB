@@ -143,34 +143,3 @@ final.append(dict3)
 final.append(dict3)
 print 'Final: ' + str(final)
 
-
-[
-    {
-        "values": [
-            {
-                "count": 1,
-                "ave_rel_abund": 0.042347,
-                "ave_rich": 7.0,
-                "label": "CBG10"
-            },
-            {
-                "count": 1,
-                "ave_rel_abund": 0.027472,
-                "ave_rich": 2.0,
-                "label": "CBG13"
-            },
-            {
-                "count": 1,
-                "ave_rel_abund": 0.026144,
-                "ave_rich": 2.0,
-                "label": "CBG16"
-            },
-            {
-                "count": 1,
-                "ave_rel_abund": 0.099113,
-                "ave_rich": 20.0,
-                "label": "RENG8"
-            }
-        ]
-    }
-]
