@@ -119,8 +119,12 @@
                 },
                 success: function(data) {
                     var result = JSON.stringify(data);
+                    alert(result);
                     var obj = $.parseJSON(result);
+                    console.log("THIS ONE");
+                    console.log(obj);
                     nvd3LineChart(obj);
+                    nvd3ScatterChart(obj);
                 }
             });
         }
@@ -165,26 +169,102 @@
         }
 
         function nvd3BarChart(obj) {
+            if (document.getElementById("abun").checked)
+            {
+                nv.addGraph(function () {
+                var chart = nv.models.multiBarChart()
+                                .x(function(d) {return d.label})
+                                .y(function(d) {return d.ave_rel_abund})
+                                .transitionDuration(50)
+                                .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
+                                .rotateLabels(-900)      //Angle to rotate x-axis labels.
+                                .showControls(true)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
+                                .groupSpacing(0.1)    //Distance between each group of bars.
+                        ;
+
+                //chart.xAxis
+                //        .tickFormat(d3.format(',f'));
+
+                chart.yAxis
+                        .tickFormat(d3.format(',.2f'));
+
+                d3.select('#barchart svg')
+                        .datum(obj)
+                        .transition().duration(1)
+                        .call(chart);
+
+                nv.utils.windowResize(chart.update);
+
+                return chart;
+                });
+            }
+            if (document.getElementById("rich").checked)
+            {
+                nv.addGraph(function () {
+                var chart = nv.models.multiBarChart()
+                                .x(function(d) {return d.label})
+                                .y(function(d) {return d.ave_rich})
+                                .transitionDuration(50)
+                                .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
+                                .rotateLabels(-900)      //Angle to rotate x-axis labels.
+                                .showControls(true)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
+                                .groupSpacing(0.1)    //Distance between each group of bars.
+                        ;
+
+                //chart.xAxis
+                //        .tickFormat(d3.format(',f'));
+
+                chart.yAxis
+                        .tickFormat(d3.format(',.2f'));
+
+                d3.select('#barchart svg')
+                        .datum(obj)
+                        .transition().duration(1)
+                        .call(chart);
+
+                nv.utils.windowResize(chart.update);
+
+                return chart;
+                });
+            }
+         }
+
+
+        function mySort(data)//Used below to make the graph readable
+        {
+            var d=0;
+            var dataOrder = [];
+            alert(data);
+            while (d<data.length) {
+                var c = d;
+                var shortestval = 1000;
+                var shortestid = -1;
+                while (c < data.length) {
+                    if (data[c].x < shortestval) {
+                        shortestval = data[c].x;
+                        shortestid = c;
+                    }
+                    c++;
+                    dataOrder.append(shortestid);
+                }
+                d++;
+            }
+            alert(dataOrder);
+        }
+
+
+        function nvd3LineChart(obj) {
             nv.addGraph(function () {
-            var chart = nv.models.multiBarChart()
-                            .x(function(d) {return d.label})
-                            .y(function(d) {return d.ave_rel_abund})
-                            .transitionDuration(50)
-                            .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
-                            .rotateLabels(-900)      //Angle to rotate x-axis labels.
-                            .showControls(true)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
-                            .groupSpacing(0.1)    //Distance between each group of bars.
-                    ;
+            if (document.getElementById("abun").checked)
+            var chart = nv.models.lineChart().y(function (d) {return d.abund});
+            if (document.getElementById("rich").checked)
+            var chart = nv.models.lineChart().y(function (d) {return d.rich});
 
-            //chart.xAxis
-            //        .tickFormat(d3.format(',f'));
+                mySort(obj);
 
-            chart.yAxis
-                    .tickFormat(d3.format(',.2f'));
-
-            d3.select('#barchart svg')
+            d3.select('#linechart svg')
                     .datum(obj)
-                    .transition().duration(1)
+                    .transition().duration(50)
                     .call(chart);
 
             nv.utils.windowResize(chart.update);
@@ -193,9 +273,18 @@
             });
          }
 
-        function nvd3LineChart(obj) {
+        function nvd3ScatterChart(obj) {
             nv.addGraph(function () {
-            var chart = nv.models.BarChart();
+                if (document.getElementById("rich").checked)
+                {
+                    var chart = nv.models.scatterChart().y(function (d) {return d.rich});
+                }
+                if (document.getElementById("abun").checked)
+                {
+                    var chart = nv.models.scatterChart().y(function (d) {return d.abund});
+                }
+
+                mySort(obj);
 
             d3.select('#linechart svg')
                     .datum(obj)
@@ -210,6 +299,7 @@
 
 
 
+
     </script>
 {% endblock %}
 
@@ -220,7 +310,6 @@
     <button>Toggle</button>
     <toggle><h2>Categorical Data Selected</h2></toggle>
     <toggle style="display: none"><h2>Quantitative Data Selected</h2></toggle>
-
     <form>
         <!-- tree tables -->
         <table width="100%" border="2" cellspacing="0" cellpadding="5">
@@ -258,16 +347,21 @@
                 </td>
             </tr>
         </table>
+        Dependent variable:
+        <form action="">
+        <input type="radio" id="abun" name="DATABUTTON" onclick="chooseData()" checked="checked">Relative Abundance<br>
+        <input type="radio" id="rich" name="DATABUTTON" onclick="chooseData()">Richness
+        </form>
         <br>
         <br>
 
         <!-- graph table -->
-        <table width="100%" border="2">
+        <table width="200%" border="2">
             <tr>
                 <th style="padding-right: 10px;">Graph Data</th>
             </tr>
             <tr>
-                <td width="100%" style="vertical-align: top">
+                <td width="200%" style="vertical-align: top">
                     <toggle>
                         <div id="barchart">  <svg style="height: 500px"></svg> </div>
                     </toggle>

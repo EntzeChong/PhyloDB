@@ -356,9 +356,9 @@ def getCatGraphData(request):
                 c += 1
         else:
             pass
-
-        finalList = []
+        res = {}
         for rank in taxaDict:
+            finalList = []
             idList = taxaDict[rank]
 
             for id in idList:
@@ -387,8 +387,9 @@ def getCatGraphData(request):
 
                 taxa_table = 'profile' + rank.lower() + '__' + rank.lower() + 'id'
 
+                valuesList = []
+
                 for field in metaDict:
-                    valuesList = []
                     fieldList = metaDict[field]
                     table = ""
                     sampleTableList = ['sample_name', 'organism', 'seq_method', 'biome', 'feature', 'geo_loc', 'material']
@@ -510,7 +511,7 @@ def getCatGraphData(request):
 
                     seriesDict["values"] = valuesList
                 finalList.append(seriesDict)
-        res = simplejson.dumps(finalList)
+            res = simplejson.dumps(finalList)
         return HttpResponse(res, content_type='application/json')
 
 
@@ -623,7 +624,8 @@ def getQuantGraphData(request):
                             for i in qs3:
                                 tempDict = {}
                                 tempDict['x'] = (i[field])
-                                tempDict['y'] = (i[annotate_field1])
+                                tempDict['abund'] = (i[annotate_field1])
+                                tempDict['rich'] = (i[annotate_field2])
                                 valuesList.append(tempDict)
                             valueDict = {
                                 "key": name,
@@ -638,7 +640,8 @@ def getQuantGraphData(request):
                             for i in qs3:
                                 tempDict = {}
                                 tempDict['x'] = (i[table_field])
-                                tempDict['y'] = (i[annotate_field1])
+                                tempDict['abund'] = (i[annotate_field1])
+                                tempDict['rich'] = (i[annotate_field2])
                                 valuesList.append(tempDict)
                             valueDict = {
                                 "key": name,
@@ -652,7 +655,8 @@ def getQuantGraphData(request):
                             for i in qs3:
                                 tempDict = {}
                                 tempDict['x'] = (i[table_field])
-                                tempDict['y'] = (i[annotate_field1])
+                                tempDict['abund'] = (i[annotate_field1])
+                                tempDict['rich'] = (i[annotate_field2])
                                 valuesList.append(tempDict)
                             valueDict = {
                                 "key": name,
@@ -666,7 +670,8 @@ def getQuantGraphData(request):
                             for i in qs3:
                                 tempDict = {}
                                 tempDict['x'] = (i[table_field])
-                                tempDict['y'] = (i[annotate_field1])
+                                tempDict['abund'] = (i[annotate_field1])
+                                tempDict['rich'] = (i[annotate_field2])
                                 valuesList.append(tempDict)
                             valueDict = {
                                 "key": name,
@@ -680,7 +685,8 @@ def getQuantGraphData(request):
                             for i in qs3:
                                 tempDict = {}
                                 tempDict['x'] = (i[table_field])
-                                tempDict['y'] = (i[annotate_field1])
+                                tempDict['abund'] = (i[annotate_field1])
+                                tempDict['rich'] = (i[annotate_field2])
                                 valuesList.append(tempDict)
                             valueDict = {
                                 "key": name,
@@ -694,7 +700,8 @@ def getQuantGraphData(request):
                             for i in qs3:
                                 tempDict = {}
                                 tempDict['x'] = (i[table_field])
-                                tempDict['y'] = (i[annotate_field1])
+                                tempDict['abund'] = (i[annotate_field1])
+                                tempDict['rich'] = (i[annotate_field2])
                                 valuesList.append(tempDict)
                             valueDict = {
                                 "key": name,
@@ -708,7 +715,8 @@ def getQuantGraphData(request):
                             for i in qs3:
                                 tempDict = {}
                                 tempDict['x'] = (i[table_field])
-                                tempDict['y'] = (i[annotate_field1])
+                                tempDict['abund'] = (i[annotate_field1])
+                                tempDict['rich'] = (i[annotate_field2])
                                 valuesList.append(tempDict)
                             valueDict = {
                                 "key": name,
@@ -718,4 +726,3 @@ def getQuantGraphData(request):
 
             res = simplejson.dumps(finalList)
             return HttpResponse(res, content_type='application/json')
-
