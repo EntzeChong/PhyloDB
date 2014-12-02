@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load render_table from django_tables2 %}
 
 {% block jquery %}
     <link rel='stylesheet' type='text/css' href="../media/dynatree/ui.dynatree.css">
@@ -27,22 +28,21 @@
                     selectedKeys = $.map(selectedNodes, function (node) {
                         return node.data.id;
                     });
-
                     // clear existing input box
                     $('#selected .list input').remove();
                     // add 'hidden' input box for each selectedKeys
                     $.each(selectedKeys, function (index, value) {
                         $('#selected .list').append("<input name=\"list\" type=\"hidden\" value=\"" + value + "\"/>")
-
                     });
-
                     //clear meassage
                     $('#selected .list li').remove();
                     $('#selected .list').append("<li>Your selection has been recorded!")
                     $('#selected .list').append("<li>Click submit button to proceed")
+
                 }
             }); // end dynatree
         }); // end original function()
+
     </script>
 {% endblock %}
 
@@ -70,6 +70,28 @@
         <p><input id="submit" type="submit" value="Submit selection"/></p>
     </form>
 
+    <br>
+
+    <!--PLACE LISTABLE HERE-->
+
+
+
+    <br>
+    {% render_table Sample %}
+    <br>
+    {% render_table Collect %}
+    <br>
+    {% render_table Climate %}
+    <br>
+    {% render_table Soil_class %}
+    <br>
+    {% render_table Soil_nutrient %}
+    <br>
+    {% render_table Management %}
+    <br>
+    {% render_table Microbial %}
+    <br>
+    {% render_table User %}
 
 {% endblock %}
 

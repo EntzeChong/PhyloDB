@@ -3,10 +3,13 @@ import pickle
 from uuid import uuid4
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from models import Project, Sample
+from models import Project, Sample, Collect, Climate, Soil_class, Soil_nutrient, Management, Microbial, User, SampleTable, CollectTable, ClimateTable, Soil_classTable, Soil_nutrientTable, ManagementTable, MicrobialTable, UserTable
 from forms import UploadForm1, UploadForm2, UploadForm3, UploadForm4, UploadForm5
 from utils import handle_uploaded_file, remove_list
 from parsers import parse_project, parse_sample, parse_taxonomy, parse_profile, taxaprofile
+#from django.shortcuts import render
+#from listable.views import BaseListableView
+#from django.db import models
 
 
 def home(request):
@@ -122,8 +125,26 @@ def upload(request):
 
 
 def select(request):
+
+    samples = SampleTable(Sample.objects.all(), exclude = ('sampleid','projectid'))
+    collect = CollectTable(Collect.objects.all(), exclude = ('sampleid','projectid'))
+    climate = ClimateTable(Climate.objects.all(), exclude = ('sampleid','projectid'))
+    soilclass = Soil_classTable(Soil_class.objects.all(), exclude = ('sampleid','projectid'))
+    soilnutrient = Soil_nutrientTable(Soil_nutrient.objects.all(), exclude = ('sampleid','projectid'))
+    management = ManagementTable(Management.objects.all(), exclude = ('sampleid','projectid'))
+    microbial = MicrobialTable(Microbial.objects.all(), exclude = ('sampleid','projectid'))
+    user = UserTable(User.objects.all(), exclude = ('sampleid','projectid'))
     return render_to_response(
         'select.html',
+        {'Sample': samples,
+         'Collect': collect,
+         'Climate': climate,
+         'Soil_class': soilclass,
+         'Soil_nutrient': soilnutrient,
+         'Management': management,
+         'Microbial': microbial,
+         'User': user
+         },
         context_instance=RequestContext(request)
     )
 
@@ -139,3 +160,34 @@ def graph(request):
         'graph.html',
         context_instance=RequestContext(request)
     )
+
+
+"""class TestList(BaseListableView):
+    model = models.Sample
+
+    fields = (
+        "name",
+        "id",
+        "project",
+    )
+    widgets = {...} # optional
+    search_fields = {...} # optional
+    order_fields = {...} # optional
+    headers = {...} # optional
+    select_related = (...) # optional
+    prefetch_related = (...) # optional"""
+
+"""{% load listable %}
+
+    {% block extra_css %}
+        {% listable_css %}
+    {% endblock extra_css %}
+
+    {% block morecontent %}
+        {{listable_table}}
+    {% endblock %}
+
+    {% block extra_js %}
+    {% listable 'test-list' save_state=True %}
+    {% endblock extra_js %}"""
+

@@ -119,7 +119,7 @@
                 },
                 success: function(data) {
                     var result = JSON.stringify(data);
-                    alert(result);
+                    //alert(result);
                     var obj = $.parseJSON(result);
                     console.log("THIS ONE");
                     console.log(obj);
@@ -232,9 +232,9 @@
 
         function mySort(data)//Used below to make the graph readable
         {
-            var d=0;
+            /*var d=0;
             var dataOrder = [];
-            alert(data);
+            //alert(data);
             while (d<data.length) {
                 var c = d;
                 var shortestval = 1000;
@@ -248,8 +248,8 @@
                     dataOrder.append(shortestid);
                 }
                 d++;
-            }
-            alert(dataOrder);
+            }*/
+            //alert(dataOrder);
         }
 
 
@@ -356,12 +356,12 @@
         <br>
 
         <!-- graph table -->
-        <table width="200%" border="2">
+        <table width="150%" border="2">
             <tr>
                 <th style="padding-right: 10px;">Graph Data</th>
             </tr>
             <tr>
-                <td width="200%" style="vertical-align: top">
+                <td width="150%" style="vertical-align: top">
                     <toggle>
                         <div id="barchart">  <svg style="height: 500px"></svg> </div>
                     </toggle>

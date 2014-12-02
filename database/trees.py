@@ -356,9 +356,8 @@ def getCatGraphData(request):
                 c += 1
         else:
             pass
-        res = {}
+        finalList = []
         for rank in taxaDict:
-            finalList = []
             idList = taxaDict[rank]
 
             for id in idList:
@@ -511,7 +510,7 @@ def getCatGraphData(request):
 
                     seriesDict["values"] = valuesList
                 finalList.append(seriesDict)
-            res = simplejson.dumps(finalList)
+        res = simplejson.dumps(finalList)
         return HttpResponse(res, content_type='application/json')
 
 
@@ -542,7 +541,9 @@ def getQuantGraphData(request):
         taxaDict = {}
         if all["taxa"]:
             taxa = all["taxa"]
+            print taxa
             taxaList = taxa.split("|")
+            print str(taxaList)
             taxaDict = {}
             c = 0
             while c < taxaList.__len__():
@@ -724,5 +725,5 @@ def getQuantGraphData(request):
                             }
                             finalList.append(valueDict)
 
-            res = simplejson.dumps(finalList)
-            return HttpResponse(res, content_type='application/json')
+        res = simplejson.dumps(finalList)
+        return HttpResponse(res, content_type='application/json')
