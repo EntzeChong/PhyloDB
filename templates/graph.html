@@ -119,8 +119,9 @@
                 },
                 success: function(data) {
                     var result = JSON.stringify(data);
-                    //alert(result);
+                    alert(result);
                     var obj = $.parseJSON(result);
+                    alert(obj);
                     console.log("THIS ONE");
                     console.log(obj);
                     nvd3LineChart(obj);
@@ -232,24 +233,29 @@
 
         function mySort(data)//Used below to make the graph readable
         {
-            /*var d=0;
+            alert(data[0]['values'].length);
+            for (var counter = 0; counter<data[0]['values'].length; counter++)
+            {
+            var d=0;
             var dataOrder = [];
-            //alert(data);
-            while (d<data.length) {
-                var c = d;
+            while (d<data[0]['values'].length) {
+                var c = 0;
                 var shortestval = 1000;
                 var shortestid = -1;
-                while (c < data.length) {
-                    if (data[c].x < shortestval) {
-                        shortestval = data[c].x;
+                while (c < data[0]['values'].length) {
+                    if (dataOrder.find(c)=="undefined")
+                    {
+                    if (data[0]['values'][c]['x'] < shortestval) {
+                        shortestval = data[0]['values'][c]['x'];
                         shortestid = c;
+                    }
                     }
                     c++;
                     dataOrder.append(shortestid);
                 }
                 d++;
-            }*/
-            //alert(dataOrder);
+            }
+            }
         }
 
 
@@ -349,7 +355,7 @@
         </table>
         Dependent variable:
         <form action="">
-        <input type="radio" id="abun" name="DATABUTTON" onclick="chooseData()" checked="checked">Relative Abundance<br>
+        <input type="radio" id="abun" name="DATABUTTON" onclick="chooseData()" checked="checked">Relative Abundance
         <input type="radio" id="rich" name="DATABUTTON" onclick="chooseData()">Richness
         </form>
         <br>

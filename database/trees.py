@@ -725,5 +725,6 @@ def getQuantGraphData(request):
                             }
                             finalList.append(valueDict)
 
+        #SORT
         res = simplejson.dumps(finalList)
         return HttpResponse(res, content_type='application/json')
