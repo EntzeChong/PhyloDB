@@ -119,11 +119,7 @@
                 },
                 success: function(data) {
                     var result = JSON.stringify(data);
-                    alert(result);
                     var obj = $.parseJSON(result);
-                    alert(obj);
-                    console.log("THIS ONE");
-                    console.log(obj);
                     nvd3LineChart(obj);
                     nvd3ScatterChart(obj);
                 }
@@ -233,27 +229,48 @@
 
         function mySort(data)//Used below to make the graph readable
         {
-            alert(data[0]['values'].length);
-            for (var counter = 0; counter<data[0]['values'].length; counter++)
+            for (var counter = 0; counter<data.length; counter++)//data.length should be number of taxa selected
             {
             var d=0;
             var dataOrder = [];
-            while (d<data[0]['values'].length) {
+            while (d<data[counter]['values'].length) {
+                //alert("There are "+data[0]['values'].length +" elements in this list");
                 var c = 0;
                 var shortestval = 1000;
                 var shortestid = -1;
-                while (c < data[0]['values'].length) {
-                    if (dataOrder.find(c)=="undefined")
+                while (c < data[counter]['values'].length) {
+                    //Check that this C is not in the list already
+                    if (dataOrder.indexOf(c)!=-1)
                     {
-                    if (data[0]['values'][c]['x'] < shortestval) {
-                        shortestval = data[0]['values'][c]['x'];
-                        shortestid = c;
+                        //Already in the list
                     }
+                    else
+                    {
+                        if (parseInt(data[counter]['values'][c]['x'],10) < shortestval)
+                        {
+                            shortestval = data[counter]['values'][c]['x'];
+                            shortestid = c;
+                        }
                     }
                     c++;
-                    dataOrder.append(shortestid);
                 }
+                dataOrder.push(shortestid);
                 d++;
+            }
+                //var listString = "";DEBUG STRING
+                var newDataX = [];
+                var newDataY = [];
+            for (var cou=0;cou<dataOrder.length;cou++)
+            {
+                newDataX.push(data[counter]['values'][dataOrder[cou]]['x']);
+                newDataY.push(data[counter]['values'][dataOrder[cou]]['y']);
+                //listString = listString+data[counter]['values'][dataOrder[cou]]['x']+", ";
+            }
+                //alert(listString);
+            for (cou=0;cou<dataOrder.length;cou++)
+            {
+                data[counter]['values'][cou]['x']=newDataX[cou];
+                data[counter]['values'][cou]['y']=newDataY[cou];
             }
             }
         }
@@ -290,7 +307,6 @@
                     var chart = nv.models.scatterChart().y(function (d) {return d.abund});
                 }
 
-                mySort(obj);
 
             d3.select('#linechart svg')
                     .datum(obj)
