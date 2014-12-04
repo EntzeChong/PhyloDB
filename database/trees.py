@@ -2,13 +2,16 @@ import simplejson
 import pickle
 import operator
 from django.http import HttpResponse, StreamingHttpResponse
-from django.db.models import Q, Avg, Count, StdDev
-from models import Project, Sample, Collect, Climate, Soil_class, Soil_nutrient, Management, Microbial, User
+from django.db.models import Q, Avg, Count
+from models import Project, Sample, Collect, Soil_class, Management, User
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
+from models import ProfileKingdom, ProfilePhyla, ProfileClass, ProfileOrder, ProfileFamily, ProfileGenus, ProfileSpecies
+
 
 
 def getProjectTree(request):
     myTree = {'title': 'All Projects', 'isFolder': True, 'expand': True, 'children': []}
+
 
     projects = Project.objects.all()
     samples = Sample.objects.all()
@@ -149,7 +152,7 @@ def getSampleCatTree(request):
 def getSampleQuantTree(request):
     samples = Sample.objects.all()
     samples.query = pickle.loads(request.session['selected_samples'])
-    selected = samples.values_list('sampleid')
+
 
     myTree = {'title': 'root', 'tooltip': 'root', 'isFolder': False,  'hideCheckbox': True, 'expand': True, 'children': []}
     mimark = {'title': 'MIMARKs', 'tooltip': 'MIMARKs', 'isFolder': True,  'hideCheckbox': True, 'children': []}
@@ -341,175 +344,178 @@ def getCatGraphData(request):
         else:
             pass
 
-        taxaDict = {}
+        idList = []
         if all["taxa"]:
             taxa = all["taxa"]
-            taxaList = taxa.split("|")
-            taxaDict = {}
-            c = 0
-            while c < taxaList.__len__():
-                data = taxaList[c].split("//")
-                key = data[0]
-                taxaDict.setdefault(key, [])
-                value = data[1]
-                taxaDict[key].append(value)
-                c += 1
-        else:
-            pass
+            idList = taxa.split("|")
+
+        kingdomList = Kingdom.objects.values_list('kingdomid', flat=True)
+        phylaList = Phyla.objects.values_list('phylaid', flat=True)
+        classList = Class.objects.values_list('classid', flat=True)
+        orderList = Order.objects.values_list('orderid', flat=True)
+        familyList = Family.objects.values_list('familyid', flat=True)
+        genusList = Genus.objects.values_list('genusid', flat=True)
+        speciesList = Species.objects.values_list('speciesid', flat=True)
 
         finalList = []
-        for rank in taxaDict:
-            idList = taxaDict[rank]
+        for id in idList:
+            seriesDict = {}
+            valuesList = []
+            taxa_table = ""
+            annotate_field1 = ""
+            annotate_field2 = ""
 
-            for id in idList:
-                seriesDict = {}
-                if (rank == 'Kingdom'):
-                    name = Kingdom.objects.filter(**{'kingdomid': id}).values('kingdomName')
-                    seriesDict["key"] = name[0]['kingdomName']
-                elif (rank == 'Phyla'):
-                    name = Phyla.objects.filter(**{'phylaid': id}).values('phylaName')
-                    seriesDict["key"] = name[0]['phylaName']
-                elif (rank == 'Class'):
-                    name = Class.objects.filter(**{'classid': id}).values('className')
-                    seriesDict["key"] = name[0]['className']
-                elif (rank == 'Order'):
-                    name = Order.objects.filter(**{'orderid': id}).values('orderName')
-                    seriesDict["key"] = name[0]['orderName']
-                elif (rank == 'Family'):
-                    name = Family.objects.filter(**{'familyid': id}).values('familyName')
-                    seriesDict["key"] = name[0]['familyName']
-                elif (rank == 'Genus'):
-                    name = Genus.objects.filter(**{'genusid': id}).values('genusName')
-                    seriesDict["key"] = name[0]['genusName']
-                elif (rank == 'Species'):
-                    name = Species.objects.filter(**{'speciesid': id}).values('speciesName')
-                    seriesDict["key"] = name[0]['speciesName']
+            if id in kingdomList:
+                name = Kingdom.objects.filter(**{'kingdomid': id}).values('kingdomName')
+                seriesDict["key"] = name[0]['kingdomName']
+                taxa_table = 'profilekingdom__kingdomid'
+                annotate_field1 = 'profilekingdom__rel_abund'
+                annotate_field2 = 'profilekingdom__rich'
+            elif id in phylaList:
+                name = Phyla.objects.filter(**{'phylaid': id}).values('phylaName')
+                seriesDict["key"] = name[0]['phylaName']
+                taxa_table = 'profilephyla__phylaid'
+                annotate_field1 = 'profilephyla__rel_abund'
+                annotate_field2 = 'profilephyla__rich'
+            elif id in classList:
+                name = Class.objects.filter(**{'classid': id}).values('className')
+                seriesDict["key"] = name[0]['className']
+                taxa_table = 'profileclass__classid'
+                annotate_field1 = 'profileclass__rel_abund'
+                annotate_field2 = 'profileclass__rich'
+            elif id in orderList:
+                name = Order.objects.filter(**{'orderid': id}).values('orderName')
+                seriesDict["key"] = name[0]['orderName']
+                taxa_table = 'profileorder__orderid'
+                annotate_field1 = 'profileorder__rel_abund'
+                annotate_field2 = 'profileorder__rich'
+            elif id in familyList:
+                name = Family.objects.filter(**{'familyid': id}).values('familyName')
+                seriesDict["key"] = name[0]['familyName']
+                taxa_table = 'profilefamily__familyid'
+                annotate_field1 = 'profilefamily__rel_abund'
+                annotate_field2 = 'profilefamily__rich'
+            elif id in genusList:
+                name = Genus.objects.filter(**{'genusid': id}).values('genusName')
+                seriesDict["key"] = name[0]['genusName']
+                taxa_table = 'profilegenus__genusid'
+                annotate_field1 = 'profilegenus__rel_abund'
+                annotate_field2 = 'profilegenus__rich'
+            elif id in speciesList:
+                name = Species.objects.filter(**{'speciesid': id}).values('speciesName')
+                seriesDict["key"] = name[0]['speciesName']
+                taxa_table = 'profilespecies__speciesid'
+                annotate_field1 = 'profilespecies__rel_abund'
+                annotate_field2 = 'profilespecies__rich'
 
-                taxa_table = 'profile' + rank.lower() + '__' + rank.lower() + 'id'
+            for field in metaDict:
+                fieldList = metaDict[field]
 
-                for field in metaDict:
-                    valuesList = []
-                    fieldList = metaDict[field]
-                    table = ""
-                    sampleTableList = ['sample_name', 'organism', 'seq_method', 'biome', 'feature', 'geo_loc', 'material']
+                sampleTableList = ['sample_name', 'organism', 'seq_method', 'biome', 'feature', 'geo_loc', 'material']
+                collectTableList = ['depth', 'pool_dna_extracts', 'samp_collection_device', 'sieving', 'storage_cond']
+                soil_classTableList = ['drainage_class', 'fao_class', 'horizon', 'local_class', 'profile_position', 'slope_aspect', 'soil_type', 'texture_class']
+                mgtTableList = ['agrochem_addition', 'biological_amendment', 'cover_crop', 'crop_rotation', 'cur_land_use', 'cur_vegetation', 'cur_crop', 'cur_cultivar', 'organic', 'previous_land_use', 'soil_amendments', 'tillage']
+                usrTableList = ['usr_cat1', 'usr_cat2', 'usr_cat3', 'usr_cat4', 'usr_cat5', 'usr_cat6']
 
-                    for x in sampleTableList:
-                        if field == x:
-                            table = 'Sample'
-                        else:
-                            pass
-                    collectTableList = ['depth', 'pool_dna_extracts', 'samp_collection_device', 'sieving', 'storage_cond']
-                    for x in collectTableList:
-                        if field == x:
-                            table = 'Collect'
-                        else:
-                            pass
-                    soil_classTableList = ['drainage_class', 'fao_class', 'horizon', 'local_class', 'profile_position', 'slope_aspect', 'soil_type', 'texture_class']
-                    for x in soil_classTableList:
-                        if field == x:
-                            table = 'Soil_class'
-                        else:
-                            pass
-                    mgtTableList = ['agrochem_addition', 'biological_amendment', 'cover_crop', 'crop_rotation', 'cur_land_use', 'cur_vegetation', 'cur_crop', 'cur_cultivar', 'organic', 'previous_land_use', 'soil_amendments', 'tillage']
-                    for x in mgtTableList:
-                        if field == x:
-                            table = 'Management'
-                        else:
-                            pass
-                    usrTableList = ['usr_cat1', 'usr_cat2', 'usr_cat3', 'usr_cat4', 'usr_cat5', 'usr_cat6']
-                    for x in usrTableList:
-                        if field == x:
-                            table = 'User'
-                        else:
-                            pass
+                if field in sampleTableList:
+                    table = 'Sample'
+                elif field in collectTableList:
+                    table = 'Collect'
+                elif field in soil_classTableList:
+                    table = 'Soil_class'
+                elif field in mgtTableList:
+                    table = 'Management'
+                elif field in usrTableList:
+                    table = 'User'
 
-                    annotate_field1 = 'profile' + rank.lower() + '__rel_abund'
-                    annotate_field2 = 'profile' + rank.lower() + '__rich'
-                    qs1 = Sample.objects.all().filter(sampleid__in=selected)
-                    qs2 = qs1.filter(Q(**{taxa_table: id}))
+                qs1 = Sample.objects.all().filter(sampleid__in=selected)
+                qs2 = qs1.filter(**{taxa_table: id})
+                if table == 'Sample':
+                    args_list = []
+                    for query in fieldList:
+                        args_list.append(Q(**{field: query}))
+                    qs3 = qs2.filter(reduce(operator.or_, args_list))
+                    qs4 = qs3.values(field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
 
+                    for i in qs4:
+                        valueDict = {
+                            "label": i[field],
+                            "ave_rel_abund": i['ave_rel_abund'],
+                            "ave_rich": i['ave_rich'],
+                            "count": i['count']
+                        }
+                        valuesList.append(valueDict)
 
-                    if table == 'Sample':
-                        args_list = []
-                        for query in fieldList:
-                            args_list.append(Q(**{field: query}))
-                        qs3 = qs2.filter(reduce(operator.or_, args_list))
-                        qs4 = qs3.values(field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
-                        for i in qs4:
-                            valueDict = {
-                                "label": i[field],
-                                "ave_rel_abund": i['ave_rel_abund'],
-                                "ave_rich": i['ave_rich'],
-                                "count": i['count']
-                            }
-                            valuesList.append(valueDict)
+                elif table == 'Collect':
+                    args_list = []
+                    table_field = 'collect__' + str(field)
+                    for query in fieldList:
+                        args_list.append(Q(**{table_field: query}))
+                    qs3 = qs2.filter(reduce(operator.or_, args_list))
+                    qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
 
-                    elif table == 'Collect':
-                        args_list = []
-                        table_field = 'collect__' + str(field)
-                        for query in fieldList:
-                            args_list.append(Q(**{table_field: query}))
-                        qs3 = qs2.filter(reduce(operator.or_, args_list))
-                        qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
-                        for i in qs4:
-                            valueDict = {
-                                "label": i[table_field],
-                                "ave_rel_abund": i['ave_rel_abund'],
-                                "ave_rich": i['ave_rich'],
-                                "count": i['count']
-                            }
-                            valuesList.append(valueDict)
+                    for i in qs4:
+                        valueDict = {
+                            "label": i[table_field],
+                            "ave_rel_abund": i['ave_rel_abund'],
+                            "ave_rich": i['ave_rich'],
+                            "count": i['count']
+                        }
+                        valuesList.append(valueDict)
 
-                    elif table == 'Soil_class':
-                        args_list = []
-                        table_field = 'soil_class__' + str(field)
-                        for query in fieldList:
-                            args_list.append(Q(**{table_field: query}))
-                        qs3 = qs2.filter(reduce(operator.or_, args_list))
-                        qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
-                        for i in qs4:
-                            valueDict = {
-                                "label": i[table_field],
-                                "ave_rel_abund": i['ave_rel_abund'],
-                                "ave_rich": i['ave_rich'],
-                                "count": i['count']
-                            }
-                            valuesList.append(valueDict)
+                elif table == 'Soil_class':
+                    args_list = []
+                    table_field = 'soil_class__' + str(field)
+                    for query in fieldList:
+                        args_list.append(Q(**{table_field: query}))
+                    qs3 = qs2.filter(reduce(operator.or_, args_list))
+                    qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
 
-                    elif table == 'Management':
-                        args_list = []
-                        table_field = 'management__' + str(field)
-                        for query in fieldList:
-                            args_list.append(Q(**{table_field: query}))
-                        qs3 = qs2.filter(reduce(operator.or_, args_list))
-                        qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
-                        for i in qs4:
-                            valueDict = {
-                                "label": i[table_field],
-                                "ave_rel_abund": i['ave_rel_abund'],
-                                "ave_rich": i['ave_rich'],
-                                "count": i['count']
-                            }
-                            valuesList.append(valueDict)
+                    for i in qs4:
+                        valueDict = {
+                            "label": i[table_field],
+                            "ave_rel_abund": i['ave_rel_abund'],
+                            "ave_rich": i['ave_rich'],
+                            "count": i['count']
+                        }
+                        valuesList.append(valueDict)
 
-                    elif table == 'User':
-                        args_list = []
-                        table_field = 'user__' + str(field)
-                        for query in fieldList:
-                            args_list.append(Q(**{table_field: query}))
-                        qs3 = qs2.filter(reduce(operator.or_, args_list))
-                        qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
-                        for i in qs4:
-                            valueDict = {
-                                "label": i[table_field],
-                                "ave_rel_abund": i['ave_rel_abund'],
-                                "ave_rich": i['ave_rich'],
-                                "count": i['count']
-                            }
-                            valuesList.append(valueDict)
+                elif table == 'Management':
+                    args_list = []
+                    table_field = 'management__' + str(field)
+                    for query in fieldList:
+                        args_list.append(Q(**{table_field: query}))
+                    qs3 = qs2.filter(reduce(operator.or_, args_list))
+                    qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
 
-                    seriesDict["values"] = valuesList
-                finalList.append(seriesDict)
+                    for i in qs4:
+                        valueDict = {
+                            "label": i[table_field],
+                            "ave_rel_abund": i['ave_rel_abund'],
+                            "ave_rich": i['ave_rich'],
+                            "count": i['count']
+                        }
+                        valuesList.append(valueDict)
+
+                elif table == 'User':
+                    args_list = []
+                    table_field = 'user__' + str(field)
+                    for query in fieldList:
+                        args_list.append(Q(**{table_field: query}))
+                    qs3 = qs2.filter(reduce(operator.or_, args_list))
+                    qs4 = qs3.values(table_field).annotate(count=Count(annotate_field1), ave_rel_abund=Avg(annotate_field1), ave_rich=Avg(annotate_field2))
+
+                    for i in qs4:
+                        valueDict = {
+                            "label": i[table_field],
+                            "ave_rel_abund": i['ave_rel_abund'],
+                            "ave_rich": i['ave_rich'],
+                            "count": i['count']
+                        }
+                        valuesList.append(valueDict)
+
+            seriesDict["values"] = valuesList
+            finalList.append(seriesDict)
         res = simplejson.dumps(finalList)
         return HttpResponse(res, content_type='application/json')
 
@@ -538,184 +544,198 @@ def getQuantGraphData(request):
         else:
             pass
 
-        taxaDict = {}
+        idList = []
         if all["taxa"]:
             taxa = all["taxa"]
-            taxaList = taxa.split("|")
-            taxaDict = {}
-            c = 0
-            while c < taxaList.__len__():
-                data = taxaList[c].split("//")
-                key = data[0]
-                taxaDict.setdefault(key, [])
-                value = data[1]
-                taxaDict[key].append(value)
-                c += 1
-        else:
-            pass
+            idList = taxa.split("|")
+
+        kingdomList = Kingdom.objects.values_list('kingdomid', flat=True)
+        phylaList = Phyla.objects.values_list('phylaid', flat=True)
+        classList = Class.objects.values_list('classid', flat=True)
+        orderList = Order.objects.values_list('orderid', flat=True)
+        familyList = Family.objects.values_list('familyid', flat=True)
+        genusList = Genus.objects.values_list('genusid', flat=True)
+        speciesList = Species.objects.values_list('speciesid', flat=True)
 
         finalList = []
-        for rank in taxaDict:
-            idList = taxaDict[rank]
+        for id in idList:
+            name = ""
+            valueDict = {}
+            valuesList = []
+            taxa_table = ""
+            annotate_field1 = ""
+            annotate_field2 = ""
 
-            for id in idList:
-                name = ""
+            if id in kingdomList:
+                qs = Kingdom.objects.filter(**{'kingdomid': id}).values('kingdomName')
+                name = qs[0]['kingdomName']
+                taxa_table = 'profilekingdom__kingdomid'
+                annotate_field1 = 'profilekingdom__rel_abund'
+                annotate_field2 = 'profilekingdom__rich'
+            elif id in phylaList:
+                qs = Phyla.objects.filter(**{'phylaid': id}).values('phylaName')
+                name = qs[0]['phylaName']
+                taxa_table = 'profilephyla__phylaid'
+                annotate_field1 = 'profilephyla__rel_abund'
+                annotate_field2 = 'profilephyla__rich'
+            elif id in classList:
+                qs = Class.objects.filter(**{'classid': id}).values('className')
+                name = qs[0]['className']
+                taxa_table = 'profileclass__classid'
+                annotate_field1 = 'profileclass__rel_abund'
+                annotate_field2 = 'profileclass__rich'
+            elif id in orderList:
+                qs = Order.objects.filter(**{'orderid': id}).values('orderName')
+                name = qs[0]['orderName']
+                taxa_table = 'profileorder__orderid'
+                annotate_field1 = 'profileorder__rel_abund'
+                annotate_field2 = 'profileorder__rich'
+            elif id in familyList:
+                qs = Family.objects.filter(**{'familyid': id}).values('familyName')
+                name = qs[0]['familyName']
+                taxa_table = 'profilefamily__familyid'
+                annotate_field1 = 'profilefamily__rel_abund'
+                annotate_field2 = 'profilefamily__rich'
+            elif id in genusList:
+                qs = Genus.objects.filter(**{'genusid': id}).values('genusName')
+                name = qs[0]['genusName']
+                taxa_table = 'profilegenus__genusid'
+                annotate_field1 = 'profilegenus__rel_abund'
+                annotate_field2 = 'profilegenus__rich'
+            elif id in speciesList:
+                qs = Species.objects.filter(**{'speciesid': id}).values('speciesName')
+                name = qs[0]['speciesmName']
+                taxa_table = 'profilespecies__speciesid'
+                annotate_field1 = 'profilespecies__rel_abund'
+                annotate_field2 = 'profilespecies__rich'
 
-                if (rank == 'Kingdom'):
-                    qs = Kingdom.objects.filter(**{'kingdomid': id}).values('kingdomName')
-                    name = qs[0]['kingdomName']
-                if (rank == 'Phyla'):
-                    qs = Phyla.objects.filter(**{'phylaid': id}).values('phylaName')
-                    name = qs[0]['phylaName']
-                if (rank == 'Class'):
-                    qs = Class.objects.filter(**{'classid': id}).values('className')
-                    name = qs[0]['className']
-                if (rank == 'Order'):
-                    qs = Order.objects.filter(**{'orderid': id}).values('orderName')
-                    name = qs[0]['orderName']
-                if (rank == 'Family'):
-                    qs = Family.objects.filter(**{'familyid': id}).values('familyName')
-                    name = qs[0]['familyName']
-                if (rank == 'Genus'):
-                    qs = Genus.objects.filter(**{'genusid': id}).values('genusName')
-                    name = qs[0]['genusName']
-                if (rank == 'Species'):
-                    qs = Species.objects.filter(**{'speciesid': id}).values('speciesName')
-                    name = qs[0]['speciesName']
+            for category in metaDict:
+                fieldList = metaDict[category]
+                table = ""
 
-                taxa_table = 'profile' + rank.lower() + '__' + rank.lower() + 'id'
+                if category == 'MIMARKs':
+                    table = 'Sample'
 
-                for category in metaDict:
-                    fieldList = metaDict[category]
-                    table = ""
+                if category == 'Sample Collection':
+                    table = 'Collect'
 
-                    if category == 'MIMARKs':
-                        table = 'Sample'
+                if category == 'Climate':
+                    table = 'Climate'
 
-                    if category == 'Sample Collection':
-                        table = 'Collect'
+                if category == 'Soil Classification':
+                    table = 'Soil_class'
 
-                    if category == 'Climate':
-                        table = 'Climate'
+                if category == 'Soil Nutrient':
+                    table = 'Soil_nutrient'
 
-                    if category == 'Soil Classification':
-                        table = 'Soil_class'
+                if category == 'Microbial Biomass':
+                    table = 'Microbial'
 
-                    if category == 'Soil Nutrient':
-                        table = 'Soil_nutrient'
+                if category == 'User-defined':
+                    table = 'User'
 
-                    if category == 'Microbial Biomass':
-                        table = 'Microbial'
+                qs1 = Sample.objects.all().filter(sampleid__in=selected)
+                qs2 = qs1.filter(Q(**{taxa_table: id}))
 
-                    if category == 'User-defined':
-                        table = 'User'
+                for field in fieldList:
+                    if table == 'Sample':
+                        qs3 = qs2.values(field, 'sampleid', annotate_field1, annotate_field2)
+                        for i in qs3:
+                            tempDict = {}
+                            tempDict['x'] = (i[field])
+                            tempDict['y_abund'] = (i[annotate_field1])
+                            tempDict['y_rich'] = (i[annotate_field2])
+                            valuesList.append(tempDict)
 
-                    annotate_field1 = 'profile' + rank.lower() + '__rel_abund'
-                    annotate_field2 = 'profile' + rank.lower() + '__rich'
-                    qs1 = Sample.objects.all().filter(sampleid__in=selected)
-                    qs2 = qs1.filter(Q(**{taxa_table: id}))
+                    if table == 'Climate':
+                        table_field = 'climate__' + str(field)
+                        qs3 = qs2.values(table_field, 'sampleid', annotate_field1, annotate_field2)
+                        for i in qs3:
+                            tempDict = {}
+                            tempDict['x'] = (i[table_field])
+                            tempDict['y_abund'] = (i[annotate_field1])
+                            tempDict['y_rich'] = (i[annotate_field2])
+                            valuesList.append(tempDict)
 
-                    for field in fieldList:
-                        valuesList = []
+                    if table == 'Collect':
+                        table_field = 'collect__' + str(field)
+                        qs3 = qs2.values(table_field, 'sampleid', annotate_field1, annotate_field2)
+                        for i in qs3:
+                            tempDict = {}
+                            tempDict['x'] = (i[table_field])
+                            tempDict['y_abund'] = (i[annotate_field1])
+                            tempDict['y_rich'] = (i[annotate_field2])
+                            valuesList.append(tempDict)
 
-                        if table == 'Sample':
-                            qs3 = qs2.values(field, 'sampleid', annotate_field1, annotate_field2)
-                            for i in qs3:
-                                tempDict = {}
-                                tempDict['x'] = (i[field])
-                                tempDict['y'] = (i[annotate_field1])
-                                valuesList.append(tempDict)
-                            valueDict = {
-                                "key": name,
-                                "values": valuesList,
-                            }
-                            finalList.append(valueDict)
-                            print valueDict
+                    if table == 'Soil_class':
+                        table_field = 'collect__' + str(field)
+                        qs3 = qs2.values(table_field, 'sampleid', annotate_field1, annotate_field2)
+                        for i in qs3:
+                            tempDict = {}
+                            tempDict['x'] = (i[table_field])
+                            tempDict['y_abund'] = (i[annotate_field1])
+                            tempDict['y_rich'] = (i[annotate_field2])
+                            valuesList.append(tempDict)
 
-                        if table == 'Climate':
-                            table_field = 'climate__' + str(field)
-                            qs3 = qs2.values(table_field, 'sampleid', annotate_field1, annotate_field2)
-                            for i in qs3:
-                                tempDict = {}
-                                tempDict['x'] = (i[table_field])
-                                tempDict['y'] = (i[annotate_field1])
-                                valuesList.append(tempDict)
-                            valueDict = {
-                                "key": name,
-                                "values": valuesList,
-                            }
-                            finalList.append(valueDict)
+                    elif table == 'User':
+                        table_field = 'user__' + str(field)
+                        qs3 = qs2.values(table_field, 'sampleid', annotate_field1, annotate_field2)
+                        for i in qs3:
+                            tempDict = {}
+                            tempDict['x'] = (i[table_field])
+                            tempDict['y_abund'] = (i[annotate_field1])
+                            tempDict['y_rich'] = (i[annotate_field2])
+                            valuesList.append(tempDict)
 
-                        if table == 'Collect':
-                            table_field = 'collect__' + str(field)
-                            qs3 = qs2.values(table_field, 'sampleid', annotate_field1, annotate_field2)
-                            for i in qs3:
-                                tempDict = {}
-                                tempDict['x'] = (i[table_field])
-                                tempDict['y'] = (i[annotate_field1])
-                                valuesList.append(tempDict)
-                            valueDict = {
-                                "key": name,
-                                "values": valuesList,
-                            }
-                            finalList.append(valueDict)
+                    elif table == 'Microbial':
+                        table_field = 'microbial__' + str(field)
+                        qs3 = qs2.values(table_field, 'sampleid', annotate_field1, annotate_field2)
+                        for i in qs3:
+                            tempDict = {}
+                            tempDict['x'] = (i[table_field])
+                            tempDict['y_abund'] = (i[annotate_field1])
+                            tempDict['y_rich'] = (i[annotate_field2])
+                            valuesList.append(tempDict)
 
-                        if table == 'Soil_class':
-                            table_field = 'collect__' + str(field)
-                            qs3 = qs2.values(table_field, 'sampleid', annotate_field1, annotate_field2)
-                            for i in qs3:
-                                tempDict = {}
-                                tempDict['x'] = (i[table_field])
-                                tempDict['y'] = (i[annotate_field1])
-                                valuesList.append(tempDict)
-                            valueDict = {
-                                "key": name,
-                                "values": valuesList,
-                            }
-                            finalList.append(valueDict)
+                    elif table == 'Soil_nutrient':
+                        table_field = 'soil_nutrient__' + str(field)
+                        qs3 = qs2.values(table_field, 'sampleid', annotate_field1, annotate_field2)
+                        for i in qs3:
+                            tempDict = {}
+                            tempDict['x'] = (i[table_field])
+                            tempDict['y_abund'] = (i[annotate_field1])
+                            tempDict['y_rich'] = (i[annotate_field2])
+                            valuesList.append(tempDict)
 
-                        elif table == 'User':
-                            table_field = 'user__' + str(field)
-                            qs3 = qs2.values(table_field, 'sampleid', annotate_field1, annotate_field2)
-                            for i in qs3:
-                                tempDict = {}
-                                tempDict['x'] = (i[table_field])
-                                tempDict['y'] = (i[annotate_field1])
-                                valuesList.append(tempDict)
-                            valueDict = {
-                                "key": name,
-                                "values": valuesList,
-                            }
-                            finalList.append(valueDict)
+                valueDict = {
+                    "key": name,
+                    "values": valuesList,
+                }
 
-                        elif table == 'Microbial':
-                            table_field = 'microbial__' + str(field)
-                            qs3 = qs2.values(table_field, 'sampleid', annotate_field1, annotate_field2)
-                            for i in qs3:
-                                tempDict = {}
-                                tempDict['x'] = (i[table_field])
-                                tempDict['y'] = (i[annotate_field1])
-                                valuesList.append(tempDict)
-                            valueDict = {
-                                "key": name,
-                                "values": valuesList,
-                            }
-                            finalList.append(valueDict)
+            finalList.append(valueDict)
+        res = simplejson.dumps(finalList)
+        return HttpResponse(res, content_type='application/json')
 
-                        elif table == 'Soil_nutrient':
-                            table_field = 'soil_nutrient__' + str(field)
-                            qs3 = qs2.values(table_field, 'sampleid', annotate_field1, annotate_field2)
-                            for i in qs3:
-                                tempDict = {}
-                                tempDict['x'] = (i[table_field])
-                                tempDict['y'] = (i[annotate_field1])
-                                valuesList.append(tempDict)
-                            valueDict = {
-                                "key": name,
-                                "values": valuesList,
-                            }
-                            finalList.append(valueDict)
 
-            res = simplejson.dumps(finalList)
-            return HttpResponse(res, content_type='application/json')
+import pandas as pd
+from scipy import stats
+def singleANOVA(request):
+    print 'test'
+    samples = Sample.objects.all()
+    samples.query = pickle.loads(request.session['selected_samples'])
+    selected = samples.values('user__usr_cat1', 'sampleid', 'profilephyla__count')
+    df = pd.DataFrame.from_records(selected)
+
+    trt1 = df['user__usr_cat1'] == 'CBG'
+    trt2 = df['user__usr_cat1'] == 'REN'
+    trt3 = df['user__usr_cat1'] == 'ESR'
+
+    cat_data = df.groupby('user__usr_cat1')
+    print cat_data.mean()
+
+    f_val, p_val = stats.f_oneway(trt1, trt2, trt3)
+    output = 'One-way ANOVA P =', p_val
+    return HttpResponse(output)
+
+
 

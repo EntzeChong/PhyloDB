@@ -1,145 +1,18 @@
-'''
-myDict = {}
-var = [u'sample_name:RENG8|sample_name:CBG6|sample_name:ESRBG24|sample_name:CBG4|sample_name:RENG12|sample_name:CBG26|sample_name:RENG25|sample_name:ESRBG27|sample_name:RENG26|sample_name:CBG13|sample_name:CBG1|sample_name:RENG29|sample_name:CBG30|sample_name:CBG10|sample_name:RENG21|sample_name:RENG13|sample_name:CBG27|sample_name:CBG19|sample_name:RENG32|sample_name:ESRBG3|sample_name:RENG2|sample_name:ESRBG11|sample_name:ESRBG18|sample_name:ESRBG31|sample_name:CBG16|sample_name:ESRBG20|sample_name:ESRBG5|sample_name:ESRBG9|sample_name:ESRBG14|sample_name:RENG7|MIMARKs:sample_name']
-var2 = str(var)
-var2 = var2.replace("[u'", "")
-var2 = var2.replace("']", "")
-print var
-print var2
-new = var2.split("|")
-print new
-c=0[{'sum': 52, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'0480e315554f44c3b9d80236f1f33954'}, {'sum': 129, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'189bd1ef445540afab75ba3805eef3fe'}, {'sum': 535, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'1ee82478fbf64111aa45667442710926'}, {'sum': 4, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'3869dc76d1694c62aa1a30b7389a5211'}, {'sum': 120, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'47c1ac16c17b421dadaa04f4170605f2'}, {'sum': 4, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'56d5c5f55c414d4c8151f7137b9a8a6e'}, {'sum': 4, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'5db43a0a844545dfabd5185a3fff3873'}, {'sum': 8, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'5f2dc6de454a49bc86b510e74f685f7e'}, {'sum': 14, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'60d3c3d061ed4312bde1b8d0aa0e84de'}, {'sum': 47, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'640fbfa17f13434fa6b118f8c336f614'}, {'sum': 499, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'657bd30f342a4b3b97562baf56cb2b6f'}, {'sum': 34, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'69452af544de41d8bd4ffeacca06f5b8'}, {'sum': 3, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'6d1ea9e2eede4f4ba195e21e05b29262'}, {'sum': 476, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'89e7993e9fd4478d83cc4f82da8f8bdc'}, {'sum': 2, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'8fa14f0e529e4e13b4b4a806bc5c9c83'}, {'sum': 6, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'9ac990ed309f4fb6b399c6480e8fce12'}, {'sum': 65, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'b6d3ef4b21bd405e946d34ffb7bd90ed'}, {'sum': 3, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'b7249a2c0f2d473e8e71d062a6858a15'}, {'sum': 1439, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'b860a20cd23843a0a81e2a9aff139c0c'}, {'sum': 14, 'phylaid': u'3d2a33491d6d43b0b692533baa490813', 'sampleid': u'b876a4c00ee64ca1945f6df31977be17'}
-while c<new.__len__():
-    data = new[c].split(":")
-    key = str(data[0])
-    value = str(data[1])
-    myDict.setdefault(key, [])
-    myDict[key].append(value)
-    c+=1
-print("THIS IS THE DICTIONARY:")
-print myDict
-#myNode5['sample_name'].append(myNode6)
-'''
 
-finalDict = {
-    "rel_abund": [
-        {
-            "x_values": ["CBG", "ESR", "REN"],
-            "name": "Proteobacteria",
-            "y_values": [0.3958213, 0.3859393, 0.36084],
-            "sd": [],
-            "n": []
-        },
-        {
-            "x_values": ["CBG", "ESR", "REN"],
-            "name": "Rhizobiales",
-            "y_values": [0.0667671, 0.04395400000000001, 0.034673899999999994]
-        },
-        {
-            "x_values": ["CBG", "ESR", "REN"],
-            "name": "Alphaproteobacteria",
-            "y_values": [0.08572700000000001, 0.14687860000000003, 0.1118252]
-        }],
-    "richness": [
-        {
-            "x_values": ["CBG", "ESR", "REN"],
-            "name": "Proteobacteria",
-            "y_values": [21.5, 43.1, 39.0]
-        },
-        {
-            "x_values": ["CBG", "ESR", "REN"],
-            "name": "Rhizobiales",
-            "y_values": [3.1, 6.1, 5.4]
-        },
-        {
-            "x_values": ["CBG", "ESR", "REN"],
-            "name": "Alphaproteobacteria",
-            "y_values": [5.6, 17.1, 15.1]
-        }
-    ]}
-
-#parse final dict
-rel_abund = finalDict['rel_abund']
-print 'rel_abund:'
-for i in rel_abund:
-    print 'series -> ' + str(i['name'])
-    print 'x-values -> ' + str(i['x_values'])
-    print 'y-values -> ' + str(i['y_values'])
-
-print
-richness = finalDict['richness']
-print 'richness:'
-for i in richness:
-    print 'series -> ' + str(i['name'])
-    print 'x-values -> ' + str(i['x_values'])
-    print 'y-values -> ' + str(i['y_values'])
+def merge_lists(l1, l2, key):
+    merged = {}
+    for item in l1+l2:
+        if item[key] in merged:
+            merged[item[key]].update(item)
+        else:
+            merged[item[key]] = item
+    return [val for (_, val) in merged.items()]
 
 
+test = [{'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'1ae99098cd6f46eaa1fa5f482d7da63e', 'rich': 153}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'2de74d4794b64a9c8426c72d80ab3f1b', 'rich': 131}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'436ca7ad0648480aa6425e8ef17a7774', 'rich': 39}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'481d9d0b0563450a8abd95f6a0fc8406', 'rich': 31}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'49b1b9b960824f1cb4111f0e80d3d364', 'rich': 35}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'58efda4db2414eae9e36502b97bad83b', 'rich': 83}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'70a66c6dc1c74374ab68372f0681b3ad', 'rich': 78}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'748462476d1e411884cddec97bd6cfb4', 'rich': 56}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'78170aa5bb804ad18d25cc158c486d2f', 'rich': 25}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'7f185a29cfe94226a5783887fcd8725e', 'rich': 191}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'80398d86cf8e412285a5d2602987d305', 'rich': 18}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'80be03d57dcb4869ae76b6c593f3b82b', 'rich': 96}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'836305388509451e9254b096b844d9bc', 'rich': 74}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'8af1d2118bad4ce38cf482be0fd63070', 'rich': 70}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'a3cebf584f6c476a8184089df229f525', 'rich': 74}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'aa2ac88a85dd41ac9bbf5ca38f02f914', 'rich': 69}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'b59d7f39e2fa41ea8f9411bc816d76e9', 'rich': 46}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'b6a0085b60e24927bc6cf9db96e0bd23', 'rich': 30}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'b82c697b7b0c40c9960c9a35ce3a4bf8', 'rich': 32}]
+count = [{'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 2285, 'sampleid': u'1ae99098cd6f46eaa1fa5f482d7da63e'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 1251, 'sampleid': u'2de74d4794b64a9c8426c72d80ab3f1b'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 182, 'sampleid': u'436ca7ad0648480aa6425e8ef17a7774'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 97, 'sampleid': u'481d9d0b0563450a8abd95f6a0fc8406'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 129, 'sampleid': u'49b1b9b960824f1cb4111f0e80d3d364'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 737, 'sampleid': u'58efda4db2414eae9e36502b97bad83b'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 1960, 'sampleid': u'70a66c6dc1c74374ab68372f0681b3ad'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 820, 'sampleid': u'748462476d1e411884cddec97bd6cfb4'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 108, 'sampleid': u'78170aa5bb804ad18d25cc158c486d2f'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 3146, 'sampleid': u'7f185a29cfe94226a5783887fcd8725e'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 146, 'sampleid': u'80398d86cf8e412285a5d2602987d305'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 1020, 'sampleid': u'80be03d57dcb4869ae76b6c593f3b82b'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 333, 'sampleid': u'836305388509451e9254b096b844d9bc'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 423, 'sampleid': u'8af1d2118bad4ce38cf482be0fd63070'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 537, 'sampleid': u'a3cebf584f6c476a8184089df229f525'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 535, 'sampleid': u'aa2ac88a85dd41ac9bbf5ca38f02f914'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 333, 'sampleid': u'b59d7f39e2fa41ea8f9411bc816d76e9'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 153, 'sampleid': u'b6a0085b60e24927bc6cf9db96e0bd23'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 130, 'sampleid': u'b82c697b7b0c40c9960c9a35ce3a4bf8'}]
 
+test = merge_lists(test, count, "sampleid")
+print test
 
-test = [
-                {
-                    "key": "Actinobacteria",
-                    "values": [
-                            {
-                                "label": "CBG1",
-                                "mean": 4,
-                                "sd": 1.5,
-                                "n": 6
-                            },
-                            {
-                                "label": "B",
-                                "value": 3.75
-                            },
-                            {
-                                "label": "C",
-                                "value": 3.8
-                            }
-                        ]
-                    },
-                {
-                    "key": "Series #2",
-                    "values": [
-                            {
-                                "label": "A",
-                                "value": 2
-                            },
-                            {
-                                "label": "B",
-                                "value": 3
-                            },
-                            {
-                                "label": "C",
-                                "value": 4
-                            }
-                        ]
-                    }
-                ]
-
-
-
-
-
-field = "C"
-abund = 0.03
-dict2 = {}
-dict2["label"] = field
-dict2["value"] = abund
-print dict2
-print
-values = []
-values.append(dict2)
-print 'value_list: ' + str(values)
-print
-
-
-dict3 = {}
-dict3["key"] = 'Acidobacteria'
-dict3["values"] = values
-print 'Dict3: ' + str(dict3)
-
-final = []
-final.append(dict3)
-final.append(dict3)
-print 'Final: ' + str(final)
 

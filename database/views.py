@@ -104,11 +104,9 @@ def upload(request):
             print("Please upload meta files")
 
     elif request.method == 'POST' and 'clickMe' in request.POST:
-
         remove_list(request)
 
     projects = Project.objects.all()
-
     return render_to_response(
         'upload.html',
         {'projects': projects,
@@ -122,8 +120,13 @@ def upload(request):
 
 
 def select(request):
+    projects = Project.objects.all()
+    samples = Sample.objects.all()
+
     return render_to_response(
         'select.html',
+        {'projects': projects,
+         'samples': samples},
         context_instance=RequestContext(request)
     )
 
@@ -139,3 +142,4 @@ def graph(request):
         'graph.html',
         context_instance=RequestContext(request)
     )
+

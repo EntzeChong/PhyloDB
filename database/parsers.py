@@ -6,9 +6,9 @@ from models import Project, Sample, Collect, Climate, Soil_class, Soil_nutrient,
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
 from models import ProfileKingdom, ProfilePhyla, ProfileClass, ProfileOrder, ProfileFamily, ProfileGenus, ProfileSpecies
 from django.db.models import Sum, Count
-
 import fileinput
 from itertools import izip
+
 
 def parse_project(filepath, uploaddate, Document, p_uuid):
     f = csv.DictReader(Document, delimiter=',')
@@ -47,7 +47,7 @@ def parse_sample(Document, p_uuid):
         m = Soil_class(projectid=project, sampleid=sample, **soil_classDict)
         m.save()
 
-        wanted_keys = ['pH', 'EC', 'tot_C', 'tot_OM', 'tot_N', 'NO3_N', 'NH4_mN', 'P', 'K', 'S', 'Zn', 'Fe', 'Cu', 'Mn', 'Ca', 'Mg', 'Na', 'B']
+        wanted_keys = ['pH', 'EC', 'tot_C', 'tot_OM', 'tot_N', 'NO3_N', 'NH4_N', 'P', 'K', 'S', 'Zn', 'Fe', 'Cu', 'Mn', 'Ca', 'Mg', 'Na', 'B']
         soil_nutrDict = {x: rowDict[x] for x in wanted_keys if x in rowDict}
         m = Soil_nutrient(projectid=project, sampleid=sample, **soil_nutrDict)
         m.save()
@@ -150,20 +150,23 @@ def parse_profile(taxonomy, shared, path, p_uuid):
                 row = line.split('\t')
                 for i in range(len(samples_list)):
                     count = int(row[i+1])
-                    if count != 0:
-                        taxon = taxa_list[j].split(';')
-                        name = samples_list[i]
-                        project = Project.objects.get(projectid=p_uuid)
-                        sample = Sample.objects.filter(projectid=p_uuid).get(sample_name=name)
-                        t_kingdom = Kingdom.objects.get(kingdomName=taxon[0])
-                        t_phyla = Phyla.objects.get(kingdomid_id=t_kingdom, phylaName=taxon[1])
-                        t_class = Class.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, className=taxon[2])
-                        t_order = Order.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderName=taxon[3])
-                        t_family = Family.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyName=taxon[4])
-                        t_genus = Genus.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyid_id=t_family, genusName=taxon[5])
-                        t_species = Species.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyid_id=t_family, genusid_id=t_genus, speciesName=taxon[6])
-                        record = Profile(projectid=project, sampleid=sample, kingdomid=t_kingdom, phylaid=t_phyla, classid=t_class, orderid=t_order, familyid=t_family, genusid=t_genus, speciesid=t_species, count=count)
-                        record.save()
+                    if count > 0:
+                        present = 1
+                    else:
+                        present = 0
+                    taxon = taxa_list[j].split(';')
+                    name = samples_list[i]
+                    project = Project.objects.get(projectid=p_uuid)
+                    sample = Sample.objects.filter(projectid=p_uuid).get(sample_name=name)
+                    t_kingdom = Kingdom.objects.get(kingdomName=taxon[0])
+                    t_phyla = Phyla.objects.get(kingdomid_id=t_kingdom, phylaName=taxon[1])
+                    t_class = Class.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, className=taxon[2])
+                    t_order = Order.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderName=taxon[3])
+                    t_family = Family.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyName=taxon[4])
+                    t_genus = Genus.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyid_id=t_family, genusName=taxon[5])
+                    t_species = Species.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyid_id=t_family, genusid_id=t_genus, speciesName=taxon[6])
+                    record = Profile(projectid=project, sampleid=sample, kingdomid=t_kingdom, phylaid=t_phyla, classid=t_class, orderid=t_order, familyid=t_family, genusid=t_genus, speciesid=t_species, count=count, binary=present)
+                    record.save()
                 j += 1
 
 def taxaprofile(p_uuid):
@@ -178,9 +181,10 @@ def taxaprofile(p_uuid):
         totalDict.setdefault(id, [])
         totalDict[id].append(total)
 
-    count = Profile.objects.filter(projectid_id=project).values('kingdomid', 'sampleid').annotate(sum=Sum('count'), rich=Count('count'))
-    for i in count:
-        myDict = i
+    q1 = Profile.objects.filter(projectid_id=project)
+
+    dict = q1.values('kingdomid', 'sampleid').annotate(sum=Sum('count'), rich=Sum('binary'))
+    for myDict in dict:
         myDict['count'] = myDict.pop('sum')
         s_uuid = myDict['sampleid']
         sample = Sample.objects.get(sampleid=s_uuid)
@@ -196,9 +200,8 @@ def taxaprofile(p_uuid):
         m.save()
 
 
-    count = Profile.objects.filter(projectid_id=project).values('phylaid', 'sampleid').annotate(sum=Sum('count'), rich=Count('count'))
-    for i in count:
-        myDict = i
+    dict = q1.values('phylaid', 'sampleid').annotate(sum=Sum('count'), rich=Sum('binary'))
+    for myDict in dict:
         myDict['count'] = myDict.pop('sum')
         s_uuid = myDict['sampleid']
         sample = Sample.objects.get(sampleid=s_uuid)
@@ -213,9 +216,8 @@ def taxaprofile(p_uuid):
         m = ProfilePhyla(projectid=project, sampleid=sample, phylaid=phyla, rel_abund=proportion, **myDict)
         m.save()
 
-    count = Profile.objects.filter(projectid_id=project).values('classid', 'sampleid').annotate(sum=Sum('count'), rich=Count('count'))
-    for i in count:
-        myDict = i
+    dict = q1.values('classid', 'sampleid').annotate(sum=Sum('count'), rich=Sum('binary'))
+    for myDict in dict:
         myDict['count'] = myDict.pop('sum')
         s_uuid = myDict['sampleid']
         sample = Sample.objects.get(sampleid=s_uuid)
@@ -230,9 +232,8 @@ def taxaprofile(p_uuid):
         m = ProfileClass(projectid=project, sampleid=sample, classid=tclass, rel_abund=proportion, **myDict)
         m.save()
 
-    count = Profile.objects.filter(projectid_id=project).values('orderid', 'sampleid').annotate(sum=Sum('count'), rich=Count('count'))
-    for i in count:
-        myDict = i
+    dict = q1.values('orderid', 'sampleid').annotate(sum=Sum('count'), rich=Sum('binary'))
+    for myDict in dict:
         myDict['count'] = myDict.pop('sum')
         s_uuid = myDict['sampleid']
         sample = Sample.objects.get(sampleid=s_uuid)
@@ -247,9 +248,8 @@ def taxaprofile(p_uuid):
         m = ProfileOrder(projectid=project, sampleid=sample, orderid=order, rel_abund=proportion, **myDict)
         m.save()
 
-    count = Profile.objects.filter(projectid_id=project).values('familyid', 'sampleid').annotate(sum=Sum('count'), rich=Count('count'))
-    for i in count:
-        myDict = i
+    dict = q1.values('familyid', 'sampleid').annotate(sum=Sum('count'), rich=Sum('binary'))
+    for myDict in dict:
         myDict['count'] = myDict.pop('sum')
         s_uuid = myDict['sampleid']
         sample = Sample.objects.get(sampleid=s_uuid)
@@ -264,9 +264,8 @@ def taxaprofile(p_uuid):
         m = ProfileFamily(projectid=project, sampleid=sample, familyid=family, rel_abund=proportion, **myDict)
         m.save()
 
-    count = Profile.objects.filter(projectid_id=project).values('genusid', 'sampleid').annotate(sum=Sum('count'), rich=Count('count'))
-    for i in count:
-        myDict = i
+    dict = q1.values('genusid', 'sampleid').annotate(sum=Sum('count'), rich=Sum('binary'))
+    for myDict in dict:
         myDict['count'] = myDict.pop('sum')
         s_uuid = myDict['sampleid']
         sample = Sample.objects.get(sampleid=s_uuid)
@@ -281,9 +280,8 @@ def taxaprofile(p_uuid):
         m = ProfileGenus(projectid=project, sampleid=sample, genusid=genus, rel_abund=proportion, **myDict)
         m.save()
 
-    count = Profile.objects.filter(projectid_id=project).values('speciesid', 'sampleid').annotate(sum=Sum('count'), rich=Count('count'))
-    for i in count:
-        myDict = i
+    dict = q1.values('speciesid', 'sampleid').annotate(sum=Sum('count'), rich=Sum('binary'))
+    for myDict in dict:
         myDict['count'] = myDict.pop('sum')
         s_uuid = myDict['sampleid']
         sample = Sample.objects.get(sampleid=s_uuid)

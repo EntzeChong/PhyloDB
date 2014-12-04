@@ -32,6 +32,9 @@ class Sample(models.Model):
     material = models.CharField(max_length=45, blank=True)
     elevation = models.CharField(max_length=45, blank=True)
 
+    def natural_key(self):
+        return self.sampleid
+
 
 class Collect(models.Model):
     sampleid = models.ForeignKey(Sample)
@@ -44,12 +47,18 @@ class Collect(models.Model):
     sieving = models.CharField(max_length=45, blank=True)
     storage_cond = models.CharField(max_length=45, blank=True)
 
+    def natural_key(self):
+        return self.sampleid
+
 
 class Climate(models.Model):
     sampleid = models.ForeignKey(Sample)
     projectid = models.ForeignKey(Project)
     annual_season_precpt = models.CharField(max_length=45, blank=True)
     annual_season_temp = models.CharField(max_length=45, blank=True)
+
+    def natural_key(self):
+        return self.sampleid
 
 
 class Soil_class(models.Model):
@@ -67,6 +76,9 @@ class Soil_class(models.Model):
     soil_type = models.CharField(max_length=45, blank=True)
     texture_class = models.CharField(max_length=45, blank=True)
     water_content_soil = models.CharField(max_length=45, blank=True)
+
+    def natural_key(self):
+        return self.sampleid
 
 
 class Soil_nutrient(models.Model):
@@ -91,6 +103,9 @@ class Soil_nutrient(models.Model):
     Na = models.CharField(max_length=45, blank=True)
     B = models.CharField(max_length=45, blank=True)
 
+    def natural_key(self):
+        return self.sampleid
+
 
 class Management(models.Model):
     sampleid = models.ForeignKey(Sample)
@@ -108,6 +123,9 @@ class Management(models.Model):
     soil_amendments = models.CharField(max_length=45, blank=True)
     tillage = models.CharField(max_length=45, blank=True)
 
+    def natural_key(self):
+        return self.sampleid
+
 
 class Microbial(models.Model):
     sampleid = models.ForeignKey(Sample)
@@ -116,6 +134,10 @@ class Microbial(models.Model):
     microbial_biomass_C = models.CharField(max_length=45, blank=True)
     microbial_biomass_N = models.CharField(max_length=45, blank=True)
     microbial_respiration = models.CharField(max_length=45, blank=True)
+
+    def natural_key(self):
+        return self.sampleid
+
 
 class User(models.Model):
     sampleid = models.ForeignKey(Sample)
@@ -132,6 +154,10 @@ class User(models.Model):
     usr_quant4 = models.CharField(max_length=45, blank=True)
     usr_quant5 = models.CharField(max_length=45, blank=True)
     usr_quant6 = models.CharField(max_length=45, blank=True)
+
+    def natural_key(self):
+        return self.sampleid
+
 
 class Kingdom(models.Model):
     kingdomid = UUIDField(primary_key=True, editable=True)
@@ -200,6 +226,7 @@ class Profile(models.Model):
     genusid = models.ForeignKey(Genus)
     speciesid = models.ForeignKey(Species)
     count = models.IntegerField()
+    binary = models.IntegerField()
 
 
 class ProfileKingdom(models.Model):

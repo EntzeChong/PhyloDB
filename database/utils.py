@@ -1,6 +1,7 @@
 import os
 import shutil
 from models import Project
+from collections import defaultdict
 
 
 def handle_uploaded_file(f, path, name):
@@ -20,4 +21,9 @@ def remove_list(request):
         Project.objects.get(projectid=item).delete()
 
 
-
+def merge_lists(list1, list2, key):
+    d = defaultdict(dict)
+    for item in (list1, list2):
+        for elem in item:
+            d[elem[key]].update(elem)
+    return d.values()

@@ -1,17 +1,8 @@
-"""
-Django settings for phyloDB project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
-"""
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -68,7 +59,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Denver'
 
 USE_I18N = True
 
@@ -90,4 +81,5 @@ TEMPLATE_DIRS = (
 )
 
 MEDIA_ROOT = 'uploads/'
+
 MEDIA_URL = '/uploads/'

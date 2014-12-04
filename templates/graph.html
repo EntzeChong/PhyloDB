@@ -1,28 +1,10 @@
 {% extends 'base.html' %}
 
-{% block jquery %}
-    <!-- dynatree -->
-    <link rel='stylesheet' type='text/css' href="../media/dynatree/ui.dynatree.css">
-    <script src="../media/dynatree/jquery.dynatree.js" type="text/javascript"></script>
-
-    <!-- nvd3 stuff -->
-    <script src="/media/nvd3/nvd3.lib/d3.v2.js"></script>
-    <script src="/media/nvd3/nv.d3.js"></script>
-    <script src="/media/nvd3/nvd3.src/tooltip.js"></script>
-    <script src="/media/nvd3/nvd3.src/utils.js"></script>
-    <script src="/media/nvd3/nvd3.src/models/legend.js"></script>
-    <script src="/media/nvd3/nvd3.src/models/axis.js"></script>
-    <script src="/media/nvd3/nvd3.src/models/scatter.js"></script>
-    <script src="/media/nvd3/nvd3.src/models/line.js"></script>
-    <link href="/media/nvd3/nvd3.src/nv.d3.css" rel="stylesheet" type="text/css">
-
-{% endblock %}
-
 {% block pagetitle %}
     <title>Graph</title>
 {% endblock %}
 
-{% block dynatree %}
+{% block javascript %}
     <script type="text/javascript">
 
         $(function () {
@@ -40,6 +22,9 @@
                 },
                 onSelect: function () {
                     chooseData();
+                },
+                onPostInit: function () {
+                    chooseData()
                 }
             }); // end tree
 
@@ -53,6 +38,9 @@
                 },
                 onSelect: function () {
                     chooseData();
+                },
+                onPostInit: function () {
+                    chooseData()
                 }
             }); // end tree
 
@@ -158,44 +146,124 @@
             var nodes = $("#tree_taxa").dynatree("getSelectedNodes");
             for (i in nodes) {
                 var value = nodes[i].data.id;
-                var key = nodes[i].data.tooltip;
-                string = key + "//" + value  + "|" + string;
+                if (nodes[i].getLevel() >= 3) {
+                    string = value + "|" + string;
+                }
             }
             return string.substring(0, string.length - 1);
         }
 
         function nvd3BarChart(obj) {
-            nv.addGraph(function () {
-            var chart = nv.models.multiBarChart()
-                            .x(function(d) {return d.label})
-                            .y(function(d) {return d.ave_rel_abund})
-                            .transitionDuration(50)
-                            .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
-                            .rotateLabels(-900)      //Angle to rotate x-axis labels.
-                            .showControls(true)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
-                            .groupSpacing(0.1)    //Distance between each group of bars.
-                    ;
+             if (document.getElementById("abun").checked) {
+                nv.addGraph(function () {
+                var chart = nv.models.multiBarChart()
+                                .x(function(d) {return d.label})
+                                .y(function(d) {return d.ave_rel_abund})
+                                .reduceXTicks(false)
+                                .rotateLabels(45)
+                                .showControls(true)
+                                .groupSpacing(0.1)
+                        ;
 
-            //chart.xAxis
-            //        .tickFormat(d3.format(',f'));
+                chart.yAxis
+                        .tickFormat(d3.format(',.2e'));
 
-            chart.yAxis
-                    .tickFormat(d3.format(',.2f'));
+                d3.select('#barchart svg')
+                        .datum(obj)
+                        .transition().duration(500)
+                        .call(chart);
 
-            d3.select('#barchart svg')
-                    .datum(obj)
-                    .transition().duration(1)
-                    .call(chart);
+                nv.utils.windowResize(chart.update);
 
-            nv.utils.windowResize(chart.update);
+                return chart;
+                });
+             }
+             if (document.getElementById("rich").checked) {
+                nv.addGraph(function () {
+                var chart = nv.models.multiBarChart()
+                                .x(function(d) {return d.label})
+                                .y(function(d) {return d.ave_rich})
+                                .reduceXTicks(false)
+                                .rotateLabels(45)
+                                .showControls(true)
+                                .groupSpacing(0.1)
+                        ;
 
-            return chart;
-            });
-         }
+                chart.yAxis
+                        .tickFormat(d3.format(',.1f'));
+
+                d3.select('#barchart svg')
+                        .datum(obj)
+                        .transition().duration(500)
+                        .call(chart);
+
+                nv.utils.windowResize(chart.update);
+
+                return chart;
+                });
+             }
+        }
+
+         function mySort(data)//Used below to make the graph readable
+            {
+                for (var counter = 0; counter<data.length; counter++)//data.length should be number of taxa selected
+                {
+                var d=0;
+                var dataOrder = [];
+                while (d<data[counter]['values'].length) {
+                    //alert("There are "+data[0]['values'].length +" elements in this list");
+                    var c = 0;
+                    var shortestval = 1000;
+                    var shortestid = -1;
+                    while (c < data[counter]['values'].length) {
+                    //Check that this C is not in the list already
+                    if (dataOrder.indexOf(c)!=-1)
+                    {
+                        //Already in the list
+                    }
+                    else
+                    {
+                        if (parseInt(data[counter]['values'][c]['x'],10) < shortestval)
+                        {
+                            shortestval = data[counter]['values'][c]['x'];
+                            shortestid = c;
+                        }
+                    }
+                    c++;
+                }
+                dataOrder.push(shortestid);
+                d++;
+            }
+            //var listString = "";DEBUG STRING
+            var newDataX = [];
+            var newDataY = [];
+            for (var cou=0;cou<dataOrder.length;cou++)
+            {
+                newDataX.push(data[counter]['values'][dataOrder[cou]]['x']);
+                newDataY.push(data[counter]['values'][dataOrder[cou]]['y']);
+                //listString = listString+data[counter]['values'][dataOrder[cou]]['x']+", ";
+            }
+            //alert(listString);
+            for (cou=0;cou<dataOrder.length;cou++)
+            {
+                data[counter]['values'][cou]['x']=newDataX[cou];
+                data[counter]['values'][cou]['y']=newDataY[cou];
+            }
+            }
+        }
 
         function nvd3LineChart(obj) {
-            nv.addGraph(function () {
-            var chart = nv.models.BarChart();
+            if (document.getElementById("abun").checked) {
+                nv.addGraph(function () {
+                    var chart = nv.models.scatterChart()
+                                .x(function(d) {return d.x})
+                                .y(function(d) {return d.y_abund})
+                            ;
+
+           // mySort(obj);
+
+           chart.yAxis
+                    .tickFormat(d3.format(',.2e'));
 
             d3.select('#linechart svg')
                     .datum(obj)
@@ -206,15 +274,36 @@
 
             return chart;
             });
-         }
+        }
 
+        if (document.getElementById("rich").checked) {
+                nv.addGraph(function () {
+                    var chart = nv.models.scatterChart()
+                                .x(function(d) {return d.x})
+                                .y(function(d) {return d.y_rich})
+                            ;
 
+           // mySort(obj);
+
+           chart.yAxis
+                    .tickFormat(d3.format(',.1f'));
+
+            d3.select('#linechart svg')
+                    .datum(obj)
+                    .transition().duration(50)
+                    .call(chart);
+
+            nv.utils.windowResize(chart.update);
+
+            return chart;
+            });
+        }
+    }
 
     </script>
-{% endblock %}
+{% endblock javascript %}
 
-{% block content %}
-
+{% block my_content %}
     <br>
     <p>Use button to change between Categorical and Quantitative variables</p>
     <button>Toggle</button>
@@ -223,16 +312,16 @@
 
     <form>
         <!-- tree tables -->
-        <table width="100%" border="2" cellspacing="0" cellpadding="5">
+        <table border="2" cellspacing="0" cellpadding="5">
             <tr>
                 <th>Select Meta Data<br>
                 </th>
                 <th>Select Taxa level</th>
             </tr>
             <tr>
-                <td width="50%" style="padding-right: 10px; vertical-align: top">
+                <td style="padding-right: 10px; vertical-align: top">
                     <!-- left tree -->
-                    <table width="100%" border="0" cellspacing="0" cellpadding="1">
+                    <table border="0" cellspacing="0" cellpadding="1">
                         <tr>
                             <td>
                                 <toggle>
@@ -245,9 +334,9 @@
                         </tr>
                     </table>
                 </td>
-                <td width="50%" style="padding-right: 10px; vertical-align: top">
+                <td style="padding-right: 10px; vertical-align: top">
                     <!-- right table -->
-                    <table width="100%" border="0" cellspacing="0" cellpadding="1">
+                    <table border="0" cellspacing="0" cellpadding="1">
                         <tr>
                             <td>
                                 <div id="tree_taxa"></div>
@@ -258,30 +347,40 @@
                 </td>
             </tr>
         </table>
+        Dependent variable:
+        <form action="">
+            <input type="radio" id="abun" name="DATABUTTON" onclick="chooseData()" checked="checked">Relative Abundance
+            <input type="radio" id="rich" name="DATABUTTON" onclick="chooseData()">Richness
+        </form>
         <br>
         <br>
 
         <!-- graph table -->
-        <table width="100%" border="2">
-            <tr>
-                <th style="padding-right: 10px;">Graph Data</th>
-            </tr>
-            <tr>
-                <td width="100%" style="vertical-align: top">
-                    <toggle>
-                        <div id="barchart">  <svg style="height: 500px"></svg> </div>
-                    </toggle>
-                    <toggle style="display: none">
-                        <div id="linechart">  <svg style="height: 500px"></svg> </div>
-                    </toggle>
-                </td>
-            </tr>
+        <table width="150%" border="2">
+        <tr>
+            <th style="padding-right: 10px;">GraphData</th>
+        </tr>
+        <tr>
+            <td width="150%" style="vertical-align: top">
+                <toggle>
+                    <h2>Bar Chart</h2>
+                    <div id="barchart">  <svg style="height: 500px"></svg> </div>
+                </toggle>
+                <toggle style="display: none">
+                    <h2>Scatter Plot</h2>
+                    <div id="linechart">  <svg style="height: 500px"></svg> </div>
+                </toggle>
+            </td>
+        </tr>
         </table>
+
         <p> TO DO:<br>
         1. Add button to switch to richness
         2. Add data table
         </p>
+
         <h3>Get selected data:<input type="button" value="Go!"/></h3>
         <h3>Run ANOVA using above selections:<input type="button" value="Run!"/></h3>
     </form>
-{% endblock %}
+
+{% endblock my_content%}
