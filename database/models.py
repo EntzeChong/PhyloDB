@@ -1,18 +1,6 @@
 from django.db import models
 from django_extensions.db.fields import UUIDField
-from django_tables2 import tables
 
-"""ACTIVE = 'active'
-INACTIVE = 'inactive'
-TERMINATED = 'terminated'
-
-ACTIVE_CHOICES = (
-    (ACTIVE, "Active"),
-    (INACTIVE, "Inactive"),
-    (TERMINATED, "Terminated"),
-)
-
-ACTIVE_CHOICES_DISPLAY = dict(ACTIVE_CHOICES)"""
 
 class Project(models.Model):
     projectid = UUIDField(primary_key=True, editable=True)
