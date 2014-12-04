@@ -30,9 +30,6 @@ class Project(models.Model):
 
 
 class Sample(models.Model):
-
-    #active = models.CharField(max_length=10, choices=ACTIVE_CHOICES)
-
     sampleid = UUIDField(primary_key=True, editable=True)
     projectid = models.ForeignKey(Project)
     sample_name = models.CharField(max_length=45, blank=False)
@@ -306,34 +303,3 @@ class ProfileSpecies(models.Model):
     rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
     rich = models.IntegerField()
 
-class SampleTable(tables.Table):
-    class Meta:
-        model = Sample
-
-class CollectTable(tables.Table):
-    class Meta:
-        model = Collect
-
-class ClimateTable(tables.Table):
-    class Meta:
-        model = Climate
-
-class Soil_classTable(tables.Table):
-    class Meta:
-        model = Soil_class
-
-class Soil_nutrientTable(tables.Table):
-    class Meta:
-        model = Soil_nutrient
-
-class ManagementTable(tables.Table):
-    class Meta:
-        model = Management
-
-class MicrobialTable(tables.Table):
-    class Meta:
-        model = Microbial
-
-class UserTable(tables.Table):
-    class Meta:
-        model = User

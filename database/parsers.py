@@ -169,6 +169,7 @@ def parse_profile(taxonomy, shared, path, p_uuid):
                     record.save()
                 j += 1
 
+
 def taxaprofile(p_uuid):
     getcontext().prec = 6
     project = Project.objects.get(projectid=p_uuid)
