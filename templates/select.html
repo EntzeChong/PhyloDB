@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load render_table from django_tables2 %}
 
 {% block pagetitle %}
     <title>Select</title>
@@ -20,18 +21,16 @@
                     selectedKeys = $.map(selectedNodes, function (node) {
                         return node.data.id;
                     });
-
                     // clear existing input box
                     $('#selected .list input').remove();
 
                     // add 'hidden' input box for each selectedKeys
                     $.each(selectedKeys, function (index, value) {
                         $('#selected .list').append("<input name=\"list\" type=\"hidden\" value=\"" + value + "\"/>")
-
                     });
-
                     //clear meassage
                     $('#selected .list li').remove();
+<<<<<<< HEAD
                     $('#selected .list').append("<li>Your selection has been recorded!");
                     $('#selected .list').append("<li>Click submit button to proceed");
 
@@ -44,11 +43,17 @@
                     updateMgtTable(selectedKeys);
                     updateMicrobeTable(selectedKeys);
                     updateUsrTable(selectedKeys);
+=======
+                    $('#selected .list').append("<li>Your selection has been recorded!")
+                    $('#selected .list').append("<li>Click submit button to proceed")
+
+>>>>>>> origin/master
                 }
 
             }); // end dynatree
         }); // end original function()
 
+<<<<<<< HEAD
     function updateProjectTable(selKeys) {
         var table = $('#projectTable').DataTable();
         table.rows().remove().draw();
@@ -317,6 +322,8 @@
         });
     });
 
+=======
+>>>>>>> origin/master
     </script>
 {% endblock javascript %}
 
@@ -345,6 +352,7 @@
     </form>
 
     <br>
+<<<<<<< HEAD
     <h2>Project/Sample information for selected samples</h2>
     <div id="myRadio">
         <h4>
@@ -544,5 +552,28 @@
 
     </div>
 {% endblock my_content %}
+=======
+
+    <!--PLACE LISTABLE HERE-->
+
+
+
+    <br>
+    {% render_table Sample %}
+    <br>
+    {% render_table Collect %}
+    <br>
+    {% render_table Climate %}
+    <br>
+    {% render_table Soil_class %}
+    <br>
+    {% render_table Soil_nutrient %}
+    <br>
+    {% render_table Management %}
+    <br>
+    {% render_table Microbial %}
+    <br>
+    {% render_table User %}
+>>>>>>> origin/master
 
 

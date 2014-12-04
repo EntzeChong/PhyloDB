@@ -1,6 +1,18 @@
 from django.db import models
 from django_extensions.db.fields import UUIDField
+from django_tables2 import tables
 
+"""ACTIVE = 'active'
+INACTIVE = 'inactive'
+TERMINATED = 'terminated'
+
+ACTIVE_CHOICES = (
+    (ACTIVE, "Active"),
+    (INACTIVE, "Inactive"),
+    (TERMINATED, "Terminated"),
+)
+
+ACTIVE_CHOICES_DISPLAY = dict(ACTIVE_CHOICES)"""
 
 class Project(models.Model):
     projectid = UUIDField(primary_key=True, editable=True)
@@ -18,6 +30,9 @@ class Project(models.Model):
 
 
 class Sample(models.Model):
+
+    #active = models.CharField(max_length=10, choices=ACTIVE_CHOICES)
+
     sampleid = UUIDField(primary_key=True, editable=True)
     projectid = models.ForeignKey(Project)
     sample_name = models.CharField(max_length=45, blank=False)
@@ -290,3 +305,35 @@ class ProfileSpecies(models.Model):
     count = models.IntegerField()
     rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
     rich = models.IntegerField()
+
+class SampleTable(tables.Table):
+    class Meta:
+        model = Sample
+
+class CollectTable(tables.Table):
+    class Meta:
+        model = Collect
+
+class ClimateTable(tables.Table):
+    class Meta:
+        model = Climate
+
+class Soil_classTable(tables.Table):
+    class Meta:
+        model = Soil_class
+
+class Soil_nutrientTable(tables.Table):
+    class Meta:
+        model = Soil_nutrient
+
+class ManagementTable(tables.Table):
+    class Meta:
+        model = Management
+
+class MicrobialTable(tables.Table):
+    class Meta:
+        model = Microbial
+
+class UserTable(tables.Table):
+    class Meta:
+        model = User
