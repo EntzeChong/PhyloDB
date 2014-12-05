@@ -138,8 +138,10 @@ def graph(request):
     qs = Sample.objects.all().filter(sampleid__in=list_ascii).values_list('sampleid')
     request.session['selected_samples'] = pickle.dumps(qs.query)
 
+    samples = Sample.objects.all()
     return render_to_response(
         'graph.html',
+        {'samples': samples},
         context_instance=RequestContext(request)
     )
 

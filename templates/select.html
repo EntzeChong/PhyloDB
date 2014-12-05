@@ -44,6 +44,7 @@
                 }
 
             }); // end dynatree
+
         }); // end original function()
 
     function updateProjectTable(selKeys) {
@@ -293,7 +294,7 @@
         });
     }
 
-    $(function () {
+    $(document).ready(function () {
         $('#projectTable').DataTable();
         $('#sampleTable').DataTable();
         $('#collectTable').DataTable();
@@ -308,7 +309,6 @@
 
         $("input[name$='tables']").click(function() {
             var test = $(this).val();
-
             $("div.desc").hide();
             $("#table" + test).show();
         });
@@ -344,7 +344,7 @@
     <br>
     <h2>Project/Sample information for selected samples</h2>
     <div id="myRadio">
-        <h4>
+        <h5>
             <input type="radio" name="tables" checked="checked" value="1"/>Project
             <input type="radio" name="tables" value="2"/>MIMARKs
             <input type="radio" name="tables" value="3"/>Sample Collection
@@ -354,7 +354,7 @@
             <input type="radio" name="tables" value="7"/>Management
             <input type="radio" name="tables" value="8"/>Microbial Biomass
             <input type="radio" name="tables" value="9"/>User-defined
-        </h4>
+        </h5>
         <div id="table1" class="desc">
             <table id="projectTable" class="display compact">
                 <thead>
