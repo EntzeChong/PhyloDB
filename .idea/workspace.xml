@@ -5,103 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f5def0b1-44de-4e55-9c23-a7de3aa1fb18" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/datatables/media/images/Sorting icons.psd" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/datatables/media/images/back_disabled.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/datatables/media/images/back_enabled.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/datatables/media/images/back_enabled_hover.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/datatables/media/images/favicon.ico" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/datatables/media/images/forward_disabled.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/datatables/media/images/forward_enabled.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/datatables/media/images/forward_enabled_hover.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/datatables/media/images/sort_asc.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/datatables/media/images/sort_asc_disabled.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/datatables/media/images/sort_both.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/datatables/media/images/sort_desc.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/datatables/media/images/sort_desc_disabled.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/boilerplate.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/bullet.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/backup/bullet.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/bulletChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/backup/bulletChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/lib/cie.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/lib/colorbrewer.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/core.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/lib/crossfilter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/lib/crossfilter.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/cumulativeLineChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/lib/d3.v2.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/lib/d3.v3.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/discreteBar.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/discreteBarChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/distribution.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/lib/fisheye.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/historicalBar.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/historicalBarChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/lib/hive.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/lib/horizon.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/indentedTree.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/interactiveLayer.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/intro.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/jquery/jquery-1.11.1.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/jquery-ui/jquery-ui.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/datatables/media/js/jquery.dataTables.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/lineChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/linePlusBarChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/linePlusBarWithFocusChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/lineWithFisheye.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/lineWithFisheyeChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/lineWithFocusChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/multiBar.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/multiBarHorizontal.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/multiBarHorizontalChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/multiBarTimeSeries.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/multiBarTimeSeriesChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/multiChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/ohlcBar.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/parallelCoordinates.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/pie.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/pieChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/lib/sankey.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/scatterChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/scatterPlusLineChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/sparkline.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/sparklinePlus.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/stackedArea.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/nvd3/src/models/stackedAreaChart.js" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\jquery.dataTables.min.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\dynatree\jquery-ui.custom.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\dynatree\jquery.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\fusioncharts\fusioncharts.charts.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\fusioncharts\fusioncharts.gantt.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\fusioncharts\fusioncharts.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\fusioncharts\fusioncharts.maps.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\fusioncharts\fusioncharts.powercharts.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\fusioncharts\fusioncharts.widgets.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\jquery\jquery.min.js" afterPath="" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\jquery.dataTables.css" afterPath="$PROJECT_DIR$/media/datatables/media/css/jquery.dataTables.css" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\dynatree\icons-rtl.gif" afterPath="$PROJECT_DIR$/media/dynatree/src/skin/icons-rtl.gif" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\dynatree\icons.gif" afterPath="$PROJECT_DIR$/media/dynatree/src/skin/icons.gif" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\dynatree\jquery.dynatree.js" afterPath="$PROJECT_DIR$/media/dynatree/src/jquery.dynatree.js" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\dynatree\loading.gif" afterPath="$PROJECT_DIR$/media/dynatree/src/skin/loading.gif" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\dynatree\ui.dynatree.css" afterPath="$PROJECT_DIR$/media/dynatree/src/skin/ui.dynatree.css" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\dynatree\vline-rtl.gif" afterPath="$PROJECT_DIR$/media/dynatree/src/skin/vline-rtl.gif" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\dynatree\vline.gif" afterPath="$PROJECT_DIR$/media/dynatree/src/skin/vline.gif" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\jquery\jquery-ui.css" afterPath="$PROJECT_DIR$/media/jquery-ui/jquery-ui.css" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\nvd3.lib\d3.v2.js" afterPath="$PROJECT_DIR$/media/nvd3/lib/d3.v2.js" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\nvd3.src\models\axis.js" afterPath="$PROJECT_DIR$/media/nvd3/src/models/axis.js" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\nvd3.src\models\legend.js" afterPath="$PROJECT_DIR$/media/nvd3/src/models/legend.js" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\nvd3.src\models\line.js" afterPath="$PROJECT_DIR$/media/nvd3/src/models/line.js" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\nvd3.src\models\multiBarChart.js" afterPath="$PROJECT_DIR$/media/nvd3/src/models/multiBarChart.js" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\nvd3.src\models\scatter.js" afterPath="$PROJECT_DIR$/media/nvd3/src/models/scatter.js" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\nvd3.src\nv.d3.css" afterPath="$PROJECT_DIR$/media/nvd3/src/nv.d3.css" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\nvd3.src\outro.js" afterPath="$PROJECT_DIR$/media/nvd3/src/outro.js" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\nvd3.src\tooltip.js" afterPath="$PROJECT_DIR$/media/nvd3/src/tooltip.js" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\nvd3.src\utils.js" afterPath="$PROJECT_DIR$/media/nvd3/src/utils.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dbMicrobe" afterPath="$PROJECT_DIR$/dbMicrobe" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/base.html" afterPath="$PROJECT_DIR$/templates/base.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/graph.html" afterPath="$PROJECT_DIR$/templates/graph.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/select.html" afterPath="$PROJECT_DIR$/templates/select.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/views.py" afterPath="$PROJECT_DIR$/database/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="PhyloDB.iws" />
@@ -133,17 +36,9 @@
       <file leaf-file-name="graph.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/graph.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.74" vertical-offset="5620" max-vertical-offset="7361">
-              <caret line="348" column="59" selection-start-line="348" selection-start-column="59" selection-end-line="348" selection-end-column="59" />
-              <folding>
-                <element signature="n#style#0;n#svg#0;n#div#0;n#td#0;n#tr#1;n#table#1;n#form#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#td#0;n#tr#1;n#table#1;n#form#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#svg#0;n#div#1;n#td#0;n#tr#1;n#table#1;n#form#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#2;n#td#0;n#tr#1;n#table#1;n#form#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#svg#0;n#div#2;n#td#0;n#tr#1;n#table#1;n#form#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#3;n#td#0;n#tr#1;n#table#1;n#form#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#svg#0;n#div#3;n#td#0;n#tr#1;n#table#1;n#form#0;n#!!top" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.3121693" vertical-offset="4243" max-vertical-offset="7361">
+              <caret line="260" column="17" selection-start-line="260" selection-start-column="17" selection-end-line="260" selection-end-column="17" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -176,6 +71,11 @@
     </FindUsagesManager>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="manterd" />
+      </list>
+    </option>
     <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="SYNC_SETTING" value="DONT" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -322,6 +222,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="phyloDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="phyloDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="media" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -737,7 +651,11 @@
       <created>1417722662266</created>
       <updated>1417722662266</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="All toggles now work!">
+      <created>1417802745195</created>
+      <updated>1417802745195</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -773,7 +691,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3908228" sideWeight="0.5032051" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34449762" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" x="329" y="268" width="622" height="184" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26340693" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26340693" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -824,7 +742,8 @@
     <MESSAGE value="Fixed graph bug regarding the selection of samples from different taxonomic levels&#10;&quot;Fixed&quot; quantatative graph by commenting out unfinished sorting algorithm" />
     <MESSAGE value="Finished quantatative graph sorting algorithm" />
     <MESSAGE value="fixed workspace.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed workspace.xml" />
+    <MESSAGE value="All toggles now work!" />
+    <option name="LAST_COMMIT_MESSAGE" value="All toggles now work!" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1207,17 +1126,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/graph.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.74" vertical-offset="5620" max-vertical-offset="7361">
-          <caret line="348" column="59" selection-start-line="348" selection-start-column="59" selection-end-line="348" selection-end-column="59" />
-          <folding>
-            <element signature="n#style#0;n#svg#0;n#div#0;n#td#0;n#tr#1;n#table#1;n#form#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#td#0;n#tr#1;n#table#1;n#form#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#svg#0;n#div#1;n#td#0;n#tr#1;n#table#1;n#form#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#2;n#td#0;n#tr#1;n#table#1;n#form#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#svg#0;n#div#2;n#td#0;n#tr#1;n#table#1;n#form#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#3;n#td#0;n#tr#1;n#table#1;n#form#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#svg#0;n#div#3;n#td#0;n#tr#1;n#table#1;n#form#0;n#!!top" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.3121693" vertical-offset="4243" max-vertical-offset="7361">
+          <caret line="260" column="17" selection-start-line="260" selection-start-column="17" selection-end-line="260" selection-end-column="17" />
+          <folding />
         </state>
       </provider>
     </entry>
