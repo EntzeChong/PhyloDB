@@ -6,7 +6,6 @@
 
 {% block javascript %}
     <script type="text/javascript">
-
         $(function () {
             $("button").click(function () {
                 $("toggle").toggle();
@@ -212,14 +211,16 @@
         }
 
         function regressionFormula(data) {
-            var Formulas = "";
-            for (var counter = 0; counter<data.length; counter++) {
+             var Formulas = "";
+            if (mode=="abund")
+            {
+                for (var counter = 0; counter<data.length; counter++) {
                 var d=0;
                 var TotalX = 0;
                 var TotalY = 0;
                 while (d<data[counter]['values'].length) {
-                    TotalX+=data[counter]['values'][d]['x'];
-                    TotalY+=data[counter]['values'][d]['y'];
+                    TotalX+=parseFloat(data[counter]['values'][d]['x']);
+                    TotalY+=parseFloat(data[counter]['values'][d]['y_abund']);
                     d++;
                 }
                 var MeanX = TotalX/d;
@@ -228,8 +229,8 @@
                 var VarX = 0;
                 var VarY = 0;
                 while (d<data[counter]['values'].length) {
-                    VarX+=(data[counter]['values'][d]['x']-MeanX)*(data[counter]['values'][d]['x']-MeanX);
-                    VarY+=(data[counter]['values'][d]['y']-MeanY)*(data[counter]['values'][d]['y']-MeanY);
+                    VarX+=(parseFloat(data[counter]['values'][d]['x'])-MeanX)*(parseFloat(data[counter]['values'][d]['x'])-MeanX);
+                    VarY+=(parseFloat(data[counter]['values'][d]['y_abund'])-MeanY)*(parseFloat(data[counter]['values'][d]['y_abund'])-MeanY);
                     d++;
                 }
                 VarX/=d;
@@ -240,16 +241,60 @@
                 var ZX = 1;
                 var ZY = 1;
                 while (d<data[counter]['values'].length) {
-                    ZX*=(data[counter]['values'][d]['x']-MeanX)/StandX;
-                    ZY*=(data[counter]['values'][d]['y']-MeanY)/StandY;
+                    ZX*=(parseFloat(data[counter]['values'][d]['x'])-MeanX)/StandX;
+                    ZY*=(parseFloat(data[counter]['values'][d]['y_abund'])-MeanY)/StandY;
                     d++;
                 }
                 var cor = (ZX+ZY)/(d-1);
                 var Slope = cor*StandY/StandX;
                 var Intercept = MeanY - Slope*MeanX;
                 Formulas = Formulas + Slope + ": " + Intercept + ";";
+                }
+                alert(Formulas);
+                return Formulas;
             }
-            alert(Formulas);
+            if (mode=="rich")
+            {
+                for (var counter = 0; counter<data.length; counter++) {
+                var d=0;
+                var TotalX = 0;
+                var TotalY = 0;
+                while (d<data[counter]['values'].length) {
+                    TotalX+=parseFloat(data[counter]['values'][d]['x']);
+                    TotalY+=parseFloat(data[counter]['values'][d]['y_rich']);
+                    d++;
+                }
+                var MeanX = TotalX/d;
+                var MeanY = TotalY/d;
+                d=0;
+                var VarX = 0;
+                var VarY = 0;
+                while (d<data[counter]['values'].length) {
+                    VarX+=(parseFloat(data[counter]['values'][d]['x'])-MeanX)*(parseFloat(data[counter]['values'][d]['x'])-MeanX);
+                    VarY+=(parseFloat(data[counter]['values'][d]['y_rich'])-MeanY)*(parseFloat(data[counter]['values'][d]['y_rich'])-MeanY);
+                    d++;
+                }
+                VarX/=d;
+                VarY/=d;
+                var StandX = Math.sqrt(VarX);
+                var StandY = Math.sqrt(VarY);
+                d=0;
+                var ZX = 1;
+                var ZY = 1;
+                while (d<data[counter]['values'].length) {
+                    ZX*=(parseFloat(data[counter]['values'][d]['x'])-MeanX)/StandX;
+                    ZY*=(parseFloat(data[counter]['values'][d]['y_rich'])-MeanY)/StandY;
+                    d++;
+                }
+                var cor = (ZX+ZY)/(d-1);
+                var Slope = cor*StandY/StandX;
+                var Intercept = MeanY - Slope*MeanX;
+                Formulas = Formulas + Slope + ": " + Intercept + ";";
+                }
+                alert(Formulas);
+                return Formulas;
+            }
+
         }
 
         var scatterchart_abund;
@@ -260,7 +305,7 @@
                         .y(function (d) {return d.y_abund})
                 ;
 
-                //regressionFormula(obj);
+                //var Lines = regressionFormula(obj).split(';');
 
                 scatterchart_abund.yAxis
                        .tickFormat(d3.format(',.2e'));
@@ -284,7 +329,7 @@
                         .y(function (d) {return d.y_rich})
                 ;
 
-                //regressionFormula(obj);
+                //var Lines = regressionFormula(obj).split(';');
 
                 scatterchart_rich.yAxis
                        .tickFormat(d3.format(',.1f'));
@@ -393,13 +438,12 @@
                 </td>
             </tr>
         </table>
+        <br>
         <div id="myRadio2">
             Select dependent variable:
             <input type="radio" name="button2" checked="checked" value="1">Relative Abundance
             <input type="radio" name="button2" value="2">Richness
         </div>
-        <br>
-
 
         <!-- graph table -->
         <table width="150%" border="2">
