@@ -14,8 +14,6 @@ urlpatterns = patterns('',
     url(r'^getCatGraphData', 'database.trees.getCatGraphData', name='getCatGraphData'),
     url(r'^getQuantGraphData', 'database.trees.getQuantGraphData', name='getQuantGraphData'),
     url(r'^getTaxaTree/$', 'database.trees.getTaxaTree', name='getTaxaTree'),
-
-    url(r'^singleANOVA/$', 'database.trees.singleANOVA', name='singleANOVA'),
 )
 
 

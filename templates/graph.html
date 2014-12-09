@@ -5,6 +5,14 @@
 {% endblock %}
 
 {% block javascript %}
+    <style>
+        .tooltip {
+          position: absolute;
+          width: 200px;
+          height: 28px;
+          pointer-events: none;
+        }
+    </style>
     <script type="text/javascript">
         $(function () {
             $("button").click(function () {
@@ -89,8 +97,11 @@
                 success: function(data) {
                     var result = JSON.stringify(data);
                     var obj = $.parseJSON(result);
-                    AbundBarChart(obj);
-                    RichBarChart(obj);
+                    var abund = (obj['abund']);
+                    var rich = obj['rich'];
+
+                    AbundBarChart(abund);
+                    RichBarChart(rich);
                 }
             });
         }
@@ -111,8 +122,11 @@
                 success: function(data) {
                     var result = JSON.stringify(data);
                     var obj = $.parseJSON(result);
-                    AbundLineChart(obj);
-                    RichLineChart(obj);
+                    var abund = (obj['abund']);
+                    var rich = obj['rich'];
+
+                    AbundLineChart(abund);
+                    RichLineChart(rich);
                 }
             });
         }
@@ -162,8 +176,9 @@
             nv.addGraph(function () {
                 barchart_abund = nv.models.multiBarChart()
                         .x(function (d) {return d.label})
-                        .y(function (d) {return d.ave_rel_abund})
+                        .y(function (d) {return d.value})
                         .transitionDuration(50)
+                        .margin({top:50, right:50, bottom:50, left:100})
                         .reduceXTicks(false)
                         .rotateLabels(-45)
                         .showControls(true)
@@ -171,11 +186,11 @@
                 ;
 
                 barchart_abund.yAxis
-                        .tickFormat(d3.format(',.2f'));
+                        .tickFormat(d3.format(',.2e'));
 
                 d3.select('#chart1 svg')
                         .datum(obj)
-                        .transition().duration(1)
+                        .transition().duration(50)
                         .call(barchart_abund);
 
                 nv.utils.windowResize(barchart_abund.update);
@@ -189,7 +204,9 @@
             nv.addGraph(function () {
                 barchart_rich = nv.models.multiBarChart()
                         .x(function (d) {return d.label})
-                        .y(function (d) {return d.ave_rich})
+                        .y(function (d) {return d.value})
+                        .transitionDuration(50)
+                        .margin({top:50, right:50, bottom:50, left:100})
                         .reduceXTicks(false)
                         .rotateLabels(-45)
                         .showControls(true)
@@ -201,7 +218,7 @@
 
                 d3.select('#chart2 svg')
                         .datum(obj)
-                        .transition().duration(500)
+                        .transition().duration(50)
                         .call(barchart_rich);
 
                 nv.utils.windowResize(barchart_rich.update);
@@ -210,110 +227,34 @@
             });
         }
 
-        function regressionFormula(data) {
-             var Formulas = "";
-            if (mode=="abund")
-            {
-                for (var counter = 0; counter<data.length; counter++) {
-                var d=0;
-                var TotalX = 0;
-                var TotalY = 0;
-                while (d<data[counter]['values'].length) {
-                    TotalX+=parseFloat(data[counter]['values'][d]['x']);
-                    TotalY+=parseFloat(data[counter]['values'][d]['y_abund']);
-                    d++;
-                }
-                var MeanX = TotalX/d;
-                var MeanY = TotalY/d;
-                d=0;
-                var VarX = 0;
-                var VarY = 0;
-                while (d<data[counter]['values'].length) {
-                    VarX+=(parseFloat(data[counter]['values'][d]['x'])-MeanX)*(parseFloat(data[counter]['values'][d]['x'])-MeanX);
-                    VarY+=(parseFloat(data[counter]['values'][d]['y_abund'])-MeanY)*(parseFloat(data[counter]['values'][d]['y_abund'])-MeanY);
-                    d++;
-                }
-                VarX/=d;
-                VarY/=d;
-                var StandX = Math.sqrt(VarX);
-                var StandY = Math.sqrt(VarY);
-                d=0;
-                var ZX = 1;
-                var ZY = 1;
-                while (d<data[counter]['values'].length) {
-                    ZX*=(parseFloat(data[counter]['values'][d]['x'])-MeanX)/StandX;
-                    ZY*=(parseFloat(data[counter]['values'][d]['y_abund'])-MeanY)/StandY;
-                    d++;
-                }
-                var cor = (ZX+ZY)/(d-1);
-                var Slope = cor*StandY/StandX;
-                var Intercept = MeanY - Slope*MeanX;
-                Formulas = Formulas + Slope + ": " + Intercept + ";";
-                }
-                alert(Formulas);
-                return Formulas;
-            }
-            if (mode=="rich")
-            {
-                for (var counter = 0; counter<data.length; counter++) {
-                var d=0;
-                var TotalX = 0;
-                var TotalY = 0;
-                while (d<data[counter]['values'].length) {
-                    TotalX+=parseFloat(data[counter]['values'][d]['x']);
-                    TotalY+=parseFloat(data[counter]['values'][d]['y_rich']);
-                    d++;
-                }
-                var MeanX = TotalX/d;
-                var MeanY = TotalY/d;
-                d=0;
-                var VarX = 0;
-                var VarY = 0;
-                while (d<data[counter]['values'].length) {
-                    VarX+=(parseFloat(data[counter]['values'][d]['x'])-MeanX)*(parseFloat(data[counter]['values'][d]['x'])-MeanX);
-                    VarY+=(parseFloat(data[counter]['values'][d]['y_rich'])-MeanY)*(parseFloat(data[counter]['values'][d]['y_rich'])-MeanY);
-                    d++;
-                }
-                VarX/=d;
-                VarY/=d;
-                var StandX = Math.sqrt(VarX);
-                var StandY = Math.sqrt(VarY);
-                d=0;
-                var ZX = 1;
-                var ZY = 1;
-                while (d<data[counter]['values'].length) {
-                    ZX*=(parseFloat(data[counter]['values'][d]['x'])-MeanX)/StandX;
-                    ZY*=(parseFloat(data[counter]['values'][d]['y_rich'])-MeanY)/StandY;
-                    d++;
-                }
-                var cor = (ZX+ZY)/(d-1);
-                var Slope = cor*StandY/StandX;
-                var Intercept = MeanY - Slope*MeanX;
-                Formulas = Formulas + Slope + ": " + Intercept + ";";
-                }
-                alert(Formulas);
-                return Formulas;
-            }
-
-        }
-
         var scatterchart_abund;
         function AbundLineChart(obj) {
             nv.addGraph(function () {
-                scatterchart_abund = nv.models.scatterChart()
+                scatterchart_abund = nv.models.scatterPlusLineChart()
                         .x(function (d) {return d.x})
                         .y(function (d) {return d.y_abund})
+                        .tooltips(true)
+                        .tooltipContent(function(key, x, y) {
+                            return '<p><strong>(' + key + '<br>(' + x + ',' + y + ')</strong></p>'
+                        })
+                        .transitionDuration(50)
+                        .margin({top:50, right:50, bottom:50, left:100})
                 ;
 
-                //var Lines = regressionFormula(obj).split(';');
+                scatterchart_abund.xAxis
+                        .axisLabel(obj[0]['x-label'])
+                ;
 
                 scatterchart_abund.yAxis
-                       .tickFormat(d3.format(',.2e'));
+                       .tickFormat(d3.format(',.2e'))
+                        .axisLabel('Relative Abundance')
+                ;
 
                 d3.select('#chart3 svg')
                         .datum(obj)
                         .transition().duration(50)
-                        .call(scatterchart_abund);
+                        .call(scatterchart_abund)
+                ;
 
                 nv.utils.windowResize(scatterchart_abund.update);
 
@@ -324,15 +265,21 @@
         var scatterchart_rich;
         function RichLineChart(obj) {
             nv.addGraph(function () {
-                scatterchart_rich = nv.models.scatterChart()
+                scatterchart_rich = nv.models.scatterPlusLineChart()
                         .x(function (d) {return d.x})
                         .y(function (d) {return d.y_rich})
+                        .transitionDuration(50)
+                        .margin({top:50, right:50, bottom:50, left:100})
                 ;
 
-                //var Lines = regressionFormula(obj).split(';');
+                scatterchart_abund.xAxis
+                        .axisLabel(obj[0]['x-label'])
+                ;
 
                 scatterchart_rich.yAxis
-                       .tickFormat(d3.format(',.1f'));
+                       .tickFormat(d3.format(',.1f'))
+                        .axisLabel('OTU Richness')
+                ;
 
                 d3.select('#chart4 svg')
                         .datum(obj)
@@ -398,6 +345,7 @@
 {% endblock javascript %}
 
 {% block my_content %}
+    <form>
     <br>
         <div id="myRadio1">
             Select data type:
@@ -405,7 +353,6 @@
             <input type="radio" name="button1" value="2">Quantitative
         </div>
 
-    <form>
         <!-- tree tables -->
         <table border="2" cellspacing="0" cellpadding="5">
             <tr>
@@ -447,25 +394,17 @@
 
         <!-- graph table -->
         <table width="150%" border="2">
-        <tr>
-            <th style="padding-right: 10px;">GraphData</th>
-        </tr>
-        <tr>
-            <td width="150%" style="vertical-align: top">
-                <div id="chart1" class="desc"> <svg style="height: 500px"></svg> </div>
-                <div id="chart2" class="desc" style="display: none"> <svg style="height: 500px"></svg> </div>
-                <div id="chart3" class="desc" style="display: none"> <svg style="height: 500px"></svg> </div>
-                <div id="chart4" class="desc" style="display: none"> <svg style="height: 500px"></svg> </div>
-            </td>
-        </tr>
-        </table>
-
-        <p> TO DO:<br>
-        1. Add button to switch to richness
-        2. Add data table
-        </p>
-
-        <h3>Get selected data:<input type="button" value="Go!"/></h3>
-        <h3>Run ANOVA using above selections:<input type="button" value="Run!"/></h3>
+            <tr>
+                <th style="padding-right: 10px;">GraphData</th>
+            </tr>
+            <tr>
+                <td>
+                    <div id="chart1" class="desc"> <svg style="height: 500px; width:750px;"></svg> </div>
+                    <div id="chart2" class="desc" style="display: none"> <svg style="height: 500px; width: 750px;"></svg> </div>
+                    <div id="chart3" class="desc" style="display: none"> <svg style="height: 500px; width: 750px;"></svg> </div>
+                    <div id="chart4" class="desc" style="display: none"> <svg style="height: 500px; width: 750px;"></svg> </div>
+                </td>
+            </tr>
+            </table>
     </form>
 {% endblock my_content%}

@@ -1,18 +1,41 @@
-
-def merge_lists(l1, l2, key):
-    merged = {}
-    for item in l1+l2:
-        if item[key] in merged:
-            merged[item[key]].update(item)
-        else:
-            merged[item[key]] = item
-    return [val for (_, val) in merged.items()]
-
-
-test = [{'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'1ae99098cd6f46eaa1fa5f482d7da63e', 'rich': 153}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'2de74d4794b64a9c8426c72d80ab3f1b', 'rich': 131}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'436ca7ad0648480aa6425e8ef17a7774', 'rich': 39}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'481d9d0b0563450a8abd95f6a0fc8406', 'rich': 31}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'49b1b9b960824f1cb4111f0e80d3d364', 'rich': 35}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'58efda4db2414eae9e36502b97bad83b', 'rich': 83}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'70a66c6dc1c74374ab68372f0681b3ad', 'rich': 78}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'748462476d1e411884cddec97bd6cfb4', 'rich': 56}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'78170aa5bb804ad18d25cc158c486d2f', 'rich': 25}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'7f185a29cfe94226a5783887fcd8725e', 'rich': 191}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'80398d86cf8e412285a5d2602987d305', 'rich': 18}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'80be03d57dcb4869ae76b6c593f3b82b', 'rich': 96}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'836305388509451e9254b096b844d9bc', 'rich': 74}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'8af1d2118bad4ce38cf482be0fd63070', 'rich': 70}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'a3cebf584f6c476a8184089df229f525', 'rich': 74}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'aa2ac88a85dd41ac9bbf5ca38f02f914', 'rich': 69}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'b59d7f39e2fa41ea8f9411bc816d76e9', 'rich': 46}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'b6a0085b60e24927bc6cf9db96e0bd23', 'rich': 30}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sampleid': u'b82c697b7b0c40c9960c9a35ce3a4bf8', 'rich': 32}]
-count = [{'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 2285, 'sampleid': u'1ae99098cd6f46eaa1fa5f482d7da63e'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 1251, 'sampleid': u'2de74d4794b64a9c8426c72d80ab3f1b'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 182, 'sampleid': u'436ca7ad0648480aa6425e8ef17a7774'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 97, 'sampleid': u'481d9d0b0563450a8abd95f6a0fc8406'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 129, 'sampleid': u'49b1b9b960824f1cb4111f0e80d3d364'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 737, 'sampleid': u'58efda4db2414eae9e36502b97bad83b'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 1960, 'sampleid': u'70a66c6dc1c74374ab68372f0681b3ad'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 820, 'sampleid': u'748462476d1e411884cddec97bd6cfb4'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 108, 'sampleid': u'78170aa5bb804ad18d25cc158c486d2f'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 3146, 'sampleid': u'7f185a29cfe94226a5783887fcd8725e'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 146, 'sampleid': u'80398d86cf8e412285a5d2602987d305'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 1020, 'sampleid': u'80be03d57dcb4869ae76b6c593f3b82b'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 333, 'sampleid': u'836305388509451e9254b096b844d9bc'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 423, 'sampleid': u'8af1d2118bad4ce38cf482be0fd63070'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 537, 'sampleid': u'a3cebf584f6c476a8184089df229f525'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 535, 'sampleid': u'aa2ac88a85dd41ac9bbf5ca38f02f914'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 333, 'sampleid': u'b59d7f39e2fa41ea8f9411bc816d76e9'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 153, 'sampleid': u'b6a0085b60e24927bc6cf9db96e0bd23'}, {'kingdomid': u'7858f35d97d741b3956194dd1e542f35', 'sum': 130, 'sampleid': u'b82c697b7b0c40c9960c9a35ce3a4bf8'}]
-
-test = merge_lists(test, count, "sampleid")
-print test
-
-
+[
+    {
+        'values':
+            [
+                {'y_rich': 14, 'x': u'28', 'y_abund': Decimal('0.258258')},
+                 {'y_rich': 11, 'x': u'8', 'y_abund': Decimal('0.328622')},
+                 {'y_rich': 26, 'x': u'18', 'y_abund': Decimal('0.107266')},
+                 {'y_rich': 8, 'x': u'24', 'y_abund': Decimal('0.073529')},
+                 {'y_rich': 12, 'x': u'3', 'y_abund': Decimal('0.318681')},
+                 {'y_rich': 9, 'x': u'1', 'y_abund': Decimal('0.22973')},
+                 {'y_rich': 9, 'x': u'12', 'y_abund': Decimal('0.20155')},
+                 {'y_rich': 16, 'x': u'20', 'y_abund': Decimal('0.148976')},
+                 {'y_rich': 13, 'x': u'23', 'y_abund': Decimal('0.180617')},
+                 {'y_rich': 22, 'x': u'14', 'y_abund': Decimal('0.092341')},
+                 {'y_rich': 17, 'x': u'25', 'y_abund': Decimal('0.291291')},
+                 {'y_rich': 15, 'x': u'16', 'y_abund': Decimal('0.154681')},
+                 {'y_rich': 8, 'x': u'9', 'y_abund': Decimal('0.335616')},
+                 {'y_rich': 7, 'x': u'27', 'y_abund': Decimal('0.170455')},
+                 {'y_rich': 10, 'x': u'4', 'y_abund': Decimal('0.320261')},
+                 {'y_rich': 18, 'x': u'21', 'y_abund': Decimal('0.092016')},
+                 {'y_rich': 25, 'x': u'15', 'y_abund': Decimal('0.104895')},
+                 {'y_rich': 8, 'x': u'10', 'y_abund': Decimal('0.161798')},
+                 {'y_rich': 15, 'x': u'26', 'y_abund': Decimal('0.095098')},
+                 {'y_rich': 20, 'x': u'29', 'y_abund': Decimal('0.095124')},
+                 {'y_rich': 24, 'x': u'30', 'y_abund': Decimal('0.078311')},
+                 {'y_rich': 15, 'x': u'19', 'y_abund': Decimal('0.205674')},
+                 {'y_rich': 13, 'x': u'13', 'y_abund': Decimal('0.284615')},
+                 {'y_rich': 8, 'x': u'6', 'y_abund': Decimal('0.139024')},
+                 {'y_rich': 11, 'x': u'7', 'y_abund': Decimal('0.37037')},
+                 {'y_rich': 14, 'x': u'2', 'y_abund': Decimal('0.146939')},
+                 {'y_rich': 9, 'x': u'5', 'y_abund': Decimal('0.099065')},
+                 {'y_rich': 10, 'x': u'22', 'y_abund': Decimal('0.391753')},
+                 {'y_rich': 8, 'x': u'11', 'y_abund': Decimal('0.207101')},
+                 {'y_rich': 12, 'x': u'17', 'y_abund': Decimal('0.202703')}
+            ],
+        'key': u'Betaproteobacteria'
+    },
+    {
+        'values':
+            [
+                {'y_rich': 8, 'x': u'28', 'y_abund': Decimal('0.072072')}, {'y_rich': 1, 'x': u'8', 'y_abund': Decimal('0.045936')}, {'y_rich': 38, 'x': u'18', 'y_abund': Decimal('0.202757')}, {'y_rich': 16, 'x': u'24', 'y_abund': Decimal('0.117647')}, {'y_rich': 6, 'x': u'3', 'y_abund': Decimal('0.203297')}, {'y_rich': 4, 'x': u'1', 'y_abund': Decimal('0.108108')}, {'y_rich': 5, 'x': u'12', 'y_abund': Decimal('0.054264')}, {'y_rich': 17, 'x': u'20', 'y_abund': Decimal('0.297952')}, {'y_rich': 9, 'x': u'23', 'y_abund': Decimal('0.088106')}, {'y_rich': 36, 'x': u'14', 'y_abund': Decimal('0.249891')}, {'y_rich': 8, 'x': u'25', 'y_abund': Decimal('0.102102')}, {'y_rich': 17, 'x': u'16', 'y_abund': Decimal('0.181818')}, {'y_rich': 3, 'x': u'9', 'y_abund': Decimal('0.116438')}, {'y_rich': 5, 'x': u'27', 'y_abund': Decimal('0.102273')}, {'y_rich': 4, 'x': u'4', 'y_abund': Decimal('0.03268')}, {'y_rich': 20, 'x': u'21', 'y_abund': Decimal('0.056382')}, {'y_rich': 36, 'x': u'15', 'y_abund': Decimal('0.18309')}, {'y_rich': 3, 'x': u'10', 'y_abund': Decimal('0.024719')}, {'y_rich': 16, 'x': u'26', 'y_abund': Decimal('0.055882')}, {'y_rich': 26, 'x': u'29', 'y_abund': Decimal('0.192646')}, {'y_rich': 38, 'x': u'30', 'y_abund': Decimal('0.279596')}, {'y_rich': 7, 'x': u'19', 'y_abund': Decimal('0.035461')}, {'y_rich': 2, 'x': u'13', 'y_abund': Decimal('0.023077')}, {'y_rich': 10, 'x': u'6', 'y_abund': Decimal('0.069512')}, {'y_rich': 5, 'x': u'7', 'y_abund': Decimal('0.185185')}, {'y_rich': 9, 'x': u'2', 'y_abund': Decimal('0.032143')}, {'y_rich': 11, 'x': u'5', 'y_abund': Decimal('0.039252')}, {'y_rich': 5, 'x': u'22', 'y_abund': Decimal('0.051546')}, {'y_rich': 6, 'x': u'11', 'y_abund': Decimal('0.12426')}, {'y_rich': 7, 'x': u'17', 'y_abund': Decimal('0.116216')}], 'key': u'Alphaproteobacteria'}]
