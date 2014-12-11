@@ -4,11 +4,8 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f5def0b1-44de-4e55-9c23-a7de3aa1fb18" name="Default" comment="Regression data is displayed on the side of the graph, data itself is not displayed while in categorical mode, but its block remains">
+    <list default="true" id="f5def0b1-44de-4e55-9c23-a7de3aa1fb18" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dbMicrobe" afterPath="$PROJECT_DIR$/dbMicrobe" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/graph.html" afterPath="$PROJECT_DIR$/templates/graph.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/phyloDB.iml" afterPath="$PROJECT_DIR$/.idea/phyloDB.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="PhyloDB.iws" />
@@ -40,8 +37,8 @@
       <file leaf-file-name="graph.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/graph.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7033748" vertical-offset="5508" max-vertical-offset="8118">
-              <caret line="328" column="35" selection-start-line="328" selection-start-column="35" selection-end-line="328" selection-end-column="35" />
+            <state vertical-scroll-proportion="0.3197158" vertical-offset="5508" max-vertical-offset="8118">
+              <caret line="316" column="11" selection-start-line="316" selection-start-column="11" selection-end-line="316" selection-end-column="11" />
               <folding>
                 <element signature="n#style#0;n#td#0;n#tr#1;n#table#0;n#form#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#td#0;n#tr#0;n#table#0;n#td#0;n#tr#1;n#table#0;n#form#0;n#!!top" expanded="true" />
@@ -401,7 +398,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="options.lastSelected" value="settings.github" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
@@ -816,7 +813,11 @@
       <created>1417803716129</created>
       <updated>1417803716129</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Regression data is displayed on the side of the graph (only appears while in quantitative mode)&#10;Regression data which is displayed now reflects users abund/rich choice">
+      <created>1418327689350</created>
+      <updated>1418327689350</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -843,6 +844,7 @@
     <frame x="1279" y="24" width="1282" height="977" extended-state="6" />
     <editor active="true" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31361607" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32700893" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -852,13 +854,12 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.390625" sideWeight="0.5032051" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34449762" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" x="329" y="268" width="622" height="184" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26004463" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26004463" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32753164" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24968944" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39872408" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -905,7 +906,8 @@
     <MESSAGE value="fixed workspace.xml" />
     <MESSAGE value="All toggles now work!" />
     <MESSAGE value="Regression and ANOVA added.  Values are sent to webpage but currently not displayed." />
-    <option name="LAST_COMMIT_MESSAGE" value="Regression and ANOVA added.  Values are sent to webpage but currently not displayed." />
+    <MESSAGE value="Regression data is displayed on the side of the graph (only appears while in quantitative mode)&#10;Regression data which is displayed now reflects users abund/rich choice" />
+    <option name="LAST_COMMIT_MESSAGE" value="Regression data is displayed on the side of the graph (only appears while in quantitative mode)&#10;Regression data which is displayed now reflects users abund/rich choice" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1421,8 +1423,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/graph.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7033748" vertical-offset="5508" max-vertical-offset="8118">
-          <caret line="328" column="35" selection-start-line="328" selection-start-column="35" selection-end-line="328" selection-end-column="35" />
+        <state vertical-scroll-proportion="0.3197158" vertical-offset="5508" max-vertical-offset="8118">
+          <caret line="316" column="11" selection-start-line="316" selection-start-column="11" selection-end-line="316" selection-end-column="11" />
           <folding>
             <element signature="n#style#0;n#td#0;n#tr#1;n#table#0;n#form#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#td#0;n#tr#0;n#table#0;n#td#0;n#tr#1;n#table#0;n#form#0;n#!!top" expanded="true" />
