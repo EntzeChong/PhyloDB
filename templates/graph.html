@@ -178,7 +178,7 @@
                         .x(function (d) {return d.label})
                         .y(function (d) {return d.value})
                         .transitionDuration(50)
-                        .margin({top:50, right:50, bottom:50, left:100})
+                        .margin({top:50, right:50, bottom:100, left:100})
                         .reduceXTicks(false)
                         .rotateLabels(-45)
                         .showControls(true)
@@ -206,7 +206,7 @@
                         .x(function (d) {return d.label})
                         .y(function (d) {return d.value})
                         .transitionDuration(50)
-                        .margin({top:50, right:50, bottom:50, left:100})
+                        .margin({top:50, right:50, bottom:100, left:100})
                         .reduceXTicks(false)
                         .rotateLabels(-45)
                         .showControls(true)
@@ -234,11 +234,8 @@
                         .x(function (d) {return d.x})
                         .y(function (d) {return d.y_abund})
                         .tooltips(true)
-                        .tooltipContent(function(key, x, y) {
-                            return '<p><strong>(' + key + '<br>(' + x + ',' + y + ')</strong></p>'
-                        })
                         .transitionDuration(50)
-                        .margin({top:50, right:50, bottom:50, left:100})
+                        .margin({top:50, right:50, bottom:100, left:100})
                 ;
 
                 scatterchart_abund.xAxis
@@ -257,7 +254,9 @@
                 ;
 
                 nv.utils.windowResize(scatterchart_abund.update);
-
+                var mode = $('input[name="button2"]:checked').val();
+                if (mode==1)
+                addStats(obj);
                 return scatterchart_abund;
             });
         }
@@ -268,8 +267,9 @@
                 scatterchart_rich = nv.models.scatterPlusLineChart()
                         .x(function (d) {return d.x})
                         .y(function (d) {return d.y_rich})
+                        .tooltips(true)
                         .transitionDuration(50)
-                        .margin({top:50, right:50, bottom:50, left:100})
+                        .margin({top:50, right:50, bottom:100, left:100})
                 ;
 
                 scatterchart_abund.xAxis
@@ -287,10 +287,23 @@
                         .call(scatterchart_rich);
 
                 nv.utils.windowResize(scatterchart_rich.update);
-
+                var mode = $('input[name="button2"]:checked').val();
+                if (mode==2)
+                addStats(obj);
                 return scatterchart_rich;
             });
         }
+
+    function addStats(data)
+    {
+        var myDiv = document.getElementById('stats');
+        var postString = "";
+        for (var c=0;c<data.length;c++)
+        {
+            postString+="<pre>Taxa: "+data[c]['key']+"<br>    R-square:"+data[c]['r_square']+"<br>    P-value: "+data[c]['p_value']+"<br></pre>";
+        }
+        myDiv.innerHTML = postString;
+    }
 
     $(function () {
         var cond1 = 1;
@@ -299,6 +312,7 @@
         $("input[name$='button1']").click(function() {
             cond1 = $(this).val();
             displayTree(cond1);
+            displayStats(cond1);
             displayGraph(cond1, cond2);
         });
         $("input[name$='button2']").click(function() {
@@ -307,6 +321,20 @@
             displayGraph(cond1, cond2);
         });
     });
+
+    function displayStats(cond)
+    {
+        if (cond==1) {
+            $("#statsbox").hide();
+            $("#statshead").hide();
+            $("#stats").hide();
+        }
+        else {
+            $("#statsbox").show();
+            $("#statshead").show();
+            $("#stats").show();
+        }
+    }
 
     function displayTree (cond1) {
         if (cond1 == 1) {
@@ -388,23 +416,30 @@
         <br>
         <div id="myRadio2">
             Select dependent variable:
-            <input type="radio" name="button2" checked="checked" value="1">Relative Abundance
-            <input type="radio" name="button2" value="2">Richness
+            <input type="radio" name="button2" checked="checked" value="1" onclick="chooseData();">Relative Abundance
+            <input type="radio" name="button2" value="2" onclick="chooseData();">Richness
         </div>
 
         <!-- graph table -->
-        <table width="150%" border="2">
+        <table style="float: left;" class="graphclass" width="50%" border="2">
             <tr>
                 <th style="padding-right: 10px;">GraphData</th>
+                <th id="statshead" style="padding-right: 10px; display: none">Linear Regression Data</th>
             </tr>
             <tr>
                 <td>
-                    <div id="chart1" class="desc"> <svg style="height: 500px; width:750px;"></svg> </div>
-                    <div id="chart2" class="desc" style="display: none"> <svg style="height: 500px; width: 750px;"></svg> </div>
-                    <div id="chart3" class="desc" style="display: none"> <svg style="height: 500px; width: 750px;"></svg> </div>
-                    <div id="chart4" class="desc" style="display: none"> <svg style="height: 500px; width: 750px;"></svg> </div>
+                    <div id="chart1" class="desc"> <svg style="height: 500px; width:500px;"></svg> </div>
+                    <div id="chart2" class="desc" style="display: none"> <svg style="height: 500px; width: 500px;"></svg> </div>
+                    <div id="chart3" class="desc" style="display: none"> <svg style="height: 500px; width: 500px;"></svg> </div>
+                    <div id="chart4" class="desc" style="display: none"> <svg style="height: 500px; width: 500px;"></svg> </div>
+                </td>
+                <td id="statsbox" style="display: none">
+                <div id="stats" style="display: none"></div>
                 </td>
             </tr>
+
             </table>
     </form>
+    <br>
+    <br>
 {% endblock my_content%}
