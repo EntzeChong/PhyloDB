@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f5def0b1-44de-4e55-9c23-a7de3aa1fb18" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dbMicrobe" afterPath="$PROJECT_DIR$/dbMicrobe" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="PhyloDB.iws" />
@@ -817,7 +816,11 @@
       <created>1418327689350</created>
       <updated>1418327689350</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Re-commited to test github config (should be under my actual account now)">
+      <created>1418328179871</created>
+      <updated>1418328179871</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -907,7 +910,8 @@
     <MESSAGE value="All toggles now work!" />
     <MESSAGE value="Regression and ANOVA added.  Values are sent to webpage but currently not displayed." />
     <MESSAGE value="Regression data is displayed on the side of the graph (only appears while in quantitative mode)&#10;Regression data which is displayed now reflects users abund/rich choice" />
-    <option name="LAST_COMMIT_MESSAGE" value="Regression data is displayed on the side of the graph (only appears while in quantitative mode)&#10;Regression data which is displayed now reflects users abund/rich choice" />
+    <MESSAGE value="Re-commited to test github config (should be under my actual account now)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Re-commited to test github config (should be under my actual account now)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
