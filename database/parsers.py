@@ -152,21 +152,19 @@ def parse_profile(taxonomy, shared, path, p_uuid):
                     count = int(row[i+1])
                     if count > 0:
                         present = 1
-                    else:
-                        present = 0
-                    taxon = taxa_list[j].split(';')
-                    name = samples_list[i]
-                    project = Project.objects.get(projectid=p_uuid)
-                    sample = Sample.objects.filter(projectid=p_uuid).get(sample_name=name)
-                    t_kingdom = Kingdom.objects.get(kingdomName=taxon[0])
-                    t_phyla = Phyla.objects.get(kingdomid_id=t_kingdom, phylaName=taxon[1])
-                    t_class = Class.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, className=taxon[2])
-                    t_order = Order.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderName=taxon[3])
-                    t_family = Family.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyName=taxon[4])
-                    t_genus = Genus.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyid_id=t_family, genusName=taxon[5])
-                    t_species = Species.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyid_id=t_family, genusid_id=t_genus, speciesName=taxon[6])
-                    record = Profile(projectid=project, sampleid=sample, kingdomid=t_kingdom, phylaid=t_phyla, classid=t_class, orderid=t_order, familyid=t_family, genusid=t_genus, speciesid=t_species, count=count, binary=present)
-                    record.save()
+                        taxon = taxa_list[j].split(';')
+                        name = samples_list[i]
+                        project = Project.objects.get(projectid=p_uuid)
+                        sample = Sample.objects.filter(projectid=p_uuid).get(sample_name=name)
+                        t_kingdom = Kingdom.objects.get(kingdomName=taxon[0])
+                        t_phyla = Phyla.objects.get(kingdomid_id=t_kingdom, phylaName=taxon[1])
+                        t_class = Class.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, className=taxon[2])
+                        t_order = Order.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderName=taxon[3])
+                        t_family = Family.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyName=taxon[4])
+                        t_genus = Genus.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyid_id=t_family, genusName=taxon[5])
+                        t_species = Species.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyid_id=t_family, genusid_id=t_genus, speciesName=taxon[6])
+                        record = Profile(projectid=project, sampleid=sample, kingdomid=t_kingdom, phylaid=t_phyla, classid=t_class, orderid=t_order, familyid=t_family, genusid=t_genus, speciesid=t_species, count=count, binary=present)
+                        record.save()
                 j += 1
 
 

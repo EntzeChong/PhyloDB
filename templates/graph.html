@@ -5,20 +5,8 @@
 {% endblock %}
 
 {% block javascript %}
-    <style>
-        .tooltip {
-          position: absolute;
-          width: 200px;
-          height: 28px;
-          pointer-events: none;
-        }
-    </style>
     <script type="text/javascript">
         $(function () {
-            $("button").click(function () {
-                $("toggle").toggle();
-            });
-
             $("#tree_metaCat").dynatree({
                 checkbox: true,
                 selectMode: 3,
@@ -27,13 +15,28 @@
                     dataType: 'jsonp',
                     data: {}
                 },
-                onSelect: function () {
+                onLazyRead: function (node) {
+                    node.appendAjax({
+                        url: '/getSampleCatTreeChildren/',
+                        data: {
+                            table: node.data.id,
+                            field: node.data.title
+                        }
+                    });
+                },
+                onSelect: function (flag, node) {
+                    if (flag && node.childList == undefined) {
+                        node.reloadChildren(function () {
+                            node.select(false);
+                            node.select(true);
+                            chooseData();
+                        });
+                    }
                     chooseData();
                 },
-                onPostInit: function () {
-                    chooseData()
-                }
-            }); // end tree
+                cookieId: "dynatree-metaCat",
+                idPrefix: "dynatree-metaCat-"
+            });
 
             $("#tree_metaQuant").dynatree({
                 checkbox: true,
@@ -43,12 +46,11 @@
                     dataType: 'jsonp',
                     data: {}
                 },
-                onSelect: function () {
+                onSelect: function() {
                     chooseData();
                 },
-                onPostInit: function () {
-                    chooseData()
-                }
+                cookieId: "dynatree-metaQuant",
+                idPrefix: "dynatree-metaQuant-"
             }); // end tree
 
             $("#tree_taxa").dynatree({
@@ -59,24 +61,53 @@
                     dataType: 'jsonp',
                     data: {}
                 },
-                onSelect: function () {
-                   chooseData();
+                onLazyRead: function (node) {
+                    node.appendAjax({
+                        url: '/getTaxaTreeChildren/',
+                        data: {
+                            tooltip: node.data.tooltip,
+                            id: node.data.id
+                        }
+                    });
                 },
-                onPostInit: function () {
-                    chooseData()
-                }
-            }); // end tree
+                onSelect: function (flag, node) {
+                    if (flag && node.childList == undefined) {
+                        node.reloadChildren(function () {
+                            node.select(false);
+                            node.select(true);
+                            chooseData();
+                        });
+                    }
+                    chooseData();
+                },
+                cookieId: "dynatree-taxa",
+                idPrefix: "dynatree-taxa-"
+            });
 
-        }); // end function
+            //$("#tree_metaCat").click(function () {
+            //    chooseData();
+            //});
+
+            //$("#tree_metaQuant").click(function () {
+            //    chooseData();
+            //});
+
+            //$("#tree_taxa").click(function () {
+            //    chooseData();
+            //});
+        });
 
         function chooseData() {
             var nodesCat = $("#tree_metaCat").dynatree("getSelectedNodes");
             var nodesQuant = $("#tree_metaQuant").dynatree("getSelectedNodes");
             var nodesTaxa = $("#tree_taxa").dynatree("getSelectedNodes");
-            if ((nodesCat != "") && (nodesTaxa != "")) {
+            var selected = $("#myRadio1 input[type='radio']:checked");
+            var cond = selected.val();
+
+            if ((nodesCat != "") && (nodesTaxa != "") && (cond == 1)) {
                 getCatData();
             }
-            if ((nodesQuant != "") && (nodesTaxa != "")) {
+            if ((nodesQuant != "") && (nodesTaxa != "") && (cond == 2)) {
                 getQuantData();
             }
         }
@@ -132,43 +163,45 @@
         }
 
         function getCatMetaValues() {
-            var string = "";
+            var array = [];
             var nodes = $("#tree_metaCat").dynatree("getSelectedNodes");
             for (i in nodes) {
+                var key = nodes[i].data.tooltip;
                 var value = nodes[i].data.title;
-                var parent = nodes[i].getParent();
-                var key = parent.data.title;
                 if (nodes[i].getLevel() == 4) {
-                    string = key + "//" + value + "|" + string;
+                    var next = '"' + key + '" : "' + value + '"';
+                    array.push(next);
                 }
             }
-            return string.substring(0, string.length - 1);
+            return "{" + array.join(",") + "}";
         }
 
         function getQuantMetaValues() {
-            var string = "";
+            var array = [];
             var nodes = $("#tree_metaQuant").dynatree("getSelectedNodes");
             for (i in nodes) {
+                var key = nodes[i].data.id;
                 var value = nodes[i].data.title;
-                var parent = nodes[i].getParent();
-                var key = parent.data.title;
                 if (nodes[i].getLevel() == 3) {
-                    string = key + "//" + value + "|" + string;
+                    var next = '"' + key + '" : "' + value + '"';
+                    array.push(next);
                 }
             }
-            return string.substring(0, string.length - 1);
+            return "{" + array.join(",") + "}";
         }
 
         function getTaxaValues() {
-            var string = "";
+            var array = [];
             var nodes = $("#tree_taxa").dynatree("getSelectedNodes");
             for (i in nodes) {
                 var value = nodes[i].data.id;
-                if (nodes[i].getLevel() >= 3) {
-                    string = value + "|" + string;
+                var key = nodes[i].data.tooltip;
+                if (nodes[i].getLevel() >= 2) {
+                    var next = '"' + key + '" : "' + value + '"';
+                    array.push(next);
                 }
             }
-            return string.substring(0, string.length - 1);
+            return "{" + array.join(",") + "}";
         }
 
         var barchart_abund;
@@ -241,9 +274,9 @@
                         .margin({top:50, right:50, bottom:50, left:100})
                 ;
 
-                scatterchart_abund.xAxis
-                        .axisLabel(obj[0]['x-label'])
-                ;
+                //scatterchart_abund.xAxis
+                //        .axisLabel(obj[0]['x-label'])
+                //;
 
                 scatterchart_abund.yAxis
                        .tickFormat(d3.format(',.2e'))
@@ -272,9 +305,9 @@
                         .margin({top:50, right:50, bottom:50, left:100})
                 ;
 
-                scatterchart_abund.xAxis
-                        .axisLabel(obj[0]['x-label'])
-                ;
+                //scatterchart_abund.xAxis
+                //        .axisLabel(obj[0]['x-label'])
+                //;
 
                 scatterchart_rich.yAxis
                        .tickFormat(d3.format(',.1f'))
@@ -292,55 +325,57 @@
             });
         }
 
-    $(function () {
-        var cond1 = 1;
-        var cond2 = 1;
-
-        $("input[name$='button1']").click(function() {
-            cond1 = $(this).val();
-            displayTree(cond1);
-            displayGraph(cond1, cond2);
+        $(function () {
+            var cond1 = 1;
+            var cond2 = 1;
+           $("input[name$='button1']").click(function() {
+                cond1 = $(this).val();
+                displayTree(cond1);
+                displayGraph(cond1, cond2);
+            });
+            $("input[name$='button2']").click(function() {
+                cond2 = $(this).val();
+                displayTree(cond1);
+                displayGraph(cond1, cond2);
+            });
         });
-        $("input[name$='button2']").click(function() {
-            cond2 = $(this).val();
-            displayTree(cond1);
-            displayGraph(cond1, cond2);
-        });
-    });
 
-    function displayTree (cond1) {
-        if (cond1 == 1) {
-            $("#tree_metaQuant").hide();
-            $("#tree_metaCat").show();
+        function displayTree (cond1) {
+            if (cond1 == 1) {
+                $("#tree_metaQuant").hide();
+                $("#tree_metaCat").show();
+            }
+            if (cond1 == 2) {
+                $("#tree_metaCat").hide();
+                $("#tree_metaQuant").show();
+            }
         }
-        if (cond1 == 2) {
-            $("#tree_metaCat").hide();
-            $("#tree_metaQuant").show();
-        }
-    }
 
-    function displayGraph (cond1, cond2) {
-        if (cond1 == 1 && cond2 == 1) {
-            $("div.desc").hide();
-            $("#chart1").show();
-            d3.select('#chart1 svg').call(barchart_abund);
+        function displayGraph (cond1, cond2) {
+            if (cond1 == 1 && cond2 == 1) {
+                $("div.desc").hide();
+                $("#chart1").show();
+                d3.select('#chart1 svg').call(barchart_abund);
+            }
+            else if (cond1 == 1 && cond2 == 2 ) {
+                $("div.desc").hide();
+                $("#chart2").show();
+                d3.select('#chart2 svg').call(barchart_rich);
+            }
+            else if (cond1 == 2 && cond2 == 1) {
+                $("div.desc").hide();
+                $("#chart3").show();
+                d3.select('#chart3 svg').call(scatterchart_abund);
+            }
+            else if (cond1 == 2 && cond2 == 2 ) {
+                $("div.desc").hide();
+                $("#chart4").show();
+                d3.select('#chart3 svg').call(scatterchart_rich);
+            }
+            else {
+                $("div.desc").hide();
+            }
         }
-        if (cond1 == 1 && cond2 == 2 ) {
-            $("div.desc").hide();
-            $("#chart2").show();
-            d3.select('#chart2 svg').call(barchart_rich);
-        }
-        if (cond1 == 2 && cond2 == 1) {
-            $("div.desc").hide();
-            $("#chart3").show();
-            d3.select('#chart3 svg').call(scatterchart_abund);
-        }
-        if (cond1 == 2 && cond2 == 2 ) {
-            $("div.desc").hide();
-            $("#chart4").show();
-            d3.select('#chart3 svg').call(scatterchart_rich);
-        }
-    }
     </script>
 {% endblock javascript %}
 
@@ -393,7 +428,7 @@
         </div>
 
         <!-- graph table -->
-        <table width="150%" border="2">
+        <table width="100%" border="2">
             <tr>
                 <th style="padding-right: 10px;">GraphData</th>
             </tr>
@@ -407,4 +442,7 @@
             </tr>
             </table>
     </form>
+    <br>
+    <br>
+    <br>
 {% endblock my_content%}

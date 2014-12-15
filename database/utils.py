@@ -1,6 +1,7 @@
 import os
 import shutil
 from models import Project
+from collections import defaultdict
 
 
 def handle_uploaded_file(f, path, name):
@@ -19,4 +20,13 @@ def remove_list(request):
         shutil.rmtree(q.path)
         Project.objects.get(projectid=item).delete()
 
+def multidict(ordered_pairs):
+    d = defaultdict(list)
+    for k, v in ordered_pairs:
+        d[k].append(v)
+
+    for k, v in d.items():
+        if len(v) == 1:
+            d[k] = v[0]
+    return dict(d)
 

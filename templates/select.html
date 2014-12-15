@@ -7,6 +7,17 @@
 {% block javascript %}
     <script type="text/javascript">
         $(function () {
+
+            $('#projectTable').DataTable();
+            $('#sampleTable').DataTable();
+            $('#collectTable').DataTable();
+            $('#climateTable').DataTable();
+            $('#soil_classTable').DataTable();
+            $('#soil_nutrTable').DataTable();
+            $('#mgtTable').DataTable();
+            $('#microbeTable').DataTable();
+            $('#usrTable').DataTable();
+
             $("#tree").dynatree({
                 checkbox: true,
                 selectMode: 3,
@@ -15,37 +26,64 @@
                     dataType: "jsonp",
                     data: {}
                  },
-                onSelect: function () {
-                    var selectedNodes = $("#tree").dynatree("getSelectedNodes");
-                    selectedKeys = $.map(selectedNodes, function (node) {
-                        return node.data.id;
+                onLazyRead: function (node) {
+                    node.appendAjax({
+                        url: '/getProjectTreeChildren/',
+                        data: {
+                            id: node.data.id
+                        }
                     });
-                    // clear existing input box
-                    $('#selected .list input').remove();
-
-                    // add 'hidden' input box for each selectedKeys
-                    $.each(selectedKeys, function (index, value) {
-                        $('#selected .list').append("<input name=\"list\" type=\"hidden\" value=\"" + value + "\"/>")
-                    });
-                    //clear meassage
-                    $('#selected .list li').remove();
-                    $('#selected .list').append("<li>Your selection has been recorded!");
-                    $('#selected .list').append("<li>Click submit button to proceed");
-
-                    updateProjectTable(selectedKeys);
-                    updateSampleTable(selectedKeys);
-                    updateCollectTable(selectedKeys);
-                    updateClimateTable(selectedKeys);
-                    updateSoilClassTable(selectedKeys);
-                    updateSoilNutrTable(selectedKeys);
-                    updateMgtTable(selectedKeys);
-                    updateMicrobeTable(selectedKeys);
-                    updateUsrTable(selectedKeys);
+                },
+                onSelect: function (flag, node) {
+                    if (flag && node.childList == undefined) {
+                        node.reloadChildren(function () {
+                            node.select(false);
+                            node.select(true);
+                            updateNodes();
+                        });
+                    }
                 }
+            });
 
-            }); // end dynatree
+            $("#tree").click(function () {
+                updateNodes();
+            });
 
-        }); // end original function()
+            $("input[name$='tables']").click(function() {
+                var test = $(this).val();
+                $("div.desc").hide();
+                $("#table" + test).show();
+            });
+        });
+
+    function updateNodes() {
+        var selectedNodes = $("#tree").dynatree("getSelectedNodes");
+        var selKeys = $.map(selectedNodes, function (node) {
+            return node.data.id;
+        });
+        updateForm(selKeys);
+        updateProjectTable(selKeys);
+        updateSampleTable(selKeys);
+        updateCollectTable(selKeys);
+        updateClimateTable(selKeys);
+        updateSoilClassTable(selKeys);
+        updateSoilNutrTable(selKeys);
+        updateMgtTable(selKeys);
+        updateMicrobeTable(selKeys);
+        updateUsrTable(selKeys);
+    }
+
+    function updateForm(selKeys) {
+        $('#selected .list input').remove();
+
+        $.each(selKeys, function (index, value) {
+            $('#selected .list').append("<input name=\"list\" type=\"hidden\" value=\"" + value + "\"/>")
+        });
+
+        $('#selected .list li').remove();
+        $('#selected .list').append("<li>Your selection has been recorded!");
+        $('#selected .list').append("<li>Click submit button to proceed");
+    }
 
     function updateProjectTable(selKeys) {
         var table = $('#projectTable').DataTable();
@@ -293,27 +331,6 @@
                 {% endfor %}
         });
     }
-
-    $(document).ready(function () {
-        $('#projectTable').DataTable();
-        $('#sampleTable').DataTable();
-        $('#collectTable').DataTable();
-        $('#climateTable').DataTable();
-        $('#soil_classTable').DataTable();
-        $('#soil_nutrTable').DataTable();
-        $('#mgtTable').DataTable();
-        $('#microbeTable').DataTable();
-        $('#usrTable').DataTable();
-
-
-
-        $("input[name$='tables']").click(function() {
-            var test = $(this).val();
-            $("div.desc").hide();
-            $("#table" + test).show();
-        });
-    });
-
     </script>
 {% endblock javascript %}
 
