@@ -29,7 +29,7 @@ a img {
 
 h1 {
 	color: #F90;
-	font-size: 24px;
+	font-size: 18px;
 	margin: 0;
 }
 
@@ -57,39 +57,25 @@ th {
     position: absolute;
 }
 
-#intestazione {
-    top: 0px;
-    position: relative;
+#header {
+    top: 0;
+    position: fixed;
     width: 100%;
+    height: 50px;
 	border-bottom: 3px double #7CBE29;
 }
 
-#pagina {
-    margin-top: 60px;
-    left: 0%;
-    right: 0%;
-    bottom: 0%;
-
-}
-
-#piedipagina {
-    position:absolute;
-    bottom:0;
-	width: 100%;
-	border-top: 2px solid #7CBE29;
-	background-color: #FFF;
+#page {
+    margin-top: 10px;
+    width: 100%;
 }
 
 #Menu {
-    top: 10%;
-    left: 0%;
-    height: 100%;
-    position: absolute;
-	width: 10%;
-	background: url("media/images/sf_menu.png") repeat-x top #ccd1cb;
+	width: 50px;
+	background: url('../images/sf_menu.png') repeat-x top #ccd1cb;
 	border: 1px solid #7CBE29;
     font-size: 12px;
-    margin: 10px;
+    margin-top: 10px;
 }
 
 .barra_pulsanti {
@@ -157,7 +143,7 @@ th {
 }
 
 ul.menuItems {
-	margin: 0x;
+	margin: 0px;
 	padding-left: 5px;
 }
 

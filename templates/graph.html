@@ -5,8 +5,22 @@
 {% endblock %}
 
 {% block javascript %}
+    <style>
+        .inlineTable {
+            display: inline-block;
+            vertical-align: top;
+        }
+    </style>
+
     <script type="text/javascript">
         $(function () {
+            // initialize variables
+            var button1 = 1, button2 = 1, toggle = 0;
+            var nodesCat = "", nodesQuant = "", nodesTaxa = "";
+            var chart1 = {}, chart2 = {};
+            var catOptions = {}, quantOptions = {};
+
+            // start of dynatrees
             $("#tree_metaCat").dynatree({
                 checkbox: true,
                 selectMode: 3,
@@ -15,28 +29,11 @@
                     dataType: 'jsonp',
                     data: {}
                 },
-                onLazyRead: function (node) {
-                    node.appendAjax({
-                        url: '/getSampleCatTreeChildren/',
-                        data: {
-                            table: node.data.id,
-                            field: node.data.title
-                        }
-                    });
-                },
-                onSelect: function (flag, node) {
-                    if (flag && node.childList == undefined) {
-                        node.reloadChildren(function () {
-                            node.select(false);
-                            node.select(true);
-                            chooseData();
-                        });
-                    }
-                    chooseData();
-                },
-                cookieId: "dynatree-metaCat",
-                idPrefix: "dynatree-metaCat-"
-            });
+                onSelect: function(select, node) {
+                    nodesCat = node.tree.getSelectedNodes();
+                    chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa);
+                }
+            }); // end tree_metaCat
 
             $("#tree_metaQuant").dynatree({
                 checkbox: true,
@@ -46,12 +43,11 @@
                     dataType: 'jsonp',
                     data: {}
                 },
-                onSelect: function() {
-                    chooseData();
-                },
-                cookieId: "dynatree-metaQuant",
-                idPrefix: "dynatree-metaQuant-"
-            }); // end tree
+                onSelect: function(select, node) {
+                    nodesQuant = node.tree.getSelectedNodes();
+                    chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa);
+                }
+            }); // end tree_metaQuant
 
             $("#tree_taxa").dynatree({
                 checkbox: true,
@@ -61,61 +57,201 @@
                     dataType: 'jsonp',
                     data: {}
                 },
-                onLazyRead: function (node) {
-                    node.appendAjax({
-                        url: '/getTaxaTreeChildren/',
-                        data: {
-                            tooltip: node.data.tooltip,
-                            id: node.data.id
-                        }
-                    });
-                },
-                onSelect: function (flag, node) {
-                    if (flag && node.childList == undefined) {
-                        node.reloadChildren(function () {
-                            node.select(false);
-                            node.select(true);
-                            chooseData();
-                        });
+                onSelect: function(select, node) {
+                    nodesTaxa = node.tree.getSelectedNodes();
+                    searchData(nodesTaxa);
+                    if (toggle == 0) {
+                        chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa);
                     }
-                    chooseData();
-                },
-                cookieId: "dynatree-taxa",
-                idPrefix: "dynatree-taxa-"
+                }
+            }); // end tree_taxa
+
+            // set highchart theme
+            $("#listbox2").change(function (e) {
+                var selTheme = $(this).val();
+
+                if (selTheme == 1) {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(catOptions);
+                }
+                else if (selTheme == 2) {
+                    $.getScript('../media/highcharts/themes/dark-blue.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));                        });
+                }
+                else if (selTheme == 3) {
+                    $.getScript('../media/highcharts/themes/dark-green.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));                        });
+                }
+                else if (selTheme == 4) {
+                    $.getScript('../media/highcharts/themes/dark-unica.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));                        });
+                }
+                else if (selTheme == 5) {
+                    $.getScript('../media/highcharts/themes/gray.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));                        });
+                }
+                else if (selTheme == 6) {
+                    $.getScript('../media/highcharts/themes/grid.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));                        });
+                }
+                else if (selTheme == 7) {
+                    $.getScript('../media/highcharts/themes/grid-light.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));                        });
+                }
+                else if (selTheme == 8) {
+                    $.getScript('../media/highcharts/themes/sand-signika.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));                    });
+                }
+                else if (selTheme == 9) {
+                    $.getScript('../media/highcharts/themes/skies.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                    });
+                }
             });
 
-            //$("#tree_metaCat").click(function () {
-            //    chooseData();
-            //});
+            // get radio button states
+            $("input[name$='button1']").click(function () {
+                button1 = $(this).val();
+                chooseDisplay(button1);
+                chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa);
+            });
 
-            //$("#tree_metaQuant").click(function () {
-            //    chooseData();
-            //});
+            $("#listbox1").change(function () {
+                button2 = $(this).val();
+                chooseDisplay(button1);
+                chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa);
+            });
 
-            //$("#tree_taxa").click(function () {
-            //    chooseData();
-            //});
-        });
+           // Clear all selected nodes
+            $("#clearMeta").click(function(){
+                if (button1 == 1) {
+                    $("#tree_metaCat").dynatree("getRoot").visit(function (node) {
+                        node.select(false);
+                    });
+                    $("#container-1").empty();
+                    $("text-1").val();
+                }
+                else if (button1 == 2) {
+                    $("#tree_metaQuant").dynatree("getRoot").visit(function (node) {
+                        node.select(false);
+                    });
+                    $("#container-2").empty();
+                }
+            });
 
-        function chooseData() {
-            var nodesCat = $("#tree_metaCat").dynatree("getSelectedNodes");
-            var nodesQuant = $("#tree_metaQuant").dynatree("getSelectedNodes");
-            var nodesTaxa = $("#tree_taxa").dynatree("getSelectedNodes");
-            var selected = $("#myRadio1 input[type='radio']:checked");
-            var cond = selected.val();
+            $("#clearTaxa").click(function() {
+                toggle = 1;
+                $("input[name$='taxa']").removeAttr("checked");
+                $("#tree_taxa").dynatree("getRoot").visit(function (node) {
+                    node.select(false);
+                });
+                chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa);
+                if (button1 == 1) {
+                    $("#container-1").empty();
+                    $("#text-1").val();
+                }
+                else if (button1 == 2) {
+                    $("#container-2").empty();
+                }
+                toggle = 0;
+            });
 
-            if ((nodesCat != "") && (nodesTaxa != "") && (cond == 1)) {
-                getCatData();
+            // get all nodes for specified taxa levels
+            $("input[name$='taxa']").click(function () {
+                var rank = $(this).val();
+                toggle = 1;  // this is necessary to override re-rendering graph on each select
+                $("#tree_taxa").dynatree("getRoot").visit(function (node) {
+                    node.select(false);
+                });
+                $("#tree_taxa").dynatree("getRoot").visit(function (node) {
+                    if (node.getLevel() == rank) {
+                        node.select(true);
+                    }
+                });
+                nodesTaxa = $("#tree_taxa").dynatree("getSelectedNodes");
+                chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa);
+                toggle = 0;
+            });
+
+
+        // Choose what tree/graph/text to display
+        function chooseDisplay(button1) {
+            if (button1 == 1) {
+                $("#tree_metaQuant").hide();
+                $("#tree_metaCat").show();
+                $("#container-2").hide();
+                $("#container-1").show();
+                $("#text-1").show();
             }
-            if ((nodesQuant != "") && (nodesTaxa != "") && (cond == 2)) {
-                getQuantData();
+            else if (button1 == 2) {
+                $("#tree_metaCat").hide();
+                $("#tree_metaQuant").show();
+                $("#container-1").hide();
+                $("#container-2").show();
+                $("#text-1").hide();
             }
         }
 
-        function getCatData() {
+        // select categorical or quantitative data
+        function chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa) {
+            if ((nodesCat != "") && (nodesTaxa != "") && (button1 == 1)) {
+                getCatGraphData(button2, nodesCat, nodesTaxa);
+            }
+            else if ((nodesQuant != "") && (nodesTaxa != "") && (button1 == 2)) {
+                getQuantGraphData(button2, nodesQuant, nodesTaxa);
+            }
+            else {
+                $("#container-1").val('Please select both meta variable(s) & taxa level(s)');
+                $("#container-2").val('Please select both meta variable & taxa level(s)');
+                $("#text-1").val('No data selected');
+            }
+        }
+
+        // populate search links
+        function searchData(nodesTaxa) {
+            var search = $.map(nodesTaxa, function(node) {
+                return node.data.title;
+            });
+            $("#MicrobeWiki").attr("href", "https://microbewiki.kenyon.edu/index.php/Special:Search?search=" + search);
+            $("#Wiki").attr("href", "http://en.wikipedia.org/wiki/" + search);
+            $("#Google").attr("href", "http://www.google.com/search?q=" + search);
+        }
+
+
+        function getCatGraphData(button2, nodesCat, nodesTaxa) {
+            var array1 = [];
+            for (i in nodesCat) {
+                var key1 = nodesCat[i].data.tooltip;
+                var value1 = nodesCat[i].data.title;
+                if (nodesCat[i].getLevel() == 4) {
+                    var next1 = '"' + key1 + '" : "' + value1 + '"';
+                    array1.push(next1);
+                }
+            }
+            var meta = "{" + array1.join(",") + "}";
+
+            var array2 = [];
+            for (i in nodesTaxa) {
+                var value2 = nodesTaxa[i].data.id;
+                var key2 = nodesTaxa[i].data.tooltip;
+                if (nodesTaxa[i].getLevel() >= 2) {
+                    var next2 = '"' + key2 + '" : "' + value2 + '"';
+                    array2.push(next2);
+                }
+            }
+            var taxa = "{" + array2.join(",") + "}";
+
             var myDict = {};
-            myDict['meta'] = getCatMetaValues();
-            myDict['taxa'] = getTaxaValues();
+            myDict['meta'] = meta;
+            myDict['taxa'] = taxa;
             jsonDict = JSON.stringify(myDict);
 
             $.ajax({
@@ -128,19 +264,57 @@
                 success: function(data) {
                     var result = JSON.stringify(data);
                     var obj = $.parseJSON(result);
-                    var abund = (obj['abund']);
-                    var rich = obj['rich'];
-
-                    AbundBarChart(abund);
-                    RichBarChart(rich);
+                    var xAxis = obj['xAxis'];
+                    if (button2 == 1) {
+                        var series = obj['series_abund'];
+                        var yAxis = obj['yAxis_abund'];
+                    }
+                    if (button2 == 2) {
+                        series = obj['series_rich'];
+                        yAxis = obj['yAxis_rich'];
+                    }
+                    barchart(xAxis, yAxis, series);
+                }
+            });
+            $.ajax({
+                url: '/ANOVA/',
+                type: 'GET',
+                data: {
+                    all: jsonDict,
+                    button: button2
+                },
+                success: function (data) {
+                    $('#text-1').val(data);
                 }
             });
         }
 
-        function getQuantData() {
+        function getQuantGraphData(button2, nodesQuant, nodesTaxa) {
+            var array1 = [];
+            for (i in nodesQuant) {
+                var key1 = nodesQuant[i].data.tooltip;
+                var value1 = nodesQuant[i].data.title;
+                if (nodesQuant[i].getLevel() == 3) {
+                    var next1 = '"' + key1 + '" : "' + value1 + '"';
+                    array1.push(next1);
+                }
+            }
+            var meta = "{" + array1.join(",") + "}";
+
+            var array2 = [];
+            for (i in nodesTaxa) {
+                var value2 = nodesTaxa[i].data.id;
+                var key2 = nodesTaxa[i].data.tooltip;
+                if (nodesTaxa[i].getLevel() >= 2) {
+                    var next2 = '"' + key2 + '" : "' + value2 + '"';
+                    array2.push(next2);
+                }
+            }
+            var taxa = "{" + array2.join(",") + "}";
+
             var myDict = {};
-            myDict['meta'] = getQuantMetaValues();
-            myDict['taxa'] = getTaxaValues();
+            myDict['meta'] = meta;
+            myDict['taxa'] = taxa;
             jsonDict = JSON.stringify(myDict);
 
             $.ajax({
@@ -153,296 +327,186 @@
                 success: function(data) {
                     var result = JSON.stringify(data);
                     var obj = $.parseJSON(result);
-                    var abund = (obj['abund']);
-                    var rich = obj['rich'];
-
-                    AbundLineChart(abund);
-                    RichLineChart(rich);
+                    var xAxis = obj['xAxis'];
+                    if (button2 == 1) {
+                        var series = obj['series_abund'];
+                        var yAxis = obj['yAxis_abund'];
+                    }
+                    if (button2 == 2) {
+                        series = obj['series_rich'];
+                        yAxis = obj['yAxis_rich'];
+                    }
+                    linechart(xAxis, yAxis, series);
                 }
             });
         }
 
-        function getCatMetaValues() {
-            var array = [];
-            var nodes = $("#tree_metaCat").dynatree("getSelectedNodes");
-            for (i in nodes) {
-                var key = nodes[i].data.tooltip;
-                var value = nodes[i].data.title;
-                if (nodes[i].getLevel() == 4) {
-                    var next = '"' + key + '" : "' + value + '"';
-                    array.push(next);
-                }
-            }
-            return "{" + array.join(",") + "}";
+        function barchart(xAxis, yAxis, series) {
+           catOptions = {
+                chart: { renderTo: 'container-1', type: 'column' },
+                title: { text: null },
+                legend: {
+                    align: 'right',
+                    verticalAlign: 'top',
+                    layout: 'vertical',
+                    x: 0,
+                    y: 20
+                },
+                xAxis: xAxis,
+                yAxis: yAxis,
+                series: series,
+                tooltip: {
+                    formatter: function () {
+                        return '<b>' + this.x + '</b><br/>' +
+                        this.series.name + ': ' + this.y + '<br/>' +
+                        'Total: ' + this.point.stackTotal;
+                    }
+                },
+                plotOptions: { column: { stacking: 'normal' } },
+                credits: { enabled: false }
+            };
+            chart1 = new Highcharts.Chart(catOptions);
         }
 
-        function getQuantMetaValues() {
-            var array = [];
-            var nodes = $("#tree_metaQuant").dynatree("getSelectedNodes");
-            for (i in nodes) {
-                var key = nodes[i].data.id;
-                var value = nodes[i].data.title;
-                if (nodes[i].getLevel() == 3) {
-                    var next = '"' + key + '" : "' + value + '"';
-                    array.push(next);
-                }
-            }
-            return "{" + array.join(",") + "}";
+        function linechart(xAxis, yAxis, series) {
+            quantOptions = {
+                chart: { renderTo: 'container-2', type: 'scatter', zoomType: 'xy'},
+                title: { text: null },
+                legend: {
+                    align: 'right',
+                    verticalAlign: 'top',
+                    layout: 'vertical',
+                    x: 0,
+                    y: 20
+                },
+                xAxis: xAxis,
+                yAxis: yAxis,
+                series: series,
+                tooltip: {
+                    formatter: function () {
+                        return '{' + series.name + '}' + '<br>' + '(' + this.x + ',' + this.y + ')'
+                    }
+                },
+                credits: { enabled: false }
+            };
+            chart2 = new Highcharts.Chart(quantOptions);
         }
 
-        function getTaxaValues() {
-            var array = [];
-            var nodes = $("#tree_taxa").dynatree("getSelectedNodes");
-            for (i in nodes) {
-                var value = nodes[i].data.id;
-                var key = nodes[i].data.tooltip;
-                if (nodes[i].getLevel() >= 2) {
-                    var next = '"' + key + '" : "' + value + '"';
-                    array.push(next);
-                }
-            }
-            return "{" + array.join(",") + "}";
-        }
-
-        var barchart_abund;
-        function AbundBarChart(obj) {
-            nv.addGraph(function () {
-                barchart_abund = nv.models.multiBarChart()
-                        .x(function (d) {return d.label})
-                        .y(function (d) {return d.value})
-                        .transitionDuration(50)
-                        .margin({top:50, right:50, bottom:50, left:100})
-                        .reduceXTicks(false)
-                        .rotateLabels(-45)
-                        .showControls(true)
-                        .groupSpacing(0.1)
-                ;
-
-                barchart_abund.yAxis
-                        .tickFormat(d3.format(',.2e'));
-
-                d3.select('#chart1 svg')
-                        .datum(obj)
-                        .transition().duration(50)
-                        .call(barchart_abund);
-
-                nv.utils.windowResize(barchart_abund.update);
-
-                return barchart_abund;
-            });
-        }
-
-        var barchart_rich;
-        function RichBarChart(obj) {
-            nv.addGraph(function () {
-                barchart_rich = nv.models.multiBarChart()
-                        .x(function (d) {return d.label})
-                        .y(function (d) {return d.value})
-                        .transitionDuration(50)
-                        .margin({top:50, right:50, bottom:50, left:100})
-                        .reduceXTicks(false)
-                        .rotateLabels(-45)
-                        .showControls(true)
-                        .groupSpacing(0.1)
-                ;
-
-                barchart_rich.yAxis
-                        .tickFormat(d3.format(',.1f'));
-
-                d3.select('#chart2 svg')
-                        .datum(obj)
-                        .transition().duration(50)
-                        .call(barchart_rich);
-
-                nv.utils.windowResize(barchart_rich.update);
-
-                return barchart_rich;
-            });
-        }
-
-        var scatterchart_abund;
-        function AbundLineChart(obj) {
-            nv.addGraph(function () {
-                scatterchart_abund = nv.models.scatterPlusLineChart()
-                        .x(function (d) {return d.x})
-                        .y(function (d) {return d.y_abund})
-                        .tooltips(true)
-                        .tooltipContent(function(key, x, y) {
-                            return '<p><strong>(' + key + '<br>(' + x + ',' + y + ')</strong></p>'
-                        })
-                        .transitionDuration(50)
-                        .margin({top:50, right:50, bottom:50, left:100})
-                ;
-
-                //scatterchart_abund.xAxis
-                //        .axisLabel(obj[0]['x-label'])
-                //;
-
-                scatterchart_abund.yAxis
-                       .tickFormat(d3.format(',.2e'))
-                        .axisLabel('Relative Abundance')
-                ;
-
-                d3.select('#chart3 svg')
-                        .datum(obj)
-                        .transition().duration(50)
-                        .call(scatterchart_abund)
-                ;
-
-                nv.utils.windowResize(scatterchart_abund.update);
-
-                return scatterchart_abund;
-            });
-        }
-
-        var scatterchart_rich;
-        function RichLineChart(obj) {
-            nv.addGraph(function () {
-                scatterchart_rich = nv.models.scatterPlusLineChart()
-                        .x(function (d) {return d.x})
-                        .y(function (d) {return d.y_rich})
-                        .transitionDuration(50)
-                        .margin({top:50, right:50, bottom:50, left:100})
-                ;
-
-                //scatterchart_abund.xAxis
-                //        .axisLabel(obj[0]['x-label'])
-                //;
-
-                scatterchart_rich.yAxis
-                       .tickFormat(d3.format(',.1f'))
-                        .axisLabel('OTU Richness')
-                ;
-
-                d3.select('#chart4 svg')
-                        .datum(obj)
-                        .transition().duration(50)
-                        .call(scatterchart_rich);
-
-                nv.utils.windowResize(scatterchart_rich.update);
-
-                return scatterchart_rich;
-            });
-        }
-
-        $(function () {
-            var cond1 = 1;
-            var cond2 = 1;
-           $("input[name$='button1']").click(function() {
-                cond1 = $(this).val();
-                displayTree(cond1);
-                displayGraph(cond1, cond2);
-            });
-            $("input[name$='button2']").click(function() {
-                cond2 = $(this).val();
-                displayTree(cond1);
-                displayGraph(cond1, cond2);
-            });
-        });
-
-        function displayTree (cond1) {
-            if (cond1 == 1) {
-                $("#tree_metaQuant").hide();
-                $("#tree_metaCat").show();
-            }
-            if (cond1 == 2) {
-                $("#tree_metaCat").hide();
-                $("#tree_metaQuant").show();
-            }
-        }
-
-        function displayGraph (cond1, cond2) {
-            if (cond1 == 1 && cond2 == 1) {
-                $("div.desc").hide();
-                $("#chart1").show();
-                d3.select('#chart1 svg').call(barchart_abund);
-            }
-            else if (cond1 == 1 && cond2 == 2 ) {
-                $("div.desc").hide();
-                $("#chart2").show();
-                d3.select('#chart2 svg').call(barchart_rich);
-            }
-            else if (cond1 == 2 && cond2 == 1) {
-                $("div.desc").hide();
-                $("#chart3").show();
-                d3.select('#chart3 svg').call(scatterchart_abund);
-            }
-            else if (cond1 == 2 && cond2 == 2 ) {
-                $("div.desc").hide();
-                $("#chart4").show();
-                d3.select('#chart3 svg').call(scatterchart_rich);
-            }
-            else {
-                $("div.desc").hide();
-            }
-        }
+    }); // end document ready function
     </script>
 {% endblock javascript %}
 
 {% block my_content %}
-    <form>
     <br>
-        <div id="myRadio1">
-            Select data type:
-            <input type="radio" name="button1" checked="checked" value="1">Categorical
-            <input type="radio" name="button1" value="2">Quantitative
-        </div>
+    <div id="myRadio1">
+        Select data type:
+        <input type="radio" name="button1" checked="checked" value="1">Categorical
+        <input type="radio" name="button1" value="2">Quantitative
+    </div>
 
-        <!-- tree tables -->
-        <table border="2" cellspacing="0" cellpadding="5">
-            <tr>
-                <th>Select Meta Data<br>
-                </th>
-                <th>Select Taxa level</th>
-            </tr>
-            <tr>
-                <td style="padding-right: 10px; vertical-align: top">
-                    <!-- left tree -->
-                    <table border="0" cellspacing="0" cellpadding="1">
-                        <tr>
-                            <td>
-                                <div id="tree_metaCat"></div>
-                                <div id="tree_metaQuant" style="display: none"></div>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td style="padding-right: 10px; vertical-align: top">
-                    <!-- right table -->
-                    <table border="0" cellspacing="0" cellpadding="1">
-                        <tr>
-                            <td>
-                                <div id="tree_taxa"></div>
-                            </td>
-                        </tr>
-                    </table>
-                    <!-- end of main table -->
-                </td>
-            </tr>
-        </table>
-        <br>
-        <div id="myRadio2">
-            Select dependent variable:
-            <input type="radio" name="button2" checked="checked" value="1">Relative Abundance
-            <input type="radio" name="button2" value="2">Richness
-        </div>
+    <!-- tree tables -->
+    <div>
+    <table border="2" cellspacing="0" cellpadding="5" class="inlineTable">
+        <tr>
+            <th>Select Meta Data:<a href="#" id="clearMeta" style="font-size: 12px;">-Deselect all-</a></th>
+        </tr>
+        <tr>
+            <td style="padding-right: 10px; vertical-align: top">
+                <div id="tree_metaCat"></div>
+                <div id="tree_metaQuant" style="display: none"></div>
+            </td>
+        </tr>
+    </table>
 
-        <!-- graph table -->
-        <table width="100%" border="2">
-            <tr>
-                <th style="padding-right: 10px;">GraphData</th>
-            </tr>
-            <tr>
-                <td>
-                    <div id="chart1" class="desc"> <svg style="height: 500px; width:750px;"></svg> </div>
-                    <div id="chart2" class="desc" style="display: none"> <svg style="height: 500px; width: 750px;"></svg> </div>
-                    <div id="chart3" class="desc" style="display: none"> <svg style="height: 500px; width: 750px;"></svg> </div>
-                    <div id="chart4" class="desc" style="display: none"> <svg style="height: 500px; width: 750px;"></svg> </div>
-                </td>
-            </tr>
-            </table>
-    </form>
+    <table border="2" cellspacing="0" cellpadding="5" class="inlineTable">
+        <tr>
+            <th>Select Taxa Level:<a href="#" id="clearTaxa" style="font-size: 12px;">-Deselect all-</a></th>
+        </tr>
+        <tr>
+            <td style="padding-right: 10px; vertical-align: top">
+                <div id="tree_taxa"></div>
+            </td>
+        </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="5"  class="inlineTable">
+        <tr>
+            <th bgcolor="white"  colspan="3" style="text-align: center">Select all:</th>
+        </tr>
+        <tr>
+            <td bgcolor="white" width="5px"></td>
+            <td bgcolor="white">
+                <div id="selectall">
+                    <input type="radio" name="taxa" value="2">Kingdoms<br>
+                    <input type="radio" name="taxa" value="3">Phylas<br>
+                    <input type="radio" name="taxa" value="4">Classes<br>
+                    <input type="radio" name="taxa" value="5">Orders<br>
+                    <input type="radio" name="taxa" value="6">Families<br>
+                    <input type="radio" name="taxa" value="7">Genera<br>
+                    <input type="radio" name="taxa" value="8">Species<br>
+                </div>
+            </td>
+            <td bgcolor="white" width="5px"></td>
+        </tr>
+    </table>
+    <table  border="2" cellspacing="0" cellpadding="5" class="inlineTable">
+        <tr>
+            <th>Search Selected Taxa:</th>
+        </tr>
+        <tr>
+            <td bgcolor="white" align="center">
+                <a style="font-size: 12px;" id="MicrobeWiki" class="Offmouse" href="https://microbewiki.kenyon.edu"  target="_blank">-MicrobeWiki-</a><br>
+                <a style="font-size: 12px;" id="Wiki" class="Offmouse" href="http://en.wikipedia.org/wiki/"  target="_blank">-Wiki-</a><br>
+                <a style="font-size: 12px;" id="Google" class="Offmouse" href="http://www.google.com/"  target="_blank">-Google-</a>
+            </td>
+        </tr>
+        <tr>
+            <td width="160px" bgcolor="white" align="center">
+                <p>Above link(s) open a search of the currently selected taxa
+                in a new window. Search will most likely fail if more than one
+                node is selected.</p>
+            </td>
+        </tr>
+    </table>
+    </div><br>
+    <p  style="float: left;">Select dependent variable:
+        <select id="listbox1">
+            <option value="1" selected="selected">Relative Abundance</option>
+            <option value="2">Richness</option>
+            <option value="3">Diversity</option>
+        </select>
+    </p>
+
+    <p  style="float: right;">Select chart theme:
+        <select id="listbox2">
+            <option value="1" selected="selected">default</option>
+            <option value="2">dark-blue</option>
+            <option value="3">dark-green</option>
+            <option value="4">dark-unica</option>
+            <option value="5">gray</option>
+            <option value="6">grid</option>
+            <option value="7">grid-light</option>
+            <option value="8">sand-signika</option>
+            <option value="9">skies</option>
+        </select>
+    </p>
+    <table width="100%" border="2">
+        <tr>
+            <th style="padding-right: 10px;">GraphData</th>
+        </tr>
+        <tr>
+            <td>
+                <div id="container-1" style="height: 400px;">No Data has been selected!</div>
+                <div id="container-2" style="height: 400px; display: none">No data has been selected!</div>
+            </td>
+        </tr>
+    </table>
+
+    <div>
+        <p>Test Results:</p>
+        <textarea id="text-1" rows="20" cols="100">No data selected</textarea>
+    </div>
     <br>
     <br>
     <br>
+
 {% endblock my_content%}

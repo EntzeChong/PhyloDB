@@ -25,16 +25,14 @@
                     url: "/getProjectTree/",
                     dataType: "jsonp",
                     data: {}
-                 },
-                onLazyRead: function (node) {
+                },
+                onLazyRead: function(node) {
                     node.appendAjax({
                         url: '/getProjectTreeChildren/',
-                        data: {
-                            id: node.data.id
-                        }
+                        data: {id: node.data.id}
                     });
                 },
-                onSelect: function (flag, node) {
+                onSelect: function(flag, node) {
                     if (flag && node.childList == undefined) {
                         node.reloadChildren(function () {
                             node.select(false);
@@ -54,7 +52,16 @@
                 $("div.desc").hide();
                 $("#table" + test).show();
             });
-        });
+
+           // Clear all selected nodes
+            $("#clearMeta").click(function(){
+                $("#tree").dynatree("getRoot").visit(function (node) {
+                    node.select(false);
+                });
+                updateNodes();
+            });
+
+        }); // document ready function
 
     function updateNodes() {
         var selectedNodes = $("#tree").dynatree("getSelectedNodes");
@@ -338,7 +345,7 @@
     <br>
     <table border="2" cellspacing="0" cellpadding="5">
         <tr>
-            <th>Select any combination of data for analysis:</th>
+            <th>Select any combination of data for analysis:<a href="#" id="clearMeta" style="font-size: 12px;">-Deselect all-</a></th>
         </tr>
         <tr>
             <td style="padding-right: 10px; vertical-align: top">

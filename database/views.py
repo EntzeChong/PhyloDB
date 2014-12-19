@@ -10,11 +10,8 @@ from parsers import parse_project, parse_sample, parse_taxonomy, parse_profile, 
 
 
 def home(request):
-    print("Going home!")
     return render_to_response('home.html')
 
-def Analysis(request):
-    return render_to_response('Analysis.html')
 
 def upload(request):
     if request.method == 'POST' and 'Upload' in request.POST:

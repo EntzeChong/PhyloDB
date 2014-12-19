@@ -5,25 +5,112 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f5def0b1-44de-4e55-9c23-a7de3aa1fb18" name="Default" comment="">
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\dbMicrobe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\uploads\59b7a5fccc874c81ac2aa67f434be33a\mothur.shared" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\uploads\59b7a5fccc874c81ac2aa67f434be33a\mothur.taxonomy" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\uploads\59b7a5fccc874c81ac2aa67f434be33a\project.csv" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\uploads\59b7a5fccc874c81ac2aa67f434be33a\sample.csv" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\uploads\59b7a5fccc874c81ac2aa67f434be33a\shared.tr" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\uploads\adeec48e0bc4495b9731142a0593aac8\mothur.shared" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\uploads\adeec48e0bc4495b9731142a0593aac8\mothur.taxonomy" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\uploads\adeec48e0bc4495b9731142a0593aac8\project.csv" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\uploads\adeec48e0bc4495b9731142a0593aac8\sample.csv" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\uploads\adeec48e0bc4495b9731142a0593aac8\shared.tr" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/graph.html" afterPath="$PROJECT_DIR$/templates/graph.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/parsers.py" afterPath="$PROJECT_DIR$/database/parsers.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/select.html" afterPath="$PROJECT_DIR$/templates/select.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/temp.py" afterPath="$PROJECT_DIR$/database/temp.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/trees.py" afterPath="$PROJECT_DIR$/database/trees.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phyloDB/urls.py" afterPath="$PROJECT_DIR$/phyloDB/urls.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/themes/dark-unica.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/plugins/highcharts-regression.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/canvas-tools.src.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/exporting.src.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/plugins/grouped-categories.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/funnel.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/adapters/standalone-framework.src.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/themes/grid.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/canvas-tools.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/adapters/standalone-framework.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/themes/dark-blue.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/highcharts-3d.src.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/no-data-to-display.src.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/funnel.src.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/solid-gauge.src.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/exporting.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/themes/grid-light.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/highcharts-all.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/highcharts-3d.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/drilldown.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/data.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/highcharts.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/data.src.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/highcharts-more.src.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/drilldown.src.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/highcharts-more.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/themes/dark-green.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/heatmap.src.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/themes/gray.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/themes/skies.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/heatmap.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/no-data-to-display.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/themes/sand-signika.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/highcharts.src.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/highcharts/modules/solid-gauge.js" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\indentedTree.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\lib\fisheye.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\sparkline.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\lib\crossfilter.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\bullet.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\pieChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\parallelCoordinates.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\backup\bulletChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\lib\colorbrewer.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\multiBarHorizontalChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\lib\d3.v2.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\distribution.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\historicalBar.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\core.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\ohlcBar.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\multiChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\sparklinePlus.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\nv.d3.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\multiBarChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\cumulativeLineChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\linePlusBarChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\intro.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\multiBarHorizontal.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\multiBarTimeSeriesChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\stackedArea.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\lineWithFocusChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\lib\cie.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\multiBarTimeSeries.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\discreteBarChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\pie.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\tooltip.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\scatter.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\historicalBarChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\backup\bullet.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\scatterChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\lineWithFisheye.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\line.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\outro.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\lib\hive.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\axis.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\scatterPlusLineChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\lineWithFisheyeChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\linePlusBarWithFocusChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\lib\d3.v2.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\discreteBar.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\lineChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\boilerplate.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\lib\d3.v3.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\interactiveLayer.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\bulletChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\stackedAreaChart.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\legend.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\utils.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models\multiBar.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\tooltip.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\lib\horizon.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\lib\crossfilter.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\lib\sankey.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\nv.d3.css" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/models.py" afterPath="$PROJECT_DIR$/database/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/base.html" afterPath="$PROJECT_DIR$/templates/base.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/phyloDB.iml" afterPath="$PROJECT_DIR$/.idea/phyloDB.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dbMicrobe" afterPath="$PROJECT_DIR$/dbMicrobe" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/utils.py" afterPath="$PROJECT_DIR$/database/utils.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/graph.html" afterPath="$PROJECT_DIR$/templates/graph.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/select.html" afterPath="$PROJECT_DIR$/templates/select.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/views.py" afterPath="$PROJECT_DIR$/database/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/trees.py" afterPath="$PROJECT_DIR$/database/trees.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/media/css/new_style.css" afterPath="$PROJECT_DIR$/media/css/new_style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phyloDB/urls.py" afterPath="$PROJECT_DIR$/phyloDB/urls.py" />
     </list>
     <ignored path="PhyloDB.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -51,53 +138,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="trees.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/database/trees.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.70414203" vertical-offset="21709" max-vertical-offset="22372">
-              <caret line="1291" column="0" selection-start-line="1291" selection-start-column="0" selection-end-line="1291" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/database/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2805" max-vertical-offset="5083">
-              <caret line="165" column="0" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="temp.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/database/temp.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="102">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="graph.html" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="graph.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/graph.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="4979" max-vertical-offset="7718">
-              <caret line="310" column="0" selection-start-line="310" selection-start-column="0" selection-end-line="310" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="parsers.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/database/parsers.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2057" max-vertical-offset="5117">
-              <caret line="121" column="4" selection-start-line="121" selection-start-column="4" selection-end-line="121" selection-end-column="44" />
+            <state vertical-scroll-proportion="-6.4761906" vertical-offset="5814" max-vertical-offset="8806">
+              <caret line="126" column="24" selection-start-line="126" selection-start-column="24" selection-end-line="126" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -128,26 +173,9 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/treePlotter/__init__.py" />
-        <option value="$PROJECT_DIR$/phyloDB/views.py" />
-        <option value="$PROJECT_DIR$/treePlotter/views.py" />
-        <option value="$PROJECT_DIR$/treeMeta/views.py" />
-        <option value="$PROJECT_DIR$/treeTaxonomy/views.py" />
-        <option value="$PROJECT_DIR$/templates/list.html" />
-        <option value="$PROJECT_DIR$/parser/mothur_parser/mothur_parser.py" />
-        <option value="$PROJECT_DIR$/parser/mothur_parser/sample_parser.py" />
-        <option value="$PROJECT_DIR$/parser/mothur_parser/input/test_data/meta_Sample.csv" />
-        <option value="$PROJECT_DIR$/parser/mothur_parser/database.py" />
-        <option value="$PROJECT_DIR$/parser/mothur_parser/project_parser.py" />
-        <option value="$PROJECT_DIR$/parser/mothur_parser/utils.py" />
-        <option value="$PROJECT_DIR$/parser/Update.py" />
-        <option value="$PROJECT_DIR$/parser/update.py" />
-        <option value="$PROJECT_DIR$/parser/db_update.py" />
-        <option value="$PROJECT_DIR$/database/dbupdate.py" />
         <option value="$PROJECT_DIR$/treeProject/views.py" />
         <option value="$PROJECT_DIR$/media/dynatree/ui.dynatree.css" />
         <option value="$PROJECT_DIR$/templates/norm.html" />
-        <option value="$PROJECT_DIR$/media/css/new_style.css" />
         <option value="$PROJECT_DIR$/tree_manager/vews.py" />
         <option value="$PROJECT_DIR$/templates/filter.html" />
         <option value="$PROJECT_DIR$/database/sql.py" />
@@ -166,19 +194,36 @@
         <option value="$PROJECT_DIR$/database/modelForms.py" />
         <option value="$PROJECT_DIR$/phyloDB/settings.py" />
         <option value="$PROJECT_DIR$/urls.py" />
-        <option value="$PROJECT_DIR$/database/models.py" />
         <option value="$PROJECT_DIR$/setup.py" />
-        <option value="$PROJECT_DIR$/database/views.py" />
-        <option value="$PROJECT_DIR$/templates/base.html" />
         <option value="$PROJECT_DIR$/media/nvd3/src/models/scatterPlusLineChart.js" />
         <option value="$PROJECT_DIR$/media/nvd3/src/tooltip.js" />
-        <option value="$PROJECT_DIR$/phyloDB/urls.py" />
-        <option value="$PROJECT_DIR$/database/utils.py" />
-        <option value="$PROJECT_DIR$/templates/select.html" />
         <option value="$PROJECT_DIR$/database/parsers.py" />
-        <option value="$PROJECT_DIR$/templates/graph.html" />
-        <option value="$PROJECT_DIR$/database/trees.py" />
+        <option value="$PROJECT_DIR$/media/nvd3/src/nv.d3.css" />
+        <option value="$PROJECT_DIR$/media/dynatree/src/jquery.dynatree.js" />
+        <option value="$PROJECT_DIR$/database/models.py" />
+        <option value="$PROJECT_DIR$/database/views.py" />
+        <option value="$PROJECT_DIR$/media/jquery/jquery.download.js" />
+        <option value="$PROJECT_DIR$/media/jquery/webtoolkit.base64.js" />
+        <option value="$PROJECT_DIR$/media/nvd3/src/models/multiBarChart.js" />
+        <option value="$PROJECT_DIR$/media/nvd3/nv.d3.js" />
+        <option value="$PROJECT_DIR$/media/css/new_style.css" />
+        <option value="$PROJECT_DIR$/templates/select.html" />
+        <option value="$PROJECT_DIR$/database/utils.py" />
         <option value="$PROJECT_DIR$/database/temp.py" />
+        <option value="$PROJECT_DIR$/media/highcharts/plugins/highcharts-regression.js" />
+        <option value="$PROJECT_DIR$/media/highcharts/themes/default.js" />
+        <option value="$PROJECT_DIR$/templates/base.html" />
+        <option value="$PROJECT_DIR$/database/trees.py" />
+        <option value="$PROJECT_DIR$/phyloDB/urls.py" />
+        <option value="$PROJECT_DIR$/media/highcharts/themes/skies.js" />
+        <option value="$PROJECT_DIR$/media/highcharts/themes/dark-blue.js" />
+        <option value="$PROJECT_DIR$/media/highcharts/themes/dark-green.js" />
+        <option value="$PROJECT_DIR$/media/highcharts/themes/dark-unica.js" />
+        <option value="$PROJECT_DIR$/media/highcharts/themes/gray.js" />
+        <option value="$PROJECT_DIR$/media/highcharts/themes/sand-signika.js" />
+        <option value="$PROJECT_DIR$/media/highcharts/themes/grid-light.js" />
+        <option value="$PROJECT_DIR$/media/highcharts/themes/grid.js" />
+        <option value="$PROJECT_DIR$/templates/graph.html" />
       </list>
     </option>
   </component>
@@ -187,8 +232,10 @@
     <config-path>C:\Users\daniel.manter\Documents\GitHub\phyloDB\bower.json</config-path>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1266" />
-    <option name="height" value="720" />
+    <option name="x" value="-4" />
+    <option name="y" value="1" />
+    <option name="width" value="987" />
+    <option name="height" value="722" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -232,6 +279,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -260,38 +308,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="uploads" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="phyloDB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="phyloDB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uploads" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="806a49a49cab4be6994c65176e524ba0" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="phyloDB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="phyloDB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="templates" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -306,13 +322,30 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="database" />
+              <option name="myItemId" value="media" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="phyloDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="phyloDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="media" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="highcharts" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -338,18 +371,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables" />
-      <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\extensions\Responsive\js" />
-      <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\extensions\Responsive\css" />
-      <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\extensions\FixedHeader" />
-      <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\responsive" />
+      <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\highcharts\themes" />
+      <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\highcharts\plugins" />
+      <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\highcharts" />
+      <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\fusioncharts" />
+      <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\fancytree" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3" />
       <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src" />
       <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\nvd3\src\models" />
       <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables" />
       <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\extensions" />
-      <recent name="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media" />
     </key>
   </component>
   <component name="RunManager" selected="Django server.phyloDB">
@@ -632,9 +665,9 @@
         <env name="PYTHONUNBUFFERED" value="1" />
         <env name="DJANGO_SETTINGS_MODULE" value="phyloDB.settings" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="C:\Python27\python.exe" />
       <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="phyloDB" />
@@ -735,7 +768,11 @@
       <created>1418146725447</created>
       <updated>1418146725447</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Regression and ANOVA added.  Values are sent to webpage but currently not displayed.">
+      <created>1418625648626</created>
+      <updated>1418625648626</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -759,19 +796,19 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1266" height="720" extended-state="0" />
-    <editor active="true" />
+    <frame x="-4" y="1" width="987" height="722" extended-state="0" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3132716" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32753164" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="top" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15822785" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2494382" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1872" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19979402" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3908228" sideWeight="0.5032051" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34449762" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" x="329" y="268" width="622" height="184" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.40031645" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35015774" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -779,8 +816,8 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39872408" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24968944" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39872408" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -808,138 +845,10 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="30" />
+      <option name="time" value="34" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/database/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2431" max-vertical-offset="2601">
-          <caret line="143" column="29" selection-start-line="143" selection-start-column="29" selection-end-line="143" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/trees.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="12138" max-vertical-offset="12699">
-          <caret line="714" column="39" selection-start-line="714" selection-start-column="39" selection-end-line="714" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/parsers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="4777" max-vertical-offset="5151">
-          <caret line="281" column="0" selection-start-line="281" selection-start-column="0" selection-end-line="281" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/trees.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="12699">
-          <caret line="721" column="0" selection-start-line="721" selection-start-column="0" selection-end-line="721" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="612" max-vertical-offset="5049">
-          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5168" max-vertical-offset="8228">
-          <caret line="304" column="20" selection-start-line="304" selection-start-column="20" selection-end-line="304" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/manage.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="272">
-          <caret line="5" column="60" selection-start-line="5" selection-start-column="60" selection-end-line="5" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5168" max-vertical-offset="8228">
-          <caret line="304" column="20" selection-start-line="304" selection-start-column="20" selection-end-line="304" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pycharm/django_manage.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/media/css/new_style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.19273743" vertical-offset="934" max-vertical-offset="4216">
-          <caret line="59" column="4" selection-start-line="59" selection-start-column="4" selection-end-line="59" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="102">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/forms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="459">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="uml://Python/#C:/Users/daniel.manter/Documents/GitHub/phyloDB/database/temp.py">
-      <provider selected="true" editor-type-id="UmlEditorProvider">
-        <state>
-          <ID>Python</ID>
-          <OriginalElement>#C:/Users/daniel.manter/Documents/GitHub/phyloDB/database/temp.py</OriginalElement>
-          <nodes />
-          <notes />
-          <edges />
-          <settings layout="Hierarchic Group" zoom="1.0" x="567.0" y="130.0" />
-          <SelectedNodes />
-          <Categories />
-          <SCOPE>All</SCOPE>
-        </state>
-      </provider>
-    </entry>
-    <entry file="uml://Python/#C:/Users/daniel.manter/Documents/GitHub/phyloDB/database/trees.py">
-      <provider selected="true" editor-type-id="UmlEditorProvider">
-        <state>
-          <ID>Python</ID>
-          <OriginalElement>#C:/Users/daniel.manter/Documents/GitHub/phyloDB/database/trees.py</OriginalElement>
-          <nodes />
-          <notes />
-          <edges />
-          <settings layout="Hierarchic Group" zoom="1.0" x="567.0" y="130.0" />
-          <SelectedNodes />
-          <Categories />
-          <SCOPE>All</SCOPE>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/phyloDB/wsgi.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6380697" vertical-offset="0" max-vertical-offset="373">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/admin.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="102">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/AUTHORS.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="504">
@@ -1024,41 +933,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/database/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9424704" vertical-offset="1738" max-vertical-offset="2465">
-          <caret line="143" column="29" selection-start-line="143" selection-start-column="29" selection-end-line="143" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/media/nvd3/src/models/scatterChart.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9198113" vertical-offset="239" max-vertical-offset="10778">
-          <caret line="37" column="12" selection-start-line="37" selection-start-column="12" selection-end-line="37" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="272" max-vertical-offset="1496">
-          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/media/nvd3/src/tooltip.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4822695" vertical-offset="408" max-vertical-offset="8347">
-          <caret line="41" column="24" selection-start-line="41" selection-start-column="24" selection-end-line="41" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/media/nvd3/src/models/scatterPlusLineChart.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5066" max-vertical-offset="10642">
-          <caret line="315" column="43" selection-start-line="315" selection-start-column="43" selection-end-line="315" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/media/datatables/responsive/dataTables.responsive.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.21854305" vertical-offset="2129" max-vertical-offset="13685">
@@ -1080,31 +954,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/phyloDB/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.35695538" vertical-offset="51" max-vertical-offset="561">
-          <caret line="11" column="107" selection-start-line="11" selection-start-column="107" selection-end-line="11" selection-end-column="107" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/media/dynatree/src/skin/ui.dynatree.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.087804876" vertical-offset="2548" max-vertical-offset="7599">
           <caret line="152" column="16" selection-start-line="152" selection-start-column="16" selection-end-line="152" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="646">
-          <caret line="2" column="26" selection-start-line="2" selection-start-column="26" selection-end-line="2" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/select.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="969" max-vertical-offset="9656">
-          <caret line="56" column="11" selection-start-line="56" selection-start-column="11" selection-end-line="56" selection-end-column="11" />
         </state>
       </provider>
     </entry>
@@ -1129,16 +982,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/uploads/cc999804f3db4d1b957d81bac851911e/shared.tr">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32352942" vertical-offset="391" max-vertical-offset="969">
-          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
-        </state>
-      </provider>
-      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/uploads/806a49a49cab4be6994c65176e524ba0/mothur.shared">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="629">
@@ -1159,45 +1002,218 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/database/parsers.py">
+    <entry file="file://$PROJECT_DIR$/media/dynatree/src/jquery.dynatree.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1870" max-vertical-offset="4964">
-          <caret line="121" column="4" selection-start-line="121" selection-start-column="4" selection-end-line="121" selection-end-column="44" />
-          <folding />
+        <state vertical-scroll-proportion="0.8880597" vertical-offset="17255" max-vertical-offset="58752">
+          <caret line="1036" column="0" selection-start-line="1036" selection-start-column="0" selection-end-line="1036" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/database/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2218" max-vertical-offset="5066">
-          <caret line="165" column="0" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="3546" max-vertical-offset="5049">
+          <caret line="230" column="0" selection-start-line="230" selection-start-column="0" selection-end-line="230" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/graph.html">
+    <entry file="file://$PROJECT_DIR$/uploads/cc999804f3db4d1b957d81bac851911e/mothur.shared">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="4979" max-vertical-offset="7718">
-          <caret line="310" column="0" selection-start-line="310" selection-start-column="0" selection-end-line="310" selection-end-column="0" />
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="379">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uploads/cc999804f3db4d1b957d81bac851911e/shared.tr">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="969">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/parsers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2673" max-vertical-offset="4964">
+          <caret line="199" column="0" selection-start-line="199" selection-start-column="0" selection-end-line="199" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2482">
+          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/select.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="6503" max-vertical-offset="9775">
+          <caret line="400" column="45" selection-start-line="400" selection-start-column="45" selection-end-line="400" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/plugins/grouped-categories.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.25211507" vertical-offset="3676" max-vertical-offset="9180">
+          <caret line="225" column="33" selection-start-line="225" selection-start-column="33" selection-end-line="225" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.9078591" vertical-offset="8029" max-vertical-offset="14059">
+          <caret line="502" column="0" selection-start-line="502" selection-start-column="0" selection-end-line="502" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/database/temp.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="102">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="382">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/plugins/highcharts-regression.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2095" max-vertical-offset="7803">
+          <caret line="155" column="44" selection-start-line="155" selection-start-column="44" selection-end-line="155" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/css/new_style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1140" max-vertical-offset="3978">
+          <caret line="74" column="16" selection-start-line="74" selection-start-column="16" selection-end-line="74" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/highcharts-all.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.72432435" vertical-offset="7739" max-vertical-offset="8109">
+          <caret line="471" column="0" selection-start-line="471" selection-start-column="0" selection-end-line="471" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/highcharts.src.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.42972973" vertical-offset="290065" max-vertical-offset="301614">
+          <caret line="17073" column="8" selection-start-line="17073" selection-start-column="8" selection-end-line="17073" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/highcharts.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3864865" vertical-offset="197" max-vertical-offset="5236">
+          <caret line="26" column="341" selection-start-line="26" selection-start-column="341" selection-end-line="26" selection-end-column="341" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/highcharts-more.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1003">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/highcharts-more.src.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.73513514" vertical-offset="39202" max-vertical-offset="43860">
+          <caret line="2323" column="0" selection-start-line="2323" selection-start-column="0" selection-end-line="2323" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6656977" vertical-offset="315" max-vertical-offset="1462">
+          <caret line="32" column="4" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="4" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phyloDB/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.9081081" vertical-offset="106" max-vertical-offset="612">
+          <caret line="26" column="5" selection-start-line="26" selection-start-column="5" selection-end-line="26" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python27/Lib/socket.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33243242" vertical-offset="4960" max-vertical-offset="9792">
+          <caret line="302" column="0" selection-start-line="302" selection-start-column="0" selection-end-line="302" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/database/trees.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.70414203" vertical-offset="21709" max-vertical-offset="22372">
-          <caret line="1291" column="0" selection-start-line="1291" selection-start-column="0" selection-end-line="1291" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="1.2297298" vertical-offset="8793" max-vertical-offset="9418">
+          <caret line="559" column="48" selection-start-line="559" selection-start-column="48" selection-end-line="559" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/themes/skies.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1615">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/themes/dark-blue.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22135417" vertical-offset="0" max-vertical-offset="4420">
+          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/themes/dark-green.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22135417" vertical-offset="0" max-vertical-offset="4437">
+          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/themes/dark-unica.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48697916" vertical-offset="0" max-vertical-offset="3723">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/themes/gray.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22911051" vertical-offset="0" max-vertical-offset="4471">
+          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/themes/sand-signika.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6901042" vertical-offset="1486" max-vertical-offset="1870">
+          <caret line="103" column="2" selection-start-line="103" selection-start-column="2" selection-end-line="103" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/themes/grid-light.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.53125" vertical-offset="0" max-vertical-offset="1360">
+          <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/highcharts/themes/grid.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22911051" vertical-offset="0" max-vertical-offset="1853">
+          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/graph.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.4761906" vertical-offset="5814" max-vertical-offset="8806">
+          <caret line="126" column="24" selection-start-line="126" selection-start-column="24" selection-end-line="126" selection-end-column="24" />
+          <folding />
         </state>
       </provider>
     </entry>
