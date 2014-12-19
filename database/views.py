@@ -1,7 +1,9 @@
 import datetime
 import pickle
+import simplejson
 from uuid import uuid4
 from django.shortcuts import render_to_response
+from django.http import HttpResponse
 from django.template import RequestContext
 from models import Project, Sample
 from forms import UploadForm1, UploadForm2, UploadForm3, UploadForm4, UploadForm5
@@ -132,17 +134,19 @@ def select(request):
 
 
 def graph(request):
-    list_unicode = request.POST.getlist('list')
-    list_ascii = [s.encode('ascii') for s in list_unicode]
-
-    qs = Sample.objects.all().filter(sampleid__in=list_ascii).values_list('sampleid')
-    request.session['selected_samples'] = pickle.dumps(qs.query)
-
-    samples = Sample.objects.all()
     return render_to_response(
         'graph.html',
-        {'samples': samples},
         context_instance=RequestContext(request)
     )
 
 
+def cookie(request):
+    if request.is_ajax():
+        allJson = request.GET["all"]
+        selList = simplejson.loads(allJson)
+        qs = Sample.objects.all().filter(sampleid__in=selList).values_list('sampleid')
+        request.session['selected_samples'] = pickle.dumps(qs.query)
+
+        text = 'Selected sample(s) have been recorded!'
+        res = simplejson.dumps(text, encoding="Latin-1")
+        return HttpResponse(res, content_type='application/json')
