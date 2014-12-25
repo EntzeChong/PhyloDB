@@ -1,11 +1,7 @@
-html {
-    #overflow-x: hidden
-}
-
 body {
 	color: #333;
 	background-color: #FFF;
-	margin: 0px;
+	margin: 0;
 }
 
 body, td, th {
@@ -18,17 +14,8 @@ input, select {
 	font-size: 13px;
 }
 
-a {
-	color: #36C;
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
-}
-
-a img {
-	border: none;
+hr {
+    margin: 0;
 }
 
 h1 {
@@ -42,14 +29,9 @@ h2 {
 	font-size: 16px;
 }
 
-h2.sottotitolo {
-	color: #7CBE29;
-}
-
 table, fieldset {
 	background: #F4F4F4;
 }
-
 
 th {
 	text-align: left;
@@ -63,86 +45,22 @@ th {
 
 #header {
     top: 0;
-    position: fixed;
+    position: absolute;
     z-index: 999;
-    width: 100%;
-    height: 76px;
+    width: 1100px;
 	border-bottom: 3px double #7CBE29;
-}
-
-#page {
-    #margin-top: 10px;
-    width: 100%;
 }
 
 #Menu {
     left: 5px;
     top: 100px;
 	width: 100px;
-    height: 400px;
-    position: fixed;
+    height: 350px;
+    position: absolute;
     z-index: 999;
 	background: url('../images/sf_menu.png') repeat-x;
 	border: 1px solid #7CBE29;
     font-size: 12px;
-}
-
-.barra_pulsanti {
-	border-top: 1px solid #69F;
-	border-bottom: 1px solid #69F;
-	padding: 2px;
-	background-color: #FFE;
-}
-
-.barra_pulsanti a {
-	margin-right: 20px;
-}
-
-.bgTabSelected {
-	font-size: 14px;
-	font-weight: bold;
-	color: #F00;
-	background-color: #FFF;
-}
-
-.buttonVert {
-	background-color: #CCC;
-	color: #036;
-	text-decoration: none
-}
-
-.cellTable {
-	text-align: left;
-}
-.cellTable_alto {
-	font-size: 12px;
-	font-weight: bold;
-	background-color: #D6EBBE;
-	color: #C00;
-}
-
-.centrato {
-	text-align: center;
-}
-
-.dataTable th, .dataTable td {
-	padding: 4px 4px;
-}
-
-.even {
-	border: 1px solid #999;
-}
-
-.even:hover {
-	background-color: #E6FAE6;
-}
-
-.leftMenuStyler {
-	background-color: #CDCDCD;
-	text-align: left;
-	vertical-align: top;
-	border-right: 1px solid #000;
-	border-bottom: 1px solid #000;
 }
 
 .menuTitle {
@@ -152,87 +70,33 @@ th {
 	text-align: center;
 }
 
-ul.menuItems {
-	margin: 0px;
-	padding-left: 5px;
+.menuItems {
+    margin-top: 10px;
+	text-align: center;
+}
+
+.menuItems p {
+    font-size: 12px;
+    margin-top:0;
+    margin-bottom:0;
 }
 
 .menuItems li {
-    margin: 0px;
-    padding-left: 2px;
-	height: 25px;
-	list-style: none;
-}
-
-.noBorder{
-	border: 0px;
-}
-
-.odd {
-	background-color: #EEE;
-	border: 1px dashed #999;
-}
-
-.odd:hover {
-	background-color: #E6FAE6;
-
+    margin-left: 15px;
+    text-align: left;
 }
 
 .Onmouse {
 	color: navy;
-	text-align: left;
-	margin-left: 0;
-	margin-right: 0;
 	text-decoration: underline;
 }
 
 .Offmouse {
 	color: navy;
-	text-align: left;
-	margin-left: 0;
-	margin-right: 0;
 	text-decoration: none;
 }
 
-.pagebanner, .pagelinks, .exportlinks {
-	font-size: 11px;
-	margin: 5px;
+.disabled {
+    color: grey;
+    font-style: italic;
 }
-
-.piccolo {
-	font-size: 11px;
-}
-
-.simple {
-	border-top: 1px solid #999;
-}
-
-.sublist {
-	margin: 3px;
-	width: 300px;
-	background-color: #FFF;
-	font-size: 11px;
-}
-
-.titoloParagrafo {
-	font-size: 12px;
-	font-weight: bold;
-	background-color: #D6EBBE;
-	color: #000;
-}
-
-.visualizzaCliente {
-	color: #000;
-	font-weight: bold;
-}
-
-/*Riga evidenziata con rosa pastello.*/
-tr.endingAccoglienza{
-	font-weight: bold;
-	background-color: #FFC0B4;
-}
-tr.endingAccoglienza:hover{
-	font-weight: bold;
-	background-color: #FFC0B4;
-}
-

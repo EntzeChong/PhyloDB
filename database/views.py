@@ -54,7 +54,7 @@ def upload(request):
                 shared = ".".join(["mothur", "shared"])
                 file4 = request.FILES['docfile4']
                 handle_uploaded_file(file4, dest, shared)
-                parse_profile(file3, file4, dest, p_uuid)
+                parse_profile(dest, p_uuid)
                 print("Parsed profile!")
 
                 taxaprofile(p_uuid)
@@ -133,9 +133,16 @@ def select(request):
     )
 
 
-def graph(request):
+def alpha_diversity(request):
     return render_to_response(
-        'graph.html',
+        'alpha.html',
+        context_instance=RequestContext(request)
+    )
+
+
+def beta_diversity(request):
+    return render_to_response(
+        'beta.html',
         context_instance=RequestContext(request)
     )
 

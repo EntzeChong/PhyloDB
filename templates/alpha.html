@@ -1,0 +1,536 @@
+{% extends 'base.html' %}
+
+{% block pagetitle %}
+    <title>Graph</title>
+{% endblock %}
+
+{% block javascript %}
+    <style>
+        .inlineTable {
+            display: inline-block;
+            vertical-align: top;
+        }
+    </style>
+
+    <script type="text/javascript">
+        $(function () {
+            // initialize variables
+            var button1 = 1, button2 = 2, toggle = "on";
+            var nodesCat = "", nodesQuant = "", nodesTaxa = "";
+            var chart1 = {}, chart2 = {};
+            var catOptions = {}, quantOptions = {};
+
+            // start of dynatrees
+            $("#tree_metaCat").dynatree({
+                checkbox: true,
+                selectMode: 3,
+                initAjax: {
+                    url: '/getSampleCatTree/',
+                    dataType: 'jsonp',
+                    data: {}
+                },
+                onLazyRead: function(node) {
+                    node.appendAjax({
+                        url: '/getSampleCatTreeChildren/',
+                        data: {field: node.data.title}
+                    });
+                },
+                onSelect: function(flag, node) {
+                    if (flag && node.childList == undefined) {
+                        node.reloadChildren(function () {
+                            node.select(false);
+                            node.select(true);
+                        });
+                    }
+                    nodesCat = node.tree.getSelectedNodes();
+                    chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa);
+                }
+            }); // end tree_metaCat
+
+            $("#tree_metaQuant").dynatree({
+                checkbox: true,
+                selectMode: 1,
+                initAjax: {
+                    url: '/getSampleQuantTree/',
+                    dataType: 'jsonp',
+                    data: {}
+                },
+                onSelect: function(select, node) {
+                    nodesQuant = node.tree.getSelectedNodes();
+                    chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa);
+                }
+            }); // end tree_metaQuant
+
+            $("#tree_taxa").dynatree({
+                checkbox: true,
+                selectMode: 2,
+                initAjax: {
+                    url: '/getTaxaTree/',
+                    dataType: 'jsonp',
+                    data: {}
+                },
+                onSelect: function(select, node) {
+                    nodesTaxa = node.tree.getSelectedNodes();
+                    searchData(nodesTaxa);
+                    if (toggle == "on") {
+                        chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa);
+                    }
+                }
+
+            }); // end tree_taxa
+
+            // set highchart theme
+            $("#theme").change(function () {
+                var selTheme = $(this).val();
+
+                if (selTheme == 1) {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(catOptions);
+                }
+                else if (selTheme == 2) {
+                    $.getScript('../media/highcharts/themes/dark-blue.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                    });
+                }
+                else if (selTheme == 3) {
+                    $.getScript('../media/highcharts/themes/dark-green.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                    });
+                }
+                else if (selTheme == 4) {
+                    $.getScript('../media/highcharts/themes/dark-unica.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                    });
+                }
+                else if (selTheme == 5) {
+                    $.getScript('../media/highcharts/themes/gray.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                    });
+                }
+                else if (selTheme == 6) {
+                    $.getScript('../media/highcharts/themes/grid.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                    });
+                }
+                else if (selTheme == 7) {
+                    $.getScript('../media/highcharts/themes/grid-light.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                    });
+                }
+                else if (selTheme == 8) {
+                    $.getScript('../media/highcharts/themes/sand-signika.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                    });
+                }
+                else if (selTheme == 9) {
+                    $.getScript('../media/highcharts/themes/skies.js', function () {
+                        $("#container-1").empty();
+                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                    });
+                }
+            });
+
+            // categorical or quantitative data
+            $("#button1").change(function () {
+                button1 = $(this).val();
+                chooseDisplay(button1);
+                chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa);
+            });
+
+            // dependent variable
+            $("#button2").change(function () {
+                button2 = $(this).val();
+                chooseDisplay(button1);
+                chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa);
+            });
+
+           // Clear all selected nodes
+            $("#clearMeta").click(function(){
+                if (button1 == 1) {
+                    $("#tree_metaCat").dynatree("getRoot").visit(function (node) {
+                        node.select(false);
+                    });
+                }
+                else if (button1 == 2) {
+                    $("#tree_metaQuant").dynatree("getRoot").visit(function (node) {
+                        node.select(false);
+                    });
+                }
+            });
+
+            $("#clearTaxa").click(function() {
+                toggle = "off";
+                $("#selectall").val(0);
+                $("#tree_taxa").dynatree("getRoot").visit(function (node) {
+                    node.select(false);
+                });
+                toggle = "on";
+                chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa);
+            });
+
+            // get all nodes for specified taxa levels
+            $("#selectall").change(function () {
+                var rank = $(this).val();
+
+                $("#tree_taxa").dynatree("getRoot").visit(function (node) {
+                    toggle = "off";
+                    node.select(false);
+                    toggle = "on";
+                });
+                $("#tree_taxa").dynatree("getRoot").visit(function (node) {
+                    toggle = "off";
+                    if (node.getLevel() == rank) {
+                        node.select(true);
+                    }
+                    toggle = "on";
+                });
+                toggle = "off";
+                nodesTaxa = $("#tree_taxa").dynatree("getSelectedNodes");
+                toggle = "on";
+                chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa);
+            });
+
+
+        // Choose what tree/graph/text to display
+        function chooseDisplay(button1) {
+            if (button1 == 1) {
+                $("#tree_metaQuant").hide();
+                $("#tree_metaCat").show();
+                $("#container-2").hide();
+                $("#container-1").show();
+                $("#text-1").show();
+            }
+            else if (button1 == 2) {
+                $("#tree_metaCat").hide();
+                $("#tree_metaQuant").show();
+                $("#container-1").hide();
+                $("#container-2").show();
+                $("#text-1").hide();
+            }
+        }
+
+        // select categorical or quantitative data
+        function chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa) {
+            if ((nodesCat != "") && (nodesTaxa != "") && (button1 == 1)) {
+                $("#container-1").empty();
+                $("#container-1").append('Analysis is running...please be patient');
+                getCatGraphData(button2, nodesCat, nodesTaxa);
+            }
+            else if ((nodesQuant != "") && (nodesTaxa != "") && (button1 == 2)) {
+                $("#container-2").empty();
+                $("#container-2").append('Analysis is running...please be patient');
+                getQuantGraphData(button2, nodesQuant, nodesTaxa);
+            }
+            else if ((nodesCat != "") && (nodesTaxa == "") && (button1 == 1)) {
+                $("#container-1").empty();
+                $("#container-1").append('Please also choose your taxa level(s)!');
+                $("#container-2").empty();
+                $("#container-2").append('Please also choose your taxa level(s)!');
+                $("#text-1").val('No data selected');
+            }
+            else if ((nodesQuant != "") && (nodesTaxa == "") && (button1 == 2)) {
+                $("#container-1").empty();
+                $("#container-1").append('Please also choose your taxa level(s)!');
+                $("#container-2").empty();
+                $("#container-2").append('Please also choose your taxa level(s)!');
+            }
+            else if ((nodesCat == "") && (nodesTaxa != "") && (button1 == 1)) {
+                $("#container-1").empty();
+                $("#container-1").append('Please also choose your meta variable(s)!');
+                $("#container-2").empty();
+                $("#container-2").append('Please also choose your meta variable(s)!');
+                $("#text-1").val('No data selected');
+            }
+            else if ((nodesQuant == "") && (nodesTaxa != "") && (button1 == 2)) {
+                $("#container-1").empty();
+                $("#container-1").append('Please also choose your meta variable(s)!');
+                $("#container-2").empty();
+                $("#container-2").append('Please also choose your meta variable(s)!');
+            }
+        }
+
+        // populate search links
+        function searchData(nodesTaxa) {
+            var search = $.map(nodesTaxa, function(node) {
+                return node.data.title;
+            });
+            $("#MicrobeWiki").attr("href", "https://microbewiki.kenyon.edu/index.php/Special:Search?search=" + search);
+            $("#Wiki").attr("href", "http://en.wikipedia.org/wiki/" + search);
+            $("#Google").attr("href", "http://www.google.com/search?q=" + search);
+        }
+
+        function getCatGraphData(button2, nodesCat, nodesTaxa) {
+            var array1 = [];
+            for (i in nodesCat) {
+                var key1 = nodesCat[i].data.id;
+                var value1 = nodesCat[i].data.title;
+                if (nodesCat[i].getLevel() == 4) {
+                    var next1 = '"' + key1 + '" : "' + value1 + '"';
+                    array1.push(next1);
+                }
+            }
+            var meta = "{" + array1.join(",") + "}";
+
+            var array2 = [];
+            for (i in nodesTaxa) {
+                var key2 = nodesTaxa[i].data.tooltip;
+                var value2 = nodesTaxa[i].data.id;
+                if (nodesTaxa[i].getLevel() >= 2) {
+                    var next2 = '"' + key2 + '" : "' + value2 + '"';
+                    array2.push(next2);
+                }
+            }
+            var taxa = "{" + array2.join(",") + "}";
+
+            var myDict = {};
+            myDict['meta'] = meta;
+            myDict['taxa'] = taxa;
+            myDict['button'] = button2;
+            jsonDict = JSON.stringify(myDict);
+
+            $.ajax({
+                url: '/getCatAlphaData/',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    all: jsonDict
+                },
+                success: function(data) {
+                    var result = JSON.stringify(data);
+                    var obj = $.parseJSON(result);
+                    var xAxis = obj['xAxis'];
+                    var series = obj['series'];
+                    var yAxis = obj['yAxis'];
+                    barchart(xAxis, yAxis, series);
+                }
+            });
+            $.ajax({
+                url: '/ANOVA/',
+                type: 'GET',
+                data: {
+                    all: jsonDict,
+                    button: button2
+                },
+                success: function (data) {
+                    $('#text-1').val(data);
+                }
+            });
+        }
+
+        function getQuantGraphData(button2, nodesQuant, nodesTaxa) {
+            var array1 = [];
+            for (i in nodesQuant) {
+                var key1 = nodesQuant[i].data.tooltip;
+                var value1 = nodesQuant[i].data.title;
+                if (nodesQuant[i].getLevel() == 3) {
+                    var next1 = '"' + key1 + '" : "' + value1 + '"';
+                    array1.push(next1);
+                }
+            }
+            var meta = "{" + array1.join(",") + "}";
+
+            var array2 = [];
+            for (i in nodesTaxa) {
+                var value2 = nodesTaxa[i].data.id;
+                var key2 = nodesTaxa[i].data.tooltip;
+                if (nodesTaxa[i].getLevel() >= 2) {
+                    var next2 = '"' + key2 + '" : "' + value2 + '"';
+                    array2.push(next2);
+                }
+            }
+            var taxa = "{" + array2.join(",") + "}";
+            var myDict = {};
+            myDict['meta'] = meta;
+            myDict['taxa'] = taxa;
+            myDict['button'] = button2;
+            jsonDict = JSON.stringify(myDict);
+
+            $.ajax({
+                url: '/getQuantAlphaData/',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    all: jsonDict
+                },
+                success: function(data) {
+                    var result = JSON.stringify(data);
+                    var obj = $.parseJSON(result);
+                    var xAxis = obj['xAxis'];
+                    var series = obj['series'];
+                    var yAxis = obj['yAxis'];
+                    linechart(xAxis, yAxis, series);
+                }
+            });
+        }
+
+        function barchart(xAxis, yAxis, series) {
+           catOptions = {
+                chart: { renderTo: 'container-1', type: 'column' },
+                title: { text: null },
+                legend: {
+                    align: 'right',
+                    verticalAlign: 'top',
+                    layout: 'vertical',
+                    x: 0,
+                    y: 20
+                },
+                xAxis: xAxis,
+                yAxis: yAxis,
+                series: series,
+                tooltip: {
+                    formatter: function () {
+                        return '<b>' + this.x + '</b><br/>' +
+                        this.series.name + ': ' + this.y + '<br/>' +
+                        'Total: ' + this.point.stackTotal;
+                    }
+                },
+                plotOptions: { column: { stacking: 'normal' } },
+                credits: { enabled: false }
+            };
+            chart1 = new Highcharts.Chart(catOptions);
+        }
+
+        function linechart(xAxis, yAxis, series) {
+            quantOptions = {
+                chart: { renderTo: 'container-2', type: 'scatter', zoomType: 'xy'},
+                title: { text: null },
+                legend: {
+                    align: 'right',
+                    verticalAlign: 'top',
+                    layout: 'vertical',
+                    x: 0,
+                    y: 20
+                },
+                xAxis: xAxis,
+                yAxis: yAxis,
+                series: series,
+                tooltip: {
+                    formatter: function () {
+                        return '{' + this.series.name + '}' + '<br>' + '(' + this.x + ',' + this.y + ')'
+                    }
+                },
+                credits: { enabled: false }
+            };
+            chart2 = new Highcharts.Chart(quantOptions);
+        }
+
+    }); // end document ready function
+    </script>
+{% endblock javascript %}
+
+{% block my_content %}
+    <br>
+    <span>
+        Select data type:
+        <select id="button1">
+            <option value="1" selected="selected">Categorical</option>
+            <option value="2" >Quantitative</option>
+        </select>
+        &nbsp &nbsp
+        Select all taxa:
+        <select id="selectall">
+            <option value="0">Off</option>
+            <option value="2">Kingdoms</option>
+            <option value="3">Phylas</option>
+            <option value="4">Classes</option>
+            <option value="5">Orders</option>
+            <option value="6">Families</option>
+            <option value="7">Genera</option>
+            <option value="8">Species</option>
+        </select>
+    </span>
+    <!-- tree tables -->
+    <div>
+        <table border="2" cellspacing="0" cellpadding="5" class="inlineTable">
+            <tr>
+                <th>Select Meta Data:<a href="#" id="clearMeta" style="font-size: 12px;">-Deselect all-</a></th>
+            </tr>
+            <tr>
+                <td style="padding-right: 10px; vertical-align: top">
+                    <div id="tree_metaCat"></div>
+                    <div id="tree_metaQuant" style="display: none"></div>
+                </td>
+            </tr>
+        </table>
+        <table border="2" cellspacing="0" cellpadding="5" class="inlineTable">
+            <tr>
+                <th>Select Taxa:<a href="#" id="clearTaxa" style="font-size: 12px;">-Deselect all-</a></th>
+            </tr>
+            <tr>
+                <td style="padding-right: 10px; vertical-align: top">
+                    <div id="tree_taxa"></div>
+                </td>
+            </tr>
+        </table>
+
+        <table  border="2" cellspacing="0" cellpadding="5" class="inlineTable">
+            <tr>
+                <th>Search Selected Taxa:</th>
+            </tr>
+            <tr>
+                <td bgcolor="white" align="center">
+                    <a style="font-size: 12px;" id="MicrobeWiki" class="Offmouse" href="https://microbewiki.kenyon.edu"  target="_blank">-MicrobeWiki-</a><br>
+                    <a style="font-size: 12px;" id="Wiki" class="Offmouse" href="http://en.wikipedia.org/wiki/"  target="_blank">-Wiki-</a><br>
+                    <a style="font-size: 12px;" id="Google" class="Offmouse" href="http://www.google.com/"  target="_blank">-Google-</a>
+                </td>
+            </tr>
+            <tr>
+                <td width="160px" bgcolor="white" align="center">
+                    <p>Above link(s) open a search of the currently selected taxa
+                    in a new window. Search will most likely fail if more than one
+                    node is selected.</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <div style="float: left;">Select dependent variable:
+        <select id="button2">
+            <option value="1">Sequence Reads</option>
+            <option value="2" selected="selected">Relative Abundance</option>
+            <option value="3">Species Richness</option>
+            <option value="4">Shannon Diversity</option>
+        </select>
+    </div>
+
+    <div  style="float: right;">Select chart theme:
+        <select id="theme">
+            <option value="1" selected="selected">default</option>
+            <option value="2">dark-blue</option>
+            <option value="3">dark-green</option>
+            <option value="4">dark-unica</option>
+            <option value="5">gray</option>
+            <option value="6">grid</option>
+            <option value="7">grid-light</option>
+            <option value="8">sand-signika</option>
+            <option value="9">skies</option>
+        </select>
+    </div>
+    <table width="100%" border="2">
+        <tr>
+            <th style="padding-right: 10px;">GraphData</th>
+        </tr>
+        <tr>
+            <td>
+                <div id="container-1" style="height: 400px;">No Data has been selected!</div>
+                <div id="container-2" style="height: 400px; display: none">No Data has been selected!</div>
+            </td>
+        </tr>
+    </table>
+
+    <div>
+        <p>Test Results:</p>
+        <textarea id="text-1" rows="20" cols="100">No data selected</textarea>
+    </div>
+    <br>
+    <br>
+    <br>
+
+{% endblock my_content%}

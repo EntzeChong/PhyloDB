@@ -37,43 +37,59 @@
     {% endblock jquery %}
 
     {% block javascript %}{% endblock javascript %}
+
 </head>
 
 <body>
     <div id="header">
-        <table style="width: 1250px;">
+        <table>
             <tr>
-                <td style="width: 50px; height: 70px;"><img style="height:60px;" alt="" src="{% static "images/dbimage.jpeg" %}"></td>
-                <td style="width: 50px; height: 70px;"><img style="height:60px;" alt="" src="{% static "images/DNA.jpeg" %}"></td>
-                <td style="width: 850px; height: 70px;" align="center"><h1 style="font-size: 24px; padding-left: 25px; padding-right: 25px;">PhyloDB: A web-based database storage and retrieval system for the analysis of metagenomic data</h1></td>
-                <td style="width: 300px; height: 55px; float: left; padding-top: 15px;"><img style="height:50px;" alt="" src="{% static "images/ARS.jpeg" %}"></td>
+                <td style="width: 5%; height: 70px;"><img style="height:60px;" alt="" src="{% static "images/dbimage.jpeg" %}"></td>
+                <td style="width: 5%; height: 70px;"><img style="height:60px;" alt="" src="{% static "images/DNA.jpeg" %}"></td>
+                <td style="width: 65%; height: 70px;" align="center"><h1 style="font-size: 24px; padding-left: 25px; padding-right: 25px;">PhyloDB: A web-based database storage and retrieval system for the analysis of metagenomic data</h1></td>
+                <td style="width: 25%; height: 55px; float: left; padding-top: 15px;"><img style="height:50px;" alt="" src="{% static "images/ARS.jpeg" %}"></td>
             </tr>
         </table>
     </div>
 
-    <div id="page">
+    <div id="Menu">
+        <div class="menuTitle">
+           Menu
+        </div>
+        <br>
 
-        <div id="Menu">
+        <div class="menuItems">
+            <hr>
+            <p><em><strong>General Info</strong></em></p>
+            <hr>
 
-            <div class="menuTitle">Menu</div>
+            <a class="Offmouse" href="{% url "home" %}" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Overview</li></a>
             <br>
-            <ul class="menuItems">
-                <li><a class="Offmouse" href="/home/" id="newOspite" onmouseout="this.className='Offmouse'"
-                       onmouseover="this.className='Onmouse'">Home</a></li>
-                <p>============</p>
-                <li><a class="Offmouse" href="/upload/" id="newOspite" onmouseout="this.className='Offmouse'"
-                       onmouseover="this.className='Onmouse'">[Upload Data]</a></li>
-                <li><a class="Offmouse" href="/select/" id="newOspite" onmouseout="this.className='Offmouse'"
-                       onmouseover="this.className='Onmouse'">Select Data</a></li>
-                <p>============</p>
-                <li><a class="Offmouse" href="/graph/" id="newOspite" onmouseout="this.className='Offmouse'"
-                       onmouseover="this.className='Onmouse'">Alpha Diversity</a></li>
-            </ul>
-        </div>
 
-        <div id="Content">
-            {% block my_content %}{% endblock my_content%}
+            <div>
+                <hr>
+                <p><em><strong>Get Data</strong></em></p>
+                <hr>
+            </div>
+
+            <a class="Offmouse" href="{% url "upload" %}" target="_blank" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>[Upload Data]</li></a>
+            <a class="Offmouse" href="{% url "select" %}" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Select Data</li></a>
+            <br>
+
+            <div>
+                <hr>
+                <p><em><strong>Analysis</strong></em></p>
+                <hr>
+            </div>
+
+            <a class="Offmouse" href="{% url "alpha" %}" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Alpha Diversity</li></a>
+            <a class="Offmouse" href="{% url "beta" %}" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Beta Diversity</li></a>
+            <br>
         </div>
+    </div>
+
+    <div id="Content">
+        {% block my_content %}{% endblock my_content%}
     </div>
 </body>
 </html>

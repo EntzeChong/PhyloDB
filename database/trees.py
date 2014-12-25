@@ -1,7 +1,4 @@
-import pickle
-import collections
-import simplejson
-import operator
+import collections, operator, pickle, simplejson
 import pandas as pd
 import numpy as np
 from django.http import HttpResponse, StreamingHttpResponse
@@ -9,11 +6,15 @@ from django.db.models import Q
 from models import Project, Sample, Collect, Soil_class, Management, User
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
 from models import ProfileKingdom, ProfilePhyla, ProfileClass, ProfileOrder, ProfileFamily, ProfileGenus, ProfileSpecies
-from utils import multidict, catDataFrame, quantDataFrame
+from utils import multidict, catAlphaDF, quantAlphaDF, catBetaMetaDF, catBetaTaxaDF
+from utils import principalComponents
+from utils import permanova_oneway, permanova_twoway
 from scipy import stats
 from numpy import *
 from pyvttbl import Anova, Anova1way, DataFrame
 from scipy.stats import linregress
+from scipy.spatial.distance import *
+
 
 def getProjectTree(request):
     myTree = {'title': 'All Projects', 'isFolder': True, 'expand': True, 'hideCheckbox': True, 'children': []}
@@ -64,85 +65,36 @@ def getProjectTreeChildren(request):
 
 
 def getSampleCatTree(request):
-    samples = Sample.objects.all()
-    samples.query = pickle.loads(request.session['selected_samples'])
-    selected = samples.values_list('sampleid')
+    myTree = {'title': 'root', 'id': 'root', 'tooltip': 'root', 'isFolder': False,  'hideCheckbox': True, 'expand': True, 'children': []}
+    mimark = {'title': 'MIMARKs', 'id': 'mimark', 'tooltip': 'Category', 'isFolder': True,  'hideCheckbox': True, 'children': []}
+    collect = {'title': 'Sample Collection', 'id': 'collect', 'tooltip': 'Category', 'isFolder': True,  'hideCheckbox': True, 'children': []}
+    soil_class = {'title': 'Soil Classification', 'id': 'soil_class', 'tooltip': 'Category', 'isFolder': True,  'hideCheckbox': True, 'children': []}
+    management = {'title': 'Management', 'id': 'management', 'tooltip': 'Category', 'isFolder': True,  'hideCheckbox': True, 'children': []}
+    user = {'title': 'User-defined', 'id': 'user', 'tooltip': 'Category', 'isFolder': True,  'hideCheckbox': True, 'children': []}
 
-    myTree = {'title': 'root', 'tooltip': 'root', 'isFolder': False,  'hideCheckbox': True, 'expand': True, 'children': []}
-    mimark = {'title': 'MIMARKs', 'tooltip': 'MIMARKs', 'isFolder': True,  'hideCheckbox': True, 'children': []}
-    collect = {'title': 'Sample Collection', 'tooltip': 'Sample Collection', 'isFolder': True,  'hideCheckbox': True, 'children': []}
-    soil_class = {'title': 'Soil Classification', 'tooltip': 'Soil Classification', 'isFolder': True,  'hideCheckbox': True, 'children': []}
-    management = {'title': 'Management', 'tooltip': 'Management', 'isFolder': True,  'hideCheckbox': True, 'children': []}
-    user = {'title': 'User-defined', 'tooltip': 'User_defined', 'isFolder': True,  'hideCheckbox': True, 'children': []}
-
-    list = ['sample_name', 'organism', 'seq_method', 'biome', 'feature', 'geo_loc', 'material']
+    list = ['organism', 'seq_method', 'biome', 'feature', 'geo_loc', 'material']
     for i in range(len(list)):
-        myNode = {'title': list[i], 'isFolder': True, 'tooltip': list[i], 'children': []}
-        items = Sample.objects.values_list(str(list[i]), flat='True').filter(sampleid__in=selected).distinct()
-        for j in range(len(items)):
-            myNode1 = {
-                'title': items[j],
-                'id': items[j],
-                'tooltip': list[i],
-                'isFolder': False
-            }
-            myNode['children'].append(myNode1)
+        myNode = {'title': list[i], 'isFolder': True, 'tooltip': 'Field', 'isLazy': True, 'children': []}
         mimark['children'].append(myNode)
 
     list = ['depth', 'pool_dna_extracts', 'samp_collection_device', 'sieving', 'storage_cond']
     for i in range(len(list)):
-        myNode = {'title': list[i], 'isFolder': True, 'tooltip': list[i], 'children': []}
-        items = Collect.objects.values_list(str(list[i]), flat='True').filter(sampleid_id__in=selected).distinct()
-        for j in range(len(items)):
-            myNode1 = {
-                'title': items[j],
-                'id': items[j],
-                'tooltip': list[i],
-                'isFolder': False
-            }
-            myNode['children'].append(myNode1)
+        myNode = {'title': list[i], 'isFolder': True, 'tooltip': 'Field', 'isLazy': True, 'children': []}
         collect['children'].append(myNode)
 
     list = ['drainage_class', 'fao_class', 'horizon', 'local_class', 'profile_position', 'slope_aspect', 'soil_type', 'texture_class']
     for i in range(len(list)):
-        myNode = {'title': list[i], 'isFolder': True, 'tooltip': list[i], 'children': []}
-        items = Soil_class.objects.values_list(str(list[i]), flat='True').filter(sampleid__in=selected).distinct()
-        for j in range(len(items)):
-            myNode1 = {
-                'title': items[j],
-                'id': items[j],
-                'tooltip': list[i],
-                'isFolder': False
-            }
-            myNode['children'].append(myNode1)
+        myNode = {'title': list[i], 'isFolder': True, 'tooltip': 'Field', 'isLazy': True, 'children': []}
         soil_class['children'].append(myNode)
 
     list = ['agrochem_addition', 'biological_amendment', 'cover_crop', 'crop_rotation', 'cur_land_use', 'cur_vegetation', 'cur_crop', 'cur_cultivar', 'organic', 'previous_land_use', 'soil_amendments', 'tillage']
     for i in range(len(list)):
-        myNode = {'title': list[i], 'isFolder': True, 'tooltip': list[i], 'children': []}
-        items = Management.objects.values_list(str(list[i]), flat='True').filter(sampleid__in=selected).distinct()
-        for j in range(len(items)):
-            myNode1 = {
-                'title': items[j],
-                'id': items[j],
-                'tooltip': list[i],
-                'isFolder': False
-            }
-            myNode['children'].append(myNode1)
+        myNode = {'title': list[i], 'isFolder': True, 'tooltip': 'Field', 'isLazy': True, 'children': []}
         management['children'].append(myNode)
 
     list = ['usr_cat1', 'usr_cat2', 'usr_cat3', 'usr_cat4', 'usr_cat5', 'usr_cat6']
     for i in range(len(list)):
-        myNode = {'title': list[i], 'isFolder': True, 'tooltip': list[i], 'children': []}
-        items = User.objects.values_list(str(list[i]), flat='True').filter(sampleid__in=selected).distinct()
-        for j in range(len(items)):
-            myNode1 = {
-                'title': items[j],
-                'id': items[j],
-                'tooltip': list[i],
-                'isFolder': False
-            }
-            myNode['children'].append(myNode1)
+        myNode = {'title': list[i], 'isFolder': True, 'tooltip': 'Field', 'isLazy': True, 'children': []}
         user['children'].append(myNode)
 
     myTree['children'].append(mimark)
@@ -165,10 +117,152 @@ def getSampleCatTree(request):
     return StreamingHttpResponse(response_dict, content_type='application/javascript')
 
 
+def getSampleCatTreeChildren(request):
+    samples = Sample.objects.all()
+    samples.query = pickle.loads(request.session['selected_samples'])
+    selected = samples.values_list('sampleid')
+
+    if request.is_ajax():
+        field = request.GET["field"]
+        mimark = ['organism', 'seq_method', 'biome', 'feature', 'geo_loc', 'material']
+        collect = ['depth', 'pool_dna_extracts', 'samp_collection_device', 'sieving', 'storage_cond']
+        soil_class = ['drainage_class', 'fao_class', 'horizon', 'local_class', 'profile_position', 'slope_aspect', 'soil_type', 'texture_class']
+        management = ['agrochem_addition', 'biological_amendment', 'cover_crop', 'crop_rotation', 'cur_land_use', 'cur_vegetation', 'cur_crop', 'cur_cultivar', 'organic', 'previous_land_use', 'soil_amendments', 'tillage']
+        user = ['usr_cat1', 'usr_cat2', 'usr_cat3', 'usr_cat4', 'usr_cat5', 'usr_cat6']
+
+        myNode = []
+        if field in mimark:
+            values = Sample.objects.values_list(field, flat='True').filter(sampleid__in=selected).distinct()
+            for j in range(len(values)):
+                myNode1 = {
+                    'title': values[j],
+                    'id': field,
+                    'tooltip': 'Value',
+                    'isFolder': True,
+                    'children': []
+                }
+                args_list = []
+                args_list.append(Q(**{field: values[j]}))
+                items = Sample.objects.filter(reduce(operator.or_, args_list)).filter(sampleid__in=selected).order_by('sample_name')
+                for item in items:
+                    myNode2 = {
+                        'title': 'Sample: ' + item.sample_name,
+                        'id': item.sampleid,
+                        'tooltip': 'Project: ' + item.projectid.project_name,
+                        'hideCheckbox': True,
+                        'isFolder': False
+                    }
+                    myNode1['children'].append(myNode2)
+                myNode.append(myNode1)
+
+        elif field in collect:
+            table_field = 'collect__' + field
+            values = Sample.objects.values_list(table_field, flat='True').filter(sampleid__in=selected).distinct()
+            for j in range(len(values)):
+                myNode1 = {
+                    'title': values[j],
+                    'id': field,
+                    'tooltip': 'Value',
+                    'isFolder': True,
+                    'children': []
+                }
+                args_list = []
+                args_list.append(Q(**{table_field: values[j]}))
+                items = Sample.objects.filter(reduce(operator.or_, args_list)).filter(sampleid__in=selected).order_by('sample_name')
+                for item in items:
+                    myNode2 = {
+                        'title': 'Sample: ' + item.sample_name,
+                        'id': item.sampleid,
+                        'tooltip': 'Project: ' + item.projectid.project_name,
+                        'hideCheckbox': True,
+                        'isFolder': False
+                    }
+                    myNode1['children'].append(myNode2)
+                myNode.append(myNode1)
+
+        elif field in soil_class:
+            table_field = 'soil_class__' + field
+            values = Sample.objects.values_list(table_field, flat='True').filter(sampleid__in=selected).distinct()
+            for j in range(len(values)):
+                myNode1 = {
+                    'title': values[j],
+                    'id': field,
+                    'tooltip': 'Value',
+                    'isFolder': True,
+                    'children': []
+                }
+                args_list = []
+                args_list.append(Q(**{table_field: values[j]}))
+                items = Sample.objects.filter(reduce(operator.or_, args_list)).filter(sampleid__in=selected).order_by('sample_name')
+                for item in items:
+                    myNode2 = {
+                        'title': 'Sample: ' + item.sample_name,
+                        'id': item.sampleid,
+                        'tooltip': 'Project: ' + item.projectid.project_name,
+                        'hideCheckbox': True,
+                        'isFolder': False
+                    }
+                    myNode1['children'].append(myNode2)
+                myNode.append(myNode1)
+
+        elif field in management:
+            table_field = 'management__' + field
+            values = Sample.objects.values_list(table_field, flat='True').filter(sampleid__in=selected).distinct()
+            for j in range(len(values)):
+                myNode1 = {
+                    'title': values[j],
+                    'id': field,
+                    'tooltip': 'Value',
+                    'isFolder': True,
+                    'children': []
+                }
+                args_list = []
+                args_list.append(Q(**{table_field: values[j]}))
+                items = Sample.objects.filter(reduce(operator.or_, args_list)).filter(sampleid__in=selected).order_by('sample_name')
+                for item in items:
+                    myNode2 = {
+                        'title': 'Sample: ' + item.sample_name,
+                        'id': item.sampleid,
+                        'tooltip': 'Project: ' + item.projectid.project_name,
+                        'hideCheckbox': True,
+                        'isFolder': False
+                    }
+                    myNode1['children'].append(myNode2)
+                myNode.append(myNode1)
+
+
+        elif field in user:
+            table_field = 'user__' + field
+            values = Sample.objects.values_list(table_field, flat='True').filter(sampleid__in=selected).distinct()
+            for j in range(len(values)):
+                myNode1 = {
+                    'title': values[j],
+                    'id': field,
+                    'tooltip': 'Value',
+                    'isFolder': True,
+                    'children': []
+                }
+                args_list = []
+                args_list.append(Q(**{table_field: values[j]}))
+                items = Sample.objects.filter(reduce(operator.or_, args_list)).filter(sampleid__in=selected).order_by('sample_name')
+                for item in items:
+                    myNode2 = {
+                        'title': 'Sample: ' + item.sample_name,
+                        'id': item.sampleid,
+                        'tooltip': 'Project: ' + item.projectid.project_name,
+                        'hideCheckbox': True,
+                        'isFolder': False
+                    }
+                    myNode1['children'].append(myNode2)
+                myNode.append(myNode1)
+
+        res = simplejson.dumps(myNode, encoding="Latin-1")
+        return StreamingHttpResponse(res, content_type='application/json')
+
+
 def getSampleQuantTree(request):
     samples = Sample.objects.all()
     samples.query = pickle.loads(request.session['selected_samples'])
-
 
     myTree = {'title': 'root', 'tooltip': 'root', 'isFolder': False,  'hideCheckbox': True, 'expand': True, 'children': []}
     mimark = {'title': 'MIMARKs', 'tooltip': 'MIMARKs', 'isFolder': True,  'hideCheckbox': True, 'children': []}
@@ -336,7 +430,7 @@ def getTaxaTree(request):
     return StreamingHttpResponse(response_dict, content_type='application/javascript')
 
 
-def getCatGraphData(request):
+def getCatAlphaData(request):
     samples = Sample.objects.all()
     samples.query = pickle.loads(request.session['selected_samples'])
     selected = samples.values_list('sampleid')
@@ -346,29 +440,28 @@ def getCatGraphData(request):
         allJson = request.GET["all"]
         all = simplejson.loads(allJson)
 
+        button = int(all["button"])
+
         taxaString = all["taxa"]
         taxaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(taxaString)
 
         metaString = all["meta"]
         metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
 
-        finalDF = catDataFrame(qs1, taxaDict, metaDict)
+        finalDF = catAlphaDF(qs1, taxaDict, metaDict)
 
         final_fieldList = []
         for key in metaDict:
             final_fieldList.append(key)
 
         finalDict = {}
-        seriesList_abund = []
-        seriesList_rich = []
+        seriesList = []
         xAxisDict = {}
-        yAxisDict_abund = {}
-        yAxisDict_rich = {}
+        yAxisDict = {}
         grouped1 = finalDF.groupby(['rank', 'taxa', 'taxa_name', 'taxa_id'])
         for name1, group1 in grouped1:
             categoryList = []
-            dataList_abund = []
-            dataList_rich = []
+            dataList = []
             groupedList = []
             for field in final_fieldList:
                 grouped2 = group1.groupby(field).mean()
@@ -376,44 +469,46 @@ def getCatGraphData(request):
                 categoryDict['name'] = field
                 categoryDict['categories'] = list(grouped2.index.T)
                 categoryList.append(categoryDict)
-                dataList_abund.extend(list(grouped2['rel_abund'].T))
-                dataList_rich.extend(list(grouped2['rich'].T))
+                if button == 1:
+                    dataList.extend(list(grouped2['count'].T))  # this?? works
+                elif button == 2:
+                    dataList.extend(list(grouped2['rel_abund'].T))  # but this doesn't
+                elif button == 3:
+                    dataList.extend(list(grouped2['rich'].T))
+                elif button == 4:
+                    dataList.extend(list(grouped2['diversity'].T))
                 groupedDict = {}
                 groupedDict['rotation'] = 0
                 groupedList.append(groupedDict)
 
-            seriesDict_abund = {}
-            seriesDict_abund['name'] = name1[1] + ": " + name1[2]
-            seriesDict_abund['data'] = dataList_abund
-            seriesList_abund.append(seriesDict_abund)
-
-            seriesDict_rich = {}
-            seriesDict_rich['name'] = name1[1] + ": " + name1[2]
-            seriesDict_rich['data'] = dataList_rich
-            seriesList_rich.append(seriesDict_rich)
+            seriesDict = {}
+            seriesDict['name'] = name1[1] + ": " + name1[2]
+            seriesDict['data'] = dataList
+            seriesList.append(seriesDict)
 
             xTitle = {}
             xTitle['text'] = ''
             labelDict = {}
             labelDict['groupedOptions'] = groupedList
-            labelDict['rotation'] = 0     # this is for the 1st axis
+            labelDict['rotation'] = 0
             xAxisDict['title'] = xTitle
             xAxisDict['categories'] = categoryList
             xAxisDict['labels'] = labelDict
 
-            yTitle_abund = {}
-            yTitle_abund['text'] = 'Relative Abundance'
-            yAxisDict_abund['title'] = yTitle_abund
+            yTitle = {}
+            if button == 1:
+                yTitle['text'] = 'Sequence Reads'
+            elif button == 2:
+                yTitle['text'] = 'Relative Abundance'
+            elif button == 3:
+                yTitle['text'] = 'Species Richness'
+            elif button == 4:
+                yTitle['text'] = 'Shannon Diversity'
+            yAxisDict['title'] = yTitle
 
-            yTitle_rich = {}
-            yTitle_rich['text'] = 'OTU Richness'
-            yAxisDict_rich['title'] = yTitle_rich
-
-        finalDict['series_abund'] = seriesList_abund
-        finalDict['series_rich'] = seriesList_rich
+        finalDict['series'] = seriesList
         finalDict['xAxis'] = xAxisDict
-        finalDict['yAxis_abund'] = yAxisDict_abund
-        finalDict['yAxis_rich'] = yAxisDict_rich
+        finalDict['yAxis'] = yAxisDict
 
         res = simplejson.dumps(finalDict)
         return HttpResponse(res, content_type='application/json')
@@ -426,7 +521,7 @@ def ANOVA(request):
     qs1 = Sample.objects.all().filter(sampleid__in=selected)
 
     if request.is_ajax():
-        button = request.GET["button"]
+        button = int(request.GET["button"])
         allJson = request.GET["all"]
         all = simplejson.loads(allJson)
 
@@ -436,7 +531,7 @@ def ANOVA(request):
         metaString = all["meta"]
         metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
 
-        finalDF = catDataFrame(qs1, taxaDict, metaDict)
+        finalDF = catAlphaDF(qs1, taxaDict, metaDict)
 
         final_fieldList = []
         for key in metaDict:
@@ -449,10 +544,14 @@ def ANOVA(request):
                 trtList = []
                 valList = []
                 grouped2 = pd.DataFrame()
-                if button == '1':
+                if button == 1:
+                    grouped2 = group1.groupby(field)['count']
+                elif button == 2:
                     grouped2 = group1.groupby(field)['rel_abund']
-                elif button == '2':
+                elif button == 3:
                     grouped2 = group1.groupby(field)['rich']
+                elif button == 4:
+                    grouped2 = group1.groupby(field)['diversity']
                 for name, group in grouped2:
                     trtList.append(name)
                     valList.append(list(group.T))
@@ -463,10 +562,14 @@ def ANOVA(request):
                     result = result + '===============================================\n'
                     result = result + 'Taxa level: ' + str(name1[1]) + '\n'
                     result = result + 'Taxa name: ' + str(name1[2]) + '\n'
-                    if button == '1':
-                        result = result + 'Dependent Variable: Relative abundance' + '\n'
-                    elif button == '2':
-                        result = result + 'Dependent Variable: OTU Richness' + '\n'
+                    if button == 1:
+                        result = result + 'Dependent Variable: Sequence Reads' + '\n'
+                    elif button == 2:
+                        result = result + 'Dependent Variable: Relative Abundance' + '\n'
+                    elif button == 3:
+                        result = result + 'Dependent Variable: Species Richness' + '\n'
+                    elif button == 4:
+                        result = result + 'Dependent Variable: Shannon Diversity' + '\n'
                     result = result + 'Independent Variable: ' + str(field) + '\n'
                     result = result + str(D) + '\n'
                     result = result + '===============================================\n'
@@ -475,10 +578,14 @@ def ANOVA(request):
                     result = result + '===============================================\n'
                     result = result + 'Taxa level: ' + str(name1[1]) + '\n'
                     result = result + 'Taxa name: ' + str(name1[2]) + '\n'
-                    if button == '1':
-                        result = result + 'Dependent Variable: Relative abundance' + '\n'
-                    elif button == '2':
-                        result = result + 'Dependent Variable: OTU Richness' + '\n'
+                    if button == 1:
+                        result = result + 'Dependent Variable: Sequence Reads' + '\n'
+                    elif button == 2:
+                        result = result + 'Dependent Variable: Relative Abundance' + '\n'
+                    elif button == 3:
+                        result = result + 'Dependent Variable: Species Richness' + '\n'
+                    elif button == 4:
+                        result = result + 'Dependent Variable: Shannon Diversity' + '\n'
                     result = result + 'Independent Variable: ' + str(field) + '\n'
                     result = result + 'ANOVA cannot be performed...\n'
                     result = result + '===============================================\n'
@@ -487,7 +594,7 @@ def ANOVA(request):
         return HttpResponse(result, content_type='application/text')
 
 
-def getQuantGraphData(request):
+def getQuantAlphaData(request):
     samples = Sample.objects.all()
     samples.query = pickle.loads(request.session['selected_samples'])
     selected = samples.values_list('sampleid')
@@ -497,67 +604,240 @@ def getQuantGraphData(request):
         allJson = request.GET["all"]
         all = simplejson.loads(allJson)
 
+        button = int(all["button"])
         metaString = all["meta"]
         metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
 
         taxaString = all["taxa"]
         taxaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(taxaString)
 
-        finalDF = quantDataFrame(qs1, taxaDict, metaDict)
+        finalDF = quantAlphaDF(qs1, taxaDict, metaDict)
+        print 'finalDF\n', finalDF
 
         final_fieldList = []
         for key, value in metaDict.items():
             final_fieldList.append(value)
 
         finalDict = {}
-        seriesList_abund = []
-        seriesList_rich = []
+        seriesList = []
         xAxisDict = {}
-        yAxisDict_rich = {}
-        yAxisDict_abund = {}
+        yAxisDict = {}
         grouped1 = finalDF.groupby(['rank', 'taxa', 'taxa_name', 'taxa_id'])
         for name1, group1 in grouped1:
-            dataList_abund = group1[['x-value', 'rel_abund']].values.tolist()
-            dataList_rich = group1[['x-value', 'rich']].values.tolist()
+            dataList = []
+            if button == 1:
+                dataList = group1[['x-value', 'count']].values.tolist()
+            elif button == 2:
+                dataList = group1[['x-value', 'rel_abund']].values.tolist()
+            elif button == 3:
+                dataList = group1[['x-value', 'rich']].values.tolist()
+            elif button == 4:
+                dataList = group1[['x-value', 'diversity']].values.tolist()
 
-            seriesDict_abund = {}
-            seriesDict_abund['regression'] = 'true'
+            seriesDict = {}
+            seriesDict['regression'] = 'true'
             regDict = {}
             regDict['type'] = 'linear'
             regDict['label'] = 'R2 = %r2<br>%eq'
-            seriesDict_abund['regressionSettings'] = regDict
-            seriesDict_abund['name'] = name1[1] + ": " + name1[2]
-            seriesDict_abund['data'] = dataList_abund
-            seriesList_abund.append(seriesDict_abund)
-
-            seriesDict_rich = {}
-            seriesDict_rich['regression'] = 'true'
-            regDict = {}
-            regDict['type'] = 'linear'
-            regDict['label'] = 'R2 = %r2<br>%eq'
-            seriesDict_rich['regressionSettings'] = regDict
-            seriesDict_rich['name'] = name1[1] + ": " + name1[2]
-            seriesDict_rich['data'] = dataList_rich
-            seriesList_rich.append(seriesDict_rich)
+            seriesDict['regressionSettings'] = regDict
+            seriesDict['name'] = name1[1] + ": " + name1[2]
+            seriesDict['data'] = dataList
+            seriesList.append(seriesDict)
 
             xTitle = {}
             xTitle['text'] = final_fieldList[0]
             xAxisDict['title'] = xTitle
 
-            yTitle_abund = {}
-            yTitle_abund['text'] = 'Relative Abundance'
-            yAxisDict_abund['title'] = yTitle_abund
+            yTitle = {}
+            if button == 1:
+                yTitle['text'] = 'Sequence Reads'
+            elif button == 2:
+                yTitle['text'] = 'Relative Abundance'
+            elif button == 3:
+                yTitle['text'] = 'Species Richness'
+            elif button == 4:
+                yTitle['text'] = 'Shannon Diversity'
+            yAxisDict['title'] = yTitle
 
-
-            yTitle_rich = {}
-            yTitle_rich['text'] = 'OTU Richness'
-            yAxisDict_rich['title'] = yTitle_rich
-
-        finalDict['series_abund'] = seriesList_abund
-        finalDict['series_rich'] = seriesList_rich
+        finalDict['series'] = seriesList
         finalDict['xAxis'] = xAxisDict
-        finalDict['yAxis_abund'] = yAxisDict_abund
-        finalDict['yAxis_rich'] = yAxisDict_rich
+        finalDict['yAxis'] = yAxisDict
+
+        res = simplejson.dumps(finalDict)
+        return HttpResponse(res, content_type='application/json')
+
+
+def getCatBetaData(request):
+    samples = Sample.objects.all()
+    samples.query = pickle.loads(request.session['selected_samples'])
+    selected = samples.values_list('sampleid')
+    qs1 = Sample.objects.all().filter(sampleid__in=selected)
+
+    if request.is_ajax():
+        allJson = request.GET["all"]
+        all = simplejson.loads(allJson)
+
+        button = int(all["button"])
+        taxaLevel = int(all["taxa"])
+        distance = int(all["distance"])
+        centered = all["center"]
+        standardize = all["standardize"]
+        PC1 = all["PC1"]
+        PC2 = all["PC2"]
+
+        metaString = all["meta"]
+        metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
+
+        fieldList = []
+        for key in metaDict:
+            fieldList.append(key)
+
+        metaDF = catBetaMetaDF(qs1, metaDict)
+        myset = list(metaDF['sampleid'].T)
+
+        taxaDF = catBetaTaxaDF(metaDF, myset, taxaLevel)
+
+        sampleList = list(set(metaDF['sampleid'].tolist()))
+
+        taxaDF2 = pd.DataFrame()
+        if button == 1:
+            fieldList.extend(['rel_abund', 'rich', 'diversity'])
+            taxaDF2 = taxaDF.drop(fieldList, axis=1)
+            taxaDF2.rename(columns={'count': 'response'}, inplace=True)
+        elif button == 2:
+            fieldList.extend(['count', 'rich', 'diversity'])
+            taxaDF2 = taxaDF.drop(fieldList, axis=1)
+            taxaDF2.rename(columns={'rel_abund': 'response'}, inplace=True)
+        elif button == 3:
+            fieldList.extend(['count', 'rel_abund', 'diversity'])
+            taxaDF2 = taxaDF.drop(fieldList, axis=1)
+            taxaDF2.rename(columns={'rich': 'response'}, inplace=True)
+        elif button == 4:
+            fieldList.extend(['count', 'rel_abund', 'rich'])
+            taxaDF2 = taxaDF.drop(fieldList, axis=1)
+            taxaDF2.rename(columns={'diversity': 'response'}, inplace=True)
+
+        taxaDF2.set_index(['taxaid', 'sampleid'], drop=True, inplace=True)
+
+        taxaFinalDF = pd.DataFrame()
+        for sample in sampleList:
+            df = taxaDF2.iloc[taxaDF2.index.get_level_values('sampleid') == sample]
+            df.reset_index(inplace=True)
+            df2 = df.drop('sampleid', axis=1)
+            if taxaFinalDF.empty:
+                taxaFinalDF = df2
+                taxaFinalDF.rename(columns={'response': sample}, inplace=True)
+            else:
+                taxaFinalDF = taxaFinalDF.merge(df2, on='taxaid', how='outer')
+                taxaFinalDF.reset_index(drop=True, inplace=True)
+                taxaFinalDF.rename(columns={'response': sample}, inplace=True)
+                taxaFinalDF.fillna(0, inplace=True)
+        taxaFinalDF.set_index('taxaid', drop=True, inplace=True)
+
+        taxa = taxaFinalDF.reset_index(drop=True).T
+        metaDF.set_index('sampleid', drop=True, inplace=True)
+        finalDF = taxa.join(metaDF)
+
+        fieldList = []
+        for key in metaDict:
+            fieldList.append(key)
+
+        pcoaDF = finalDF.reset_index(drop=True)
+
+        matrixDF = pcoaDF.drop(fieldList, axis=1)
+
+        datamtx = asarray(matrixDF)
+
+        numrows, numcols = shape(datamtx)
+        dists = zeros((numrows, numrows))
+
+        for x in range(numrows):
+            for y in range(1, numrows):
+                try:
+                    if distance == 1:
+                        dist = braycurtis(datamtx[x], datamtx[y])
+                        dists[x, y] = dists[y, x] = dist
+                    elif distance == 2:
+                        dist = canberra(datamtx[x], datamtx[y])
+                        dists[x, y] = dists[y, x] = dist
+                    elif distance == 3:
+                        dist = dice(datamtx[x], datamtx[y])
+                        dists[x, y] = dists[y, x] = dist
+                    elif distance == 4:
+                        dist = euclidean(datamtx[x], datamtx[y])
+                        dists[x, y] = dists[y, x] = dist
+                    elif distance == 5:
+                        dist = jaccard(datamtx[x], datamtx[y])
+                        dists[x, y] = dists[y, x] = dist
+                except:
+                    dist = 0
+                    dists[x, y] = dists[y, x] = dist
+
+        distDF = pd.DataFrame(dists, columns=sampleList, index=sampleList)
+
+        ### add a step here to center and standardize 'dists' ###
+        dists_final = ""
+        if centered == 0 and standardize == 0:
+            dists_final = dists
+        elif centered == 1 and standardize == 0:
+            dists_final = dists - dists.mean(1)
+        elif centered == 0 and standardize == 1:
+            dists_final = dists / dists.std(1)
+        elif centered == 1 and standardize == 1:
+            dists_center = dists - dists.mean(1)
+            dists_final = dists_center / dists_center.std(1)
+
+        pcoa = principalComponents(dists_final)
+        numaxes = len(pcoa[0])
+        axesList = []
+        for i in range(numaxes):
+            j = i + 1
+            axesList.append('PC' + str(j))
+
+        eigenDF = pd.DataFrame(pcoa[0], columns=['EigenVectors'], index=axesList)
+        pcoaDF = pd.DataFrame(pcoa[1], columns=axesList, index=sampleList)
+        resultDF = metaDF.join(pcoaDF)
+
+#        print 'axes: ', numaxes, '\n'
+#        print 'eigenvalues\n', eigenDF, '\n'
+#        print 'principal components\n', resultDF, '\n'
+
+        if len(fieldList) == 1:
+            trtList = list(finalDF[fieldList[0]].T)
+            perm_res = permanova_oneway(dists_final, trtList, 1000)
+        else:
+            subset = finalDF[fieldList]      # needs to be array pair
+            trtList = [tuple(x) for x in subset.values]
+            perm_res = permanova_twoway(dists_final, trtList, 1000)
+
+#        print 'permanova: ', perm_res
+
+        finalDict = {}
+        seriesList = []
+        xAxisDict = {}
+        yAxisDict = {}
+        for field in fieldList:
+            grouped = resultDF.groupby(field)
+            for name, group in grouped:
+                dataList = []
+                dataList = group[[PC1, PC2]].values.tolist()
+
+                seriesDict = {}
+                seriesDict['name'] = field + ": " + name
+                seriesDict['data'] = dataList
+                seriesList.append(seriesDict)
+
+        xTitle = {}
+        xTitle['text'] = PC1
+        xAxisDict['title'] = xTitle
+
+        yTitle = {}
+        yTitle['text'] = PC2
+        yAxisDict['title'] = yTitle
+
+        finalDict['series'] = seriesList
+        finalDict['xAxis'] = xAxisDict
+        finalDict['yAxis'] = yAxisDict
 
         res = simplejson.dumps(finalDict)
         return HttpResponse(res, content_type='application/json')

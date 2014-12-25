@@ -1,6 +1,6 @@
 from django.db import models
 from django_extensions.db.fields import UUIDField
-from django.db.models import Sum
+
 
 class Project(models.Model):
     projectid = UUIDField(primary_key=True, editable=True)
@@ -226,7 +226,10 @@ class Profile(models.Model):
     genusid = models.ForeignKey(Genus)
     speciesid = models.ForeignKey(Species)
     count = models.IntegerField()
+    total = models.IntegerField()
+    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
     binary = models.IntegerField()
+    diversity = models.DecimalField(max_digits=6, decimal_places=4)
 
 
 class ProfileKingdom(models.Model):
@@ -236,6 +239,7 @@ class ProfileKingdom(models.Model):
     count = models.IntegerField()
     rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
     rich = models.IntegerField()
+    diversity = models.DecimalField(max_digits=6, decimal_places=4)
 
 
 class ProfilePhyla(models.Model):
@@ -245,6 +249,7 @@ class ProfilePhyla(models.Model):
     count = models.IntegerField()
     rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
     rich = models.IntegerField()
+    diversity = models.DecimalField(max_digits=6, decimal_places=4)
 
 
 class ProfileClass(models.Model):
@@ -254,7 +259,7 @@ class ProfileClass(models.Model):
     count = models.IntegerField()
     rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
     rich = models.IntegerField()
-
+    diversity = models.DecimalField(max_digits=6, decimal_places=4)
 
 class ProfileOrder(models.Model):
     projectid = models.ForeignKey(Project)
@@ -263,6 +268,7 @@ class ProfileOrder(models.Model):
     count = models.IntegerField()
     rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
     rich = models.IntegerField()
+    diversity = models.DecimalField(max_digits=6, decimal_places=4)
 
 
 class ProfileFamily(models.Model):
@@ -272,6 +278,7 @@ class ProfileFamily(models.Model):
     count = models.IntegerField()
     rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
     rich = models.IntegerField()
+    diversity = models.DecimalField(max_digits=6, decimal_places=4)
 
 
 class ProfileGenus(models.Model):
@@ -281,6 +288,7 @@ class ProfileGenus(models.Model):
     count = models.IntegerField()
     rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
     rich = models.IntegerField()
+    diversity = models.DecimalField(max_digits=6, decimal_places=4)
 
 
 class ProfileSpecies(models.Model):
@@ -290,4 +298,5 @@ class ProfileSpecies(models.Model):
     count = models.IntegerField()
     rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
     rich = models.IntegerField()
+    diversity = models.DecimalField(max_digits=6, decimal_places=4)
 

@@ -37,15 +37,15 @@
                         node.reloadChildren(function () {
                             node.select(false);
                             node.select(true);
-                            updateNodes();
                         });
                     }
+                    updateNodes();
                 }
             });
 
-            $("#tree").click(function () {
-                updateNodes();
-            });
+            //$("#tree").click(function () {
+            //    updateNodes();
+            //});
 
             $("input[name$='tables']").click(function() {
                 var test = $(this).val();
@@ -62,8 +62,8 @@
             });
 
             $("#submit").click(function () {
-                jsonDict = JSON.stringify(selKeys);
 
+                jsonDict = JSON.stringify(selKeys);
                 $.ajax({
                     type: 'GET',
                     url: '/cookie/',
