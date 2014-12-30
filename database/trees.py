@@ -6,7 +6,7 @@ from django.db.models import Q
 from models import Project, Sample, Collect, Soil_class, Management, User
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
 from models import ProfileKingdom, ProfilePhyla, ProfileClass, ProfileOrder, ProfileFamily, ProfileGenus, ProfileSpecies
-from utils import multidict, catAlphaDF, quantAlphaDF, catBetaMetaDF, catBetaTaxaDF
+from utils import multidict, catAlphaDF, quantAlphaDF, alphaTaxaDF, catBetaMetaDF, quantBetaMetaDF, betaTaxaDF
 from utils import principalComponents
 from utils import permanova_oneway, permanova_twoway
 from scipy import stats
@@ -72,7 +72,7 @@ def getSampleCatTree(request):
     management = {'title': 'Management', 'id': 'management', 'tooltip': 'Category', 'isFolder': True,  'hideCheckbox': True, 'children': []}
     user = {'title': 'User-defined', 'id': 'user', 'tooltip': 'Category', 'isFolder': True,  'hideCheckbox': True, 'children': []}
 
-    list = ['organism', 'seq_method', 'biome', 'feature', 'geo_loc', 'material']
+    list = ['sample_name', 'organism', 'seq_method', 'biome', 'feature', 'geo_loc', 'material']
     for i in range(len(list)):
         myNode = {'title': list[i], 'isFolder': True, 'tooltip': 'Field', 'isLazy': True, 'children': []}
         mimark['children'].append(myNode)
@@ -124,7 +124,7 @@ def getSampleCatTreeChildren(request):
 
     if request.is_ajax():
         field = request.GET["field"]
-        mimark = ['organism', 'seq_method', 'biome', 'feature', 'geo_loc', 'material']
+        mimark = ['sample_name', 'organism', 'seq_method', 'biome', 'feature', 'geo_loc', 'material']
         collect = ['depth', 'pool_dna_extracts', 'samp_collection_device', 'sieving', 'storage_cond']
         soil_class = ['drainage_class', 'fao_class', 'horizon', 'local_class', 'profile_position', 'slope_aspect', 'soil_type', 'texture_class']
         management = ['agrochem_addition', 'biological_amendment', 'cover_crop', 'crop_rotation', 'cur_land_use', 'cur_vegetation', 'cur_crop', 'cur_cultivar', 'organic', 'previous_land_use', 'soil_amendments', 'tillage']
@@ -448,7 +448,8 @@ def getCatAlphaData(request):
         metaString = all["meta"]
         metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
 
-        finalDF = catAlphaDF(qs1, taxaDict, metaDict)
+        metaDF = catAlphaDF(qs1, metaDict)
+        finalDF = alphaTaxaDF(metaDF, taxaDict)
 
         final_fieldList = []
         for key in metaDict:
@@ -470,9 +471,9 @@ def getCatAlphaData(request):
                 categoryDict['categories'] = list(grouped2.index.T)
                 categoryList.append(categoryDict)
                 if button == 1:
-                    dataList.extend(list(grouped2['count'].T))  # this?? works
+                    dataList.extend(list(grouped2['count'].T))
                 elif button == 2:
-                    dataList.extend(list(grouped2['rel_abund'].T))  # but this doesn't
+                    dataList.extend(list(grouped2['rel_abund'].T))
                 elif button == 3:
                     dataList.extend(list(grouped2['rich'].T))
                 elif button == 4:
@@ -509,33 +510,6 @@ def getCatAlphaData(request):
         finalDict['series'] = seriesList
         finalDict['xAxis'] = xAxisDict
         finalDict['yAxis'] = yAxisDict
-
-        res = simplejson.dumps(finalDict)
-        return HttpResponse(res, content_type='application/json')
-
-
-def ANOVA(request):
-    samples = Sample.objects.all()
-    samples.query = pickle.loads(request.session['selected_samples'])
-    selected = samples.values_list('sampleid')
-    qs1 = Sample.objects.all().filter(sampleid__in=selected)
-
-    if request.is_ajax():
-        button = int(request.GET["button"])
-        allJson = request.GET["all"]
-        all = simplejson.loads(allJson)
-
-        taxaString = all["taxa"]
-        taxaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(taxaString)
-
-        metaString = all["meta"]
-        metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
-
-        finalDF = catAlphaDF(qs1, taxaDict, metaDict)
-
-        final_fieldList = []
-        for key in metaDict:
-            final_fieldList.append(key)
 
         result = ""
         grouped1 = finalDF.groupby(['rank', 'taxa', 'taxa_name', 'taxa_id'])
@@ -591,7 +565,11 @@ def ANOVA(request):
                     result = result + '===============================================\n'
                     result = result + '\n\n\n\n'
 
-        return HttpResponse(result, content_type='application/text')
+        finalDict['text'] = result
+
+        res = simplejson.dumps(finalDict)
+
+        return HttpResponse(res, content_type='application/json')
 
 
 def getQuantAlphaData(request):
@@ -605,14 +583,18 @@ def getQuantAlphaData(request):
         all = simplejson.loads(allJson)
 
         button = int(all["button"])
+        regType = int(all["regType"])
+
         metaString = all["meta"]
         metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
 
         taxaString = all["taxa"]
         taxaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(taxaString)
 
-        finalDF = quantAlphaDF(qs1, taxaDict, metaDict)
-        print 'finalDF\n', finalDF
+        metaDF = quantAlphaDF(qs1, metaDict)
+
+        finalDF = alphaTaxaDF(metaDF, taxaDict)
+        finalDF['x-value'] = finalDF['x-value'].astype(float)
 
         final_fieldList = []
         for key, value in metaDict.items():
@@ -637,8 +619,17 @@ def getQuantAlphaData(request):
             seriesDict = {}
             seriesDict['regression'] = 'true'
             regDict = {}
-            regDict['type'] = 'linear'
-            regDict['label'] = 'R2 = %r2<br>%eq'
+            if regType == 1:
+                regDict['type'] = 'linear'
+            elif regType == 2:
+                regDict['type'] = 'polynomial'
+            elif regType == 3:
+                regDict['type'] = 'exponential'
+            elif regType == 4:
+                regDict['type'] = 'logarithmic'
+            elif regType == 5:
+                regDict['type'] = 'power'
+
             seriesDict['regressionSettings'] = regDict
             seriesDict['name'] = name1[1] + ": " + name1[2]
             seriesDict['data'] = dataList
@@ -695,7 +686,7 @@ def getCatBetaData(request):
         metaDF = catBetaMetaDF(qs1, metaDict)
         myset = list(metaDF['sampleid'].T)
 
-        taxaDF = catBetaTaxaDF(metaDF, myset, taxaLevel)
+        taxaDF = betaTaxaDF(metaDF, myset, taxaLevel)
 
         sampleList = list(set(metaDF['sampleid'].tolist()))
 
@@ -773,7 +764,7 @@ def getCatBetaData(request):
                     dist = 0
                     dists[x, y] = dists[y, x] = dist
 
-        distDF = pd.DataFrame(dists, columns=sampleList, index=sampleList)
+#        distDF = pd.DataFrame(dists, columns=sampleList, index=sampleList)
 
         ### add a step here to center and standardize 'dists' ###
         dists_final = ""
@@ -798,19 +789,13 @@ def getCatBetaData(request):
         pcoaDF = pd.DataFrame(pcoa[1], columns=axesList, index=sampleList)
         resultDF = metaDF.join(pcoaDF)
 
-#        print 'axes: ', numaxes, '\n'
-#        print 'eigenvalues\n', eigenDF, '\n'
-#        print 'principal components\n', resultDF, '\n'
-
         if len(fieldList) == 1:
             trtList = list(finalDF[fieldList[0]].T)
             perm_res = permanova_oneway(dists_final, trtList, 1000)
         else:
-            subset = finalDF[fieldList]      # needs to be array pair
+            subset = finalDF[fieldList]
             trtList = [tuple(x) for x in subset.values]
             perm_res = permanova_twoway(dists_final, trtList, 1000)
-
-#        print 'permanova: ', perm_res
 
         finalDict = {}
         seriesList = []
@@ -838,6 +823,225 @@ def getCatBetaData(request):
         finalDict['series'] = seriesList
         finalDict['xAxis'] = xAxisDict
         finalDict['yAxis'] = yAxisDict
+
+        result = ""
+        result = result + '===============================================\n'
+        result = result + 'Taxa level: ' + str(taxaLevel) + '\n'
+        if button == 1:
+            result = result + 'Dependent Variable: Sequence Reads' + '\n'
+        elif button == 2:
+            result = result + 'Dependent Variable: Relative Abundance' + '\n'
+        elif button == 3:
+            result = result + 'Dependent Variable: Species Richness' + '\n'
+        elif button == 4:
+            result = result + 'Dependent Variable: Shannon Diversity' + '\n'
+        result = result + 'Independent Variable: ' + str(fieldList) + '\n'
+        if distance == 1:
+            result = result + 'Distance score: Bray-Curtis' + '\n'
+        elif distance == 2:
+            result = result + 'Distance score: Canberra' + '\n'
+        elif distance == 3:
+            result = result + 'Distance score: Dice' + '\n'
+        elif distance == 4:
+            result = result + 'Distance score: Euclidean' + '\n'
+        elif distance == 5:
+            result = result + 'Distance score: Jaccard' + '\n'
+        result = result + '===============================================\n'
+        result = result + str(perm_res) + '\n'
+        result = result + '===============================================\n'
+        result = result + str(eigenDF) + '\n'
+        result = result + '===============================================\n'
+        result = result + str(resultDF) + '\n'
+        result = result + '\n\n\n\n'
+
+        finalDict['text'] = result
+
+        res = simplejson.dumps(finalDict)
+        return HttpResponse(res, content_type='application/json')
+
+
+def getQuantBetaData(request):
+    samples = Sample.objects.all()
+    samples.query = pickle.loads(request.session['selected_samples'])
+    selected = samples.values_list('sampleid')
+    qs1 = Sample.objects.all().filter(sampleid__in=selected)
+
+    if request.is_ajax():
+        allJson = request.GET["all"]
+        all = simplejson.loads(allJson)
+
+        button = int(all["button"])
+        taxaLevel = int(all["taxa"])
+        distance = int(all["distance"])
+        centered = all["center"]
+        standardize = all["standardize"]
+        PC1 = all["PC1"]
+        PC2 = all["PC2"]
+
+        metaString = all["meta"]
+        metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
+
+        fieldList = []
+        for key, value in metaDict.items():
+            fieldList.append(value)
+
+        metaDF = quantBetaMetaDF(qs1, metaDict)
+        myset = list(metaDF['sampleid'].T)
+
+        taxaDF = betaTaxaDF(metaDF, myset, taxaLevel)
+
+        sampleList = list(set(metaDF['sampleid'].tolist()))
+
+        taxaDF2 = pd.DataFrame()
+        if button == 1:
+            fieldList.extend(['rel_abund', 'rich', 'diversity'])
+            taxaDF2 = taxaDF.drop(fieldList, axis=1)
+            taxaDF2.rename(columns={'count': 'response'}, inplace=True)
+        elif button == 2:
+            fieldList.extend(['count', 'rich', 'diversity'])
+            taxaDF2 = taxaDF.drop(fieldList, axis=1)
+            taxaDF2.rename(columns={'rel_abund': 'response'}, inplace=True)
+        elif button == 3:
+            fieldList.extend(['count', 'rel_abund', 'diversity'])
+            taxaDF2 = taxaDF.drop(fieldList, axis=1)
+            taxaDF2.rename(columns={'rich': 'response'}, inplace=True)
+        elif button == 4:
+            fieldList.extend(['count', 'rel_abund', 'rich'])
+            taxaDF2 = taxaDF.drop(fieldList, axis=1)
+            taxaDF2.rename(columns={'diversity': 'response'}, inplace=True)
+
+        taxaDF2.set_index(['taxaid', 'sampleid'], drop=True, inplace=True)
+
+        taxaFinalDF = pd.DataFrame()
+        for sample in sampleList:
+            df = taxaDF2.iloc[taxaDF2.index.get_level_values('sampleid') == sample]
+            df.reset_index(inplace=True)
+            df2 = df.drop('sampleid', axis=1)
+            if taxaFinalDF.empty:
+                taxaFinalDF = df2
+                taxaFinalDF.rename(columns={'response': sample}, inplace=True)
+            else:
+                taxaFinalDF = taxaFinalDF.merge(df2, on='taxaid', how='outer')
+                taxaFinalDF.reset_index(drop=True, inplace=True)
+                taxaFinalDF.rename(columns={'response': sample}, inplace=True)
+                taxaFinalDF.fillna(0, inplace=True)
+        taxaFinalDF.set_index('taxaid', drop=True, inplace=True)
+
+        taxa = taxaFinalDF.reset_index(drop=True).T
+        metaDF.set_index('sampleid', drop=True, inplace=True)
+        finalDF = taxa.join(metaDF)
+
+        fieldList = []
+        for key, value in metaDict.items():
+            fieldList.append(value)
+
+        pcoaDF = finalDF.reset_index(drop=True)
+        matrixDF = pcoaDF.drop(fieldList, axis=1)
+
+        datamtx = asarray(matrixDF)
+
+        numrows, numcols = shape(datamtx)
+        dists = zeros((numrows, numrows))
+
+        for x in range(numrows):
+            for y in range(1, numrows):
+                try:
+                    if distance == 1:
+                        dist = braycurtis(datamtx[x], datamtx[y])
+                        dists[x, y] = dists[y, x] = dist
+                    elif distance == 2:
+                        dist = canberra(datamtx[x], datamtx[y])
+                        dists[x, y] = dists[y, x] = dist
+                    elif distance == 3:
+                        dist = dice(datamtx[x], datamtx[y])
+                        dists[x, y] = dists[y, x] = dist
+                    elif distance == 4:
+                        dist = euclidean(datamtx[x], datamtx[y])
+                        dists[x, y] = dists[y, x] = dist
+                    elif distance == 5:
+                        dist = jaccard(datamtx[x], datamtx[y])
+                        dists[x, y] = dists[y, x] = dist
+                except:
+                    dist = 0
+                    dists[x, y] = dists[y, x] = dist
+
+        distDF = pd.DataFrame(dists, columns=sampleList, index=sampleList)
+
+        dists_final = ""
+        if centered == 0 and standardize == 0:
+            dists_final = dists
+        elif centered == 1 and standardize == 0:
+            dists_final = dists - dists.mean(1)
+        elif centered == 0 and standardize == 1:
+            dists_final = dists / dists.std(1)
+        elif centered == 1 and standardize == 1:
+            dists_center = dists - dists.mean(1)
+            dists_final = dists_center / dists_center.std(1)
+
+        pcoa = principalComponents(dists_final)
+        numaxes = len(pcoa[0])
+        axesList = []
+        for i in range(numaxes):
+            j = i + 1
+            axesList.append('PC' + str(j))
+
+        eigenDF = pd.DataFrame(pcoa[0], columns=['EigenVectors'], index=axesList)
+        pcoaDF = pd.DataFrame(pcoa[1], columns=axesList, index=sampleList)
+        resultDF = metaDF.join(pcoaDF)
+
+        finalDict = {}
+        seriesList = []
+        xAxisDict = {}
+        yAxisDict = {}
+        dataList = resultDF[[PC1, PC2]].values.tolist()
+
+        seriesDict = {}
+        seriesDict['name'] = fieldList
+        seriesDict['data'] = dataList
+        seriesList.append(seriesDict)
+
+        xTitle = {}
+        xTitle['text'] = PC1
+        xAxisDict['title'] = xTitle
+
+        yTitle = {}
+        yTitle['text'] = PC2
+        yAxisDict['title'] = yTitle
+
+        finalDict['series'] = seriesList
+        finalDict['xAxis'] = xAxisDict
+        finalDict['yAxis'] = yAxisDict
+
+        result = ""
+        result = result + '===============================================\n'
+        result = result + 'Taxa level: ' + str(taxaLevel) + '\n'
+        if button == 1:
+            result = result + 'Dependent Variable: Sequence Reads' + '\n'
+        elif button == 2:
+            result = result + 'Dependent Variable: Relative Abundance' + '\n'
+        elif button == 3:
+            result = result + 'Dependent Variable: Species Richness' + '\n'
+        elif button == 4:
+            result = result + 'Dependent Variable: Shannon Diversity' + '\n'
+        result = result + 'Independent Variable: ' + str(fieldList) + '\n'
+        if distance == 1:
+            result = result + 'Distance score: Bray-Curtis' + '\n'
+        elif distance == 2:
+            result = result + 'Distance score: Canberra' + '\n'
+        elif distance == 3:
+            result = result + 'Distance score: Dice' + '\n'
+        elif distance == 4:
+            result = result + 'Distance score: Euclidean' + '\n'
+        elif distance == 5:
+            result = result + 'Distance score: Jaccard' + '\n'
+        result = result + '===============================================\n'
+        result = result + str(eigenDF) + '\n'
+        result = result + '===============================================\n'
+        result = result + str(resultDF) + '\n'
+        result = result + '\n\n\n\n'
+
+        print result
+        finalDict['text'] = result
 
         res = simplejson.dumps(finalDict)
         return HttpResponse(res, content_type='application/json')

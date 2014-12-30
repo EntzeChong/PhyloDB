@@ -1,49 +1,11 @@
-import pandas as pd
-from scipy.spatial.distance import *
-import numpy as np
-from numpy import asarray, shape, zeros
-import random as r
-from itertools import permutations, product, chain
-from scipy import stats
-from utils import principalComponents, permanova_oneway
-
-
-df = pd.DataFrame({'Sample1': [0, 2, 4, 6, 8, 10], 'Sample2': [0, 2, 4, 6, 8, 10], 'Sample3': [10, 8, 6, 4, 2, 0], 'Sample4': [1, 2, 3, 4, 5, 6], 'Sample5': [3, 6, 7, 2, 4, 0], 'Sample6': [0, 8, 6, 4, 2, 1]}, index=['OTU1', 'OTU2', 'OTU3', 'OTU4', 'OTU5', 'OTU6'])
-print 'df\n', df, '\n'
-
-sampleList = list(df.columns.values)
-
-sampleDF = pd.DataFrame({'group': [1, 1, 1, 2, 2, 2]}, index=sampleList)
-print 'sampleDF\n', sampleDF, '\n'
-
-## Calculate distance matrix
-datamtx = asarray(df.T)
-numrows, numcols = shape(datamtx)
-dists = zeros((numrows, numrows))
-
-for x in range(numrows):
-    for y in range(1, numrows):
-        try:
-            dist = braycurtis(datamtx[x], datamtx[y])
-            dists[x, y] = dists[y, x] = dist
-        except:
-            dist = 0
-            dists[x, y] = dists[y, x] = dist
-
-distDF = pd.DataFrame(dists, columns=sampleList, index=sampleList)
-print 'distDF\n', distDF, '\n'
-
-pcoa = principalComponents(dists)
-numaxes = len(pcoa[0])
-axesList = []
-for i in range(len(pcoa[0])):
-    j = i + 1
-    axesList.append('PC' + str(j))
-
-eigenDF = pd.DataFrame(pcoa[0], columns=['EigenVectors'], index=axesList)
-pcoaDF = pd.DataFrame(pcoa[1], columns=axesList, index=sampleList)
-
-print 'eigenvalues\n', eigenDF, '\n'
-print 'principal components\n', pcoaDF, '\n'
-
-
+{
+    "series": [{
+                   "regressionSettings": {
+                       "type": "linear"
+                   },
+                   "data": [[2.0, 0.260203], [4.0, 0.424837], [15.0, 0.376032], [9.0, 0.50685], [1.0, 0.439192], [11.0, 0.378694], [24.0, 0.254904], [28.0, 0.378378], [14.0, 0.39607], [19.0, 0.316781], [20.0, 0.506513], [12.0, 0.341087], [27.0, 0.329546], [6.0, 0.243907], [8.0, 0.434632], [10.0, 0.231461], [29.0, 0.440445], [3.0, 0.59891], [26.0, 0.220585], [30.0, 0.43806], [13.0, 0.353845], [22.0, 0.463916], [16.0, 0.373134], [25.0, 0.513513], [18.0, 0.365888], [23.0, 0.29075], [21.0, 0.278299], [17.0, 0.45135], [5.0, 0.170087], [7.0, 0.648148]],
+                   "regression": "true",
+                   "name": "Phyla: Proteobacteria"
+               }],
+    "xAxis": {"title": {"text": "usr_quant1"}},
+    "yAxis": {"title": {"text": "Relative Abundance"}}}

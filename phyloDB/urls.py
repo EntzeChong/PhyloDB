@@ -24,9 +24,7 @@ urlpatterns = patterns('',
     url(r'^getCatAlphaData', 'database.trees.getCatAlphaData', name='getCatAlphaData'),
     url(r'^getQuantAlphaData', 'database.trees.getQuantAlphaData', name='getQuantAlphaData'),
     url(r'^getCatBetaData', 'database.trees.getCatBetaData', name='getCatBetaData'),
-    #url(r'^getQuantBetaData', 'database.trees.getQuantBetaData', name='getQuantBetaData'),
-
-    url(r'^ANOVA/$', 'database.trees.ANOVA', name='ANOVA'),
+    url(r'^getQuantBetaData', 'database.trees.getQuantBetaData', name='getQuantBetaData'),
 
 )
 

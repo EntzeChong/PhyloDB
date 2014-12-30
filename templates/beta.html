@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block pagetitle %}
-    <title>Graph</title>
-{% endblock %}
+    <title>Graphs-beta</title>
+{% endblock pagetitle %}
 
 {% block javascript %}
     <style>
@@ -123,7 +123,6 @@
             // categorical or quantitative data
             $("#button1").change(function () {
                 button1 = $(this).val();
-                alert(button1);
                 chooseDisplay(button1);
                 chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize);
             });
@@ -204,12 +203,10 @@
             if (button1 == 1) {
                 $("#tree_metaQuant").hide();
                 $("#tree_metaCat").show();
-                $("#text-1").show();
             }
             else if (button1 == 2) {
                 $("#tree_metaCat").hide();
                 $("#tree_metaQuant").show();
-                $("#text-1").hide();
             }
         }
 
@@ -268,7 +265,7 @@
             myDict['PC2'] = PC2;
             myDict['center'] = center;
             myDict['standardize'] = standardize;
-            jsonDict = JSON.stringify(myDict);
+            var jsonDict = JSON.stringify(myDict);
 
             $.ajax({
                 url: '/getCatBetaData/',
@@ -284,24 +281,15 @@
                     var series = obj['series'];
                     var yAxis = obj['yAxis'];
                     linechart(xAxis, yAxis, series);
-                }
-            });
-            $.ajax({
-                url: '/ANOVA/',
-                type: 'GET',
-                data: {
-                    all: jsonDict,
-                    button: button2
-                },
-                success: function (data) {
-                    $('#text-1').val(data);
+                    var text = obj['text'];
+                    $('#text-1').val(text);
                 }
             });
         }
 
         function getQuantGraphData(button2, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize) {
             var array1 = [];
-            for (i in nodesQuant) {
+            for (var i = 0; i < nodesQuant.length; i++) {
                 var key1 = nodesQuant[i].data.tooltip;
                 var value1 = nodesQuant[i].data.title;
                 if (nodesQuant[i].getLevel() == 3) {
@@ -315,7 +303,12 @@
             myDict['meta'] = meta;
             myDict['taxa'] = taxaLevel;
             myDict['button'] = button2;
-            jsonDict = JSON.stringify(myDict);
+            myDict['distance'] = distance;
+            myDict['PC1'] = PC1;
+            myDict['PC2'] = PC2;
+            myDict['center'] = center;
+            myDict['standardize'] = standardize;
+            var jsonDict = JSON.stringify(myDict);
 
             $.ajax({
                 url: '/getQuantBetaData/',
@@ -331,6 +324,8 @@
                     var series = obj['series'];
                     var yAxis = obj['yAxis'];
                     linechart(xAxis, yAxis, series);
+                    var text = obj['text'];
+                    $('#text-1').val(text);
                 }
             });
         }
@@ -480,7 +475,7 @@
             <option value="9">skies</option>
         </select>
     </div>
-    <table width="100%" border="2">
+    <table width="950px" border="2">
         <tr>
             <th style="padding-right: 10px;">GraphData</th>
         </tr>
