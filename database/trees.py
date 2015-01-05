@@ -1,18 +1,19 @@
-import collections, operator, pickle, simplejson
-import pandas as pd
-import numpy as np
+import collections
+import pickle
+import operator
+import simplejson
 from django.http import HttpResponse, StreamingHttpResponse
 from django.db.models import Q
 from models import Project, Sample, Collect, Soil_class, Management, User
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
 from models import ProfileKingdom, ProfilePhyla, ProfileClass, ProfileOrder, ProfileFamily, ProfileGenus, ProfileSpecies
 from utils import multidict, catAlphaDF, quantAlphaDF, alphaTaxaDF, catBetaMetaDF, quantBetaMetaDF, betaTaxaDF
-from utils import principalComponents
-from utils import permanova_oneway, permanova_twoway
-from scipy import stats
+from utils import principalComponents, principal_coordinates_analysis
+from utils import permanova_oneway
+import pandas as pd
+import numpy as np
 from numpy import *
-from pyvttbl import Anova, Anova1way, DataFrame
-from scipy.stats import linregress
+from pyvttbl import Anova1way
 from scipy.spatial.distance import *
 
 
@@ -734,37 +735,27 @@ def getCatBetaData(request):
             fieldList.append(key)
 
         pcoaDF = finalDF.reset_index(drop=True)
-
         matrixDF = pcoaDF.drop(fieldList, axis=1)
 
         datamtx = asarray(matrixDF)
-
         numrows, numcols = shape(datamtx)
         dists = zeros((numrows, numrows))
 
-        for x in range(numrows):
-            for y in range(1, numrows):
-                try:
-                    if distance == 1:
-                        dist = braycurtis(datamtx[x], datamtx[y])
-                        dists[x, y] = dists[y, x] = dist
-                    elif distance == 2:
-                        dist = canberra(datamtx[x], datamtx[y])
-                        dists[x, y] = dists[y, x] = dist
-                    elif distance == 3:
-                        dist = dice(datamtx[x], datamtx[y])
-                        dists[x, y] = dists[y, x] = dist
-                    elif distance == 4:
-                        dist = euclidean(datamtx[x], datamtx[y])
-                        dists[x, y] = dists[y, x] = dist
-                    elif distance == 5:
-                        dist = jaccard(datamtx[x], datamtx[y])
-                        dists[x, y] = dists[y, x] = dist
-                except:
-                    dist = 0
-                    dists[x, y] = dists[y, x] = dist
-
-#        distDF = pd.DataFrame(dists, columns=sampleList, index=sampleList)
+        if distance == 1:
+            dist = pdist(datamtx, 'braycurtis')
+            dists = squareform(dist)
+        elif distance == 2:
+            dist = pdist(datamtx, 'canberra')
+            dists = squareform(dist)
+        elif distance == 3:
+            dist = pdist(datamtx, 'dice')
+            dists = squareform(dist)
+        elif distance == 4:
+            dist = pdist(datamtx, 'euclidean')
+            dists = squareform(dist)
+        elif distance == 5:
+            dist = pdist(datamtx, 'jaccard')
+            dists = squareform(dist)
 
         ### add a step here to center and standardize 'dists' ###
         dists_final = ""
@@ -778,24 +769,21 @@ def getCatBetaData(request):
             dists_center = dists - dists.mean(1)
             dists_final = dists_center / dists_center.std(1)
 
-        pcoa = principalComponents(dists_final)
-        numaxes = len(pcoa[0])
+        point_matrix, eigvals, pcoa = principal_coordinates_analysis(dists_final)
+
+        numaxes = len(eigvals)
         axesList = []
         for i in range(numaxes):
             j = i + 1
             axesList.append('PC' + str(j))
 
-        eigenDF = pd.DataFrame(pcoa[0], columns=['EigenVectors'], index=axesList)
-        pcoaDF = pd.DataFrame(pcoa[1], columns=axesList, index=sampleList)
+        eigenDF = pd.DataFrame(eigvals, columns=['EigenVectors'], index=axesList)
+        pcoaDF = pd.DataFrame(pcoa, columns=axesList, index=sampleList)
         resultDF = metaDF.join(pcoaDF)
+        pd.set_option('display.max_rows', resultDF.shape[0], 'display.max_columns', resultDF.shape[1], 'display.width', 1000)
 
-        if len(fieldList) == 1:
-            trtList = list(finalDF[fieldList[0]].T)
-            perm_res = permanova_oneway(dists_final, trtList, 1000)
-        else:
-            subset = finalDF[fieldList]
-            trtList = [tuple(x) for x in subset.values]
-            perm_res = permanova_twoway(dists_final, trtList, 1000)
+        trtList = list(finalDF[fieldList[0]].T)
+        bigf, p = permanova_oneway(dists_final, trtList, 200)
 
         finalDict = {}
         seriesList = []
@@ -804,7 +792,6 @@ def getCatBetaData(request):
         for field in fieldList:
             grouped = resultDF.groupby(field)
             for name, group in grouped:
-                dataList = []
                 dataList = group[[PC1, PC2]].values.tolist()
 
                 seriesDict = {}
@@ -826,7 +813,21 @@ def getCatBetaData(request):
 
         result = ""
         result = result + '===============================================\n'
-        result = result + 'Taxa level: ' + str(taxaLevel) + '\n'
+        if taxaLevel == 1:
+            result = result + 'Taxa level: Kingdom' + '\n'
+        elif taxaLevel == 2:
+            result = result + 'Taxa level: Phyla' + '\n'
+        elif taxaLevel == 3:
+            result = result + 'Taxa level: Class' + '\n'
+        elif taxaLevel == 4:
+            result = result + 'Taxa level: Order' + '\n'
+        elif taxaLevel == 5:
+            result = result + 'Taxa level: Family' + '\n'
+        elif taxaLevel == 6:
+            result = result + 'Taxa level: Genus' + '\n'
+        elif taxaLevel == 7:
+            result = result + 'Taxa level: Species' + '\n'
+
         if button == 1:
             result = result + 'Dependent Variable: Sequence Reads' + '\n'
         elif button == 2:
@@ -835,7 +836,9 @@ def getCatBetaData(request):
             result = result + 'Dependent Variable: Species Richness' + '\n'
         elif button == 4:
             result = result + 'Dependent Variable: Shannon Diversity' + '\n'
-        result = result + 'Independent Variable: ' + str(fieldList) + '\n'
+
+        result = result + 'Independent Variable: ' + str(fieldList[0]) + '\n'
+
         if distance == 1:
             result = result + 'Distance score: Bray-Curtis' + '\n'
         elif distance == 2:
@@ -846,11 +849,15 @@ def getCatBetaData(request):
             result = result + 'Distance score: Euclidean' + '\n'
         elif distance == 5:
             result = result + 'Distance score: Jaccard' + '\n'
+
         result = result + '===============================================\n'
-        result = result + str(perm_res) + '\n'
+        result = result + 'perMANOVA results' + '\n'
+        result = result + 'f-value: ' + str(bigf) + '\n'
+        result = result + 'p-value: ' + str(p) + '\n'
         result = result + '===============================================\n'
         result = result + str(eigenDF) + '\n'
         result = result + '===============================================\n'
+
         result = result + str(resultDF) + '\n'
         result = result + '\n\n\n\n'
 
@@ -930,7 +937,6 @@ def getQuantBetaData(request):
         taxa = taxaFinalDF.reset_index(drop=True).T
         metaDF.set_index('sampleid', drop=True, inplace=True)
         finalDF = taxa.join(metaDF)
-
         fieldList = []
         for key, value in metaDict.items():
             fieldList.append(value)
@@ -939,33 +945,24 @@ def getQuantBetaData(request):
         matrixDF = pcoaDF.drop(fieldList, axis=1)
 
         datamtx = asarray(matrixDF)
-
         numrows, numcols = shape(datamtx)
         dists = zeros((numrows, numrows))
 
-        for x in range(numrows):
-            for y in range(1, numrows):
-                try:
-                    if distance == 1:
-                        dist = braycurtis(datamtx[x], datamtx[y])
-                        dists[x, y] = dists[y, x] = dist
-                    elif distance == 2:
-                        dist = canberra(datamtx[x], datamtx[y])
-                        dists[x, y] = dists[y, x] = dist
-                    elif distance == 3:
-                        dist = dice(datamtx[x], datamtx[y])
-                        dists[x, y] = dists[y, x] = dist
-                    elif distance == 4:
-                        dist = euclidean(datamtx[x], datamtx[y])
-                        dists[x, y] = dists[y, x] = dist
-                    elif distance == 5:
-                        dist = jaccard(datamtx[x], datamtx[y])
-                        dists[x, y] = dists[y, x] = dist
-                except:
-                    dist = 0
-                    dists[x, y] = dists[y, x] = dist
-
-        distDF = pd.DataFrame(dists, columns=sampleList, index=sampleList)
+        if distance == 1:
+            dist = pdist(datamtx, 'braycurtis')
+            dists = squareform(dist)
+        elif distance == 2:
+            dist = pdist(datamtx, 'canberra')
+            dists = squareform(dist)
+        elif distance == 3:
+            dist = pdist(datamtx, 'dice')
+            dists = squareform(dist)
+        elif distance == 4:
+            dist = pdist(datamtx, 'euclidean')
+            dists = squareform(dist)
+        elif distance == 5:
+            dist = pdist(datamtx, 'jaccard')
+            dists = squareform(dist)
 
         dists_final = ""
         if centered == 0 and standardize == 0:
@@ -978,16 +975,18 @@ def getQuantBetaData(request):
             dists_center = dists - dists.mean(1)
             dists_final = dists_center / dists_center.std(1)
 
-        pcoa = principalComponents(dists_final)
-        numaxes = len(pcoa[0])
+        point_matrix, eigvals, pcoa = principal_coordinates_analysis(dists_final)
+
+        numaxes = len(eigvals)
         axesList = []
         for i in range(numaxes):
             j = i + 1
             axesList.append('PC' + str(j))
 
-        eigenDF = pd.DataFrame(pcoa[0], columns=['EigenVectors'], index=axesList)
-        pcoaDF = pd.DataFrame(pcoa[1], columns=axesList, index=sampleList)
+        eigenDF = pd.DataFrame(eigvals, columns=['EigenVectors'], index=axesList)
+        pcoaDF = pd.DataFrame(pcoa, columns=axesList, index=sampleList)
         resultDF = metaDF.join(pcoaDF)
+        pd.set_option('display.max_rows', resultDF.shape[0], 'display.max_columns', resultDF.shape[1], 'display.width', 1000)
 
         finalDict = {}
         seriesList = []
@@ -1014,7 +1013,21 @@ def getQuantBetaData(request):
 
         result = ""
         result = result + '===============================================\n'
-        result = result + 'Taxa level: ' + str(taxaLevel) + '\n'
+        if taxaLevel == 1:
+            result = result + 'Taxa level: Kingdom' + '\n'
+        elif taxaLevel == 2:
+            result = result + 'Taxa level: Phyla' + '\n'
+        elif taxaLevel == 3:
+            result = result + 'Taxa level: Class' + '\n'
+        elif taxaLevel == 4:
+            result = result + 'Taxa level: Order' + '\n'
+        elif taxaLevel == 5:
+            result = result + 'Taxa level: Family' + '\n'
+        elif taxaLevel == 6:
+            result = result + 'Taxa level: Genus' + '\n'
+        elif taxaLevel == 7:
+            result = result + 'Taxa level: Species' + '\n'
+
         if button == 1:
             result = result + 'Dependent Variable: Sequence Reads' + '\n'
         elif button == 2:
@@ -1023,7 +1036,9 @@ def getQuantBetaData(request):
             result = result + 'Dependent Variable: Species Richness' + '\n'
         elif button == 4:
             result = result + 'Dependent Variable: Shannon Diversity' + '\n'
-        result = result + 'Independent Variable: ' + str(fieldList) + '\n'
+
+        result = result + 'Independent Variable: ' + str(fieldList[0]) + '\n'
+
         if distance == 1:
             result = result + 'Distance score: Bray-Curtis' + '\n'
         elif distance == 2:
@@ -1034,13 +1049,14 @@ def getQuantBetaData(request):
             result = result + 'Distance score: Euclidean' + '\n'
         elif distance == 5:
             result = result + 'Distance score: Jaccard' + '\n'
+
         result = result + '===============================================\n'
         result = result + str(eigenDF) + '\n'
+
         result = result + '===============================================\n'
         result = result + str(resultDF) + '\n'
         result = result + '\n\n\n\n'
 
-        print result
         finalDict['text'] = result
 
         res = simplejson.dumps(finalDict)

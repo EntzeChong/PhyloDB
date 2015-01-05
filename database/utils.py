@@ -1,9 +1,9 @@
 import operator
 import os
-import pickle
 import pandas as pd
 import numpy as np
-from numpy import asarray, shape, zeros
+from numpy import asarray, shape, zeros, sum, sqrt, argsort, newaxis
+from numpy.linalg import eigh
 import shutil
 from collections import defaultdict
 from django.db.models import Q
@@ -840,66 +840,52 @@ def permanova_oneway(dm, levels, permutations=200):
         f = f_oneway(dm, shuffledlevels)
         if f >= bigf:
             above += 1
-    p = float(above/float(permutations))
+    p = above/float(permutations)
     return bigf, p
 
 
 def f_oneway(dm, levels):
-    bign = float(len(levels))
+    bign = len(levels)
     dm = np.asarray(dm)
     a = len(set(levels))
-    n = float(bign/a)
-    sst = np.sum(stats.ss(r) for r in (s[n+1:] for n, s in enumerate(dm[:-1])))/bign
-    ssw = np.sum((dm[i][j]**2 for i, j in product(xrange(len(dm)), xrange(1, len(dm))) if i < j and levels[i] == levels[j]))/n
+    n = bign/a
+    assert dm.shape == (bign, bign)
+    sst = np.sum(stats.ss(r) for r in (s[n+1:] for n, s in enumerate(dm[:-1])))/float(bign)
+    ssw = np.sum((dm[i][j]**2 for i, j in product(xrange(len(dm)), xrange(1, len(dm))) if i < j and levels[i] == levels[j]))/float(n)
     ssa = sst - ssw
     fstat = (ssa/float(a-1))/(ssw/float(bign-a))
     return fstat
 
 
-def permanova_twoway(dm, levels, permutations=200):
-    bigf_i, bigf_a, bigf_b = f_twoway(dm, levels)
-    above_i = above_a = above_b = 0
-    shuffledlevels = list(levels)
-
-    a_levels = list([l[0] for l in levels])
-    b_levels = list([l[1] for l in levels])
-
-    for i in xrange(permutations):
-        r.shuffle(shuffledlevels)
-        f_i, f_a, f_b = f_twoway(dm,shuffledlevels)
-        if f_i > bigf_i:
-            above_i += 1
-    for i in xrange(permutations):
-        r.shuffle(a_levels)
-        f_i, f_a, f_b = f_twoway(dm,zip(a_levels, [l[1] for l in levels]))
-        if f_a > bigf_a:
-            above_a += 1
-    for i in xrange(permutations):
-        r.shuffle(b_levels)
-        f_i, f_a, f_b = f_twoway(dm, zip([l[0] for l in levels], b_levels))
-        if f_b > bigf_b:
-            above_b += 1
-    p_i, p_a, p_b = [above/float(permutations) for above in [above_i, above_a, above_b]]
-    return bigf_a, float(p_a), bigf_b, float(p_b), bigf_i, float(p_i)
+def principal_coordinates_analysis(distance_matrix):
+    E_matrix = make_E_matrix(distance_matrix)
+    F_matrix = make_F_matrix(E_matrix)
+    eigvals, eigvecs = run_eig(F_matrix)
+    eigvals = eigvals.real
+    eigvecs = eigvecs.real
+    point_matrix = get_principal_coordinates(eigvals, eigvecs)
+    return point_matrix, eigvals, eigvecs
 
 
-def f_twoway(dm, levels):
-    bign = len(levels)
-    dm = np.asarray(dm)
-    l = len(set(levels))
-    a = len(set([l[0] for l in levels]))
-    b = len(set([l[1] for l in levels]))
-    n = bign/float(a*b)
+def make_E_matrix(dist_matrix):
+    return (dist_matrix * dist_matrix) / -2.0
 
-    sst = stats.ss(chain(*(r[i+1:] for i,r in enumerate(dm))))/float(bign)
-    ssr = select_ss(dm, levels, lambda a,b: a==b)/float(n)
-    sswa = select_ss(dm, levels, lambda a,b: a[0] == b[0])/float(b*n)
-    sswb = select_ss(dm, levels, lambda a,b: a[1] == b[1])/float(a*n)
-    ssa = sst - sswa
-    ssb = sst - sswb
-    ssab = sst - ssa - ssb - ssr
 
-    f_interaction = float((ssab/float((a-1)*(b-1)))/(ssr/float(bign - a*b)))
-    f_a = float((ssa/float((a-1)))/(ssr/float(bign - a*b)))
-    f_b = float((ssb/float((b-1)))/(ssr/float(bign - a*b)))
-    return (f_interaction, f_a, f_b)
+def make_F_matrix(E_matrix):
+    column_means = np.mean(E_matrix, axis=1, dtype=np.float64)
+    row_means = np.mean(E_matrix, axis=0, dtype=np.float64)
+    matrix_mean = np.mean(E_matrix, dtype=np.float64)
+
+    E_matrix -= row_means
+    E_matrix -= column_means
+    E_matrix += matrix_mean
+    return E_matrix
+
+
+def run_eig(F_matrix):
+    eigvals, eigvecs = eigh(F_matrix)
+    return eigvals, eigvecs.transpose()
+
+
+def get_principal_coordinates(eigvals, eigvecs):
+    return eigvecs * sqrt(abs(eigvals))[:, newaxis]

@@ -15,6 +15,10 @@ def home(request):
     return render_to_response('home.html')
 
 
+def instructions(request):
+    return render_to_response('instructions.html')
+
+
 def upload(request):
     if request.method == 'POST' and 'Upload' in request.POST:
         form1 = UploadForm1(request.POST, request.FILES)

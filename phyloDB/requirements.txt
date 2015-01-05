@@ -1,0 +1,7 @@
+cogent
+django
+numpy
+pandas
+pyvttbl
+scipy
+simplejson

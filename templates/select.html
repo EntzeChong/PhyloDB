@@ -6,6 +6,8 @@
 
 {% block javascript %}
     <script type="text/javascript">
+        var selNodes = "", selKeys = "";
+
         $(function () {
 
             $('#projectTable').DataTable();
@@ -39,13 +41,15 @@
                             node.select(true);
                         });
                     }
-                    updateNodes();
+
+                    selNodes = node.tree.getSelectedNodes();
+                    selKeys = $.map(selNodes, function (node) {
+                        return node.data.id;
+                    });
+
+                    updateNodes(selKeys);
                 }
             });
-
-            //$("#tree").click(function () {
-            //    updateNodes();
-            //});
 
             $("input[name$='tables']").click(function() {
                 var test = $(this).val();
@@ -58,12 +62,11 @@
                 $("#tree").dynatree("getRoot").visit(function (node) {
                     node.select(false);
                 });
-                updateNodes();
+                updateNodes(selKeys);
             });
 
             $("#submit").click(function () {
-
-                jsonDict = JSON.stringify(selKeys);
+                var jsonDict = JSON.stringify(selKeys);
                 $.ajax({
                     type: 'GET',
                     url: '/cookie/',
@@ -76,12 +79,7 @@
                 });
             });
 
-        var selNodes = "", selKeys = "";
-        function updateNodes() {
-            selNodes = $("#tree").dynatree("getSelectedNodes");
-            selKeys = $.map(selNodes, function (node) {
-                return node.data.id;
-            });
+        function updateNodes(selKeys) {
             updateProjectTable(selKeys);
             updateSampleTable(selKeys);
             updateCollectTable(selKeys);
@@ -92,254 +90,256 @@
             updateMicrobeTable(selKeys);
             updateUsrTable(selKeys);
         }
-        }); // document ready function
 
-    function updateProjectTable(selKeys) {
-        var table = $('#projectTable').DataTable();
-        table.rows().remove().draw();
-        $.each(selKeys, function (index, value) {
-            {% for project in projects %}
-                {% for sample in project.sample_set.all %}
-                    var id = "{{ sample.sampleid }}";
-                    if (id == value) {
-                         table.row.add([
-                            "{{ project.project_name }}",
-                            "{{ sample.sample_name }}",
-                            "{{ project.project_desc }}",
-                            "{{ project.start_date }}",
-                            "{{ project.end_date }}",
-                            "{{ project.pi_last }}",
-                            "{{ project.pi_first }}",
-                            "{{ project.pi_affiliation }}",
-                            "{{ project.pi_email }}",
-                            "{{ project.pi_phone }}"
-                         ]).draw();
-                    }
-                {% endfor %}
-            {% endfor %}
-        });
-    }
-
-    function updateSampleTable(selKeys) {
-        var table = $('#sampleTable').DataTable();
-        table.rows().remove().draw();
-        $.each(selKeys, function (index, value) {
-            {% for project in projects %}
-                {% for sample in project.sample_set.all %}
-                    var id = "{{ sample.sampleid }}";
-                    if (id == value) {
-                         table.row.add([
-                            "{{ project.project_name }}",
-                            "{{ sample.sample_name }}",
-                            "{{ sample.organism }}",
-                            "{{ sample.title }}",
-                            "{{ sample.seq_method }}",
-                            "{{ sample.collection_date }}",
-                            "{{ sample.biome }}",
-                            "{{ sample.feature }}",
-                            "{{ sample.geo_loc }}",
-                            "{{ sample.material }}",
-                            "{{ sample.lat_lon }}",
-                            "{{ sample.elevation }}"
-                         ]).draw();
-                    }
-                {% endfor %}
-            {% endfor %}
-        });
-    }
-
-    function updateCollectTable(selKeys) {
-        var table = $('#collectTable').DataTable();
-        table.rows().remove().draw();
-        $.each(selKeys, function (index, value) {
+        function updateProjectTable(selKeys) {
+            var table = $('#projectTable').DataTable();
+            table.rows().remove().draw();
+            $.each(selKeys, function (index, value) {
                 {% for project in projects %}
-                    {% for collect in project.collect_set.all %}
-                        var id = "{{ collect.sampleid_id }}";
+                    {% for sample in project.sample_set.all %}
+                        var id = "{{ sample.sampleid }}";
                         if (id == value) {
                              table.row.add([
                                 "{{ project.project_name }}",
-                                "{{ collect.sampleid.sample_name }}",
-                                "{{ collect.depth }}",
-                                "{{ collect.pool_dna_extracts }}",
-                                "{{ collect.samp_size }}",
-                                "{{ collect.samp_collection_device }}",
-                                "{{ collect.samp_weight_dna_ext }}",
-                                "{{ collect.sieving }}",
-                                "{{ collect.storage_cond }}"
+                                "{{ sample.sample_name }}",
+                                "{{ project.project_desc }}",
+                                "{{ project.start_date }}",
+                                "{{ project.end_date }}",
+                                "{{ project.pi_last }}",
+                                "{{ project.pi_first }}",
+                                "{{ project.pi_affiliation }}",
+                                "{{ project.pi_email }}",
+                                "{{ project.pi_phone }}"
                              ]).draw();
                         }
                     {% endfor %}
                 {% endfor %}
-        });
-    }
+            });
+        }
 
-    function updateClimateTable(selKeys) {
-        var table = $('#climateTable').DataTable();
-        table.rows().remove().draw();
-        $.each(selKeys, function (index, value) {
+        function updateSampleTable(selKeys) {
+            var table = $('#sampleTable').DataTable();
+            table.rows().remove().draw();
+            $.each(selKeys, function (index, value) {
                 {% for project in projects %}
-                    {% for collect in project.climate_set.all %}
-                        var id = "{{ collect.sampleid_id }}";
+                    {% for sample in project.sample_set.all %}
+                        var id = "{{ sample.sampleid }}";
                         if (id == value) {
                              table.row.add([
                                 "{{ project.project_name }}",
-                                "{{ collect.sampleid.sample_name }}",
-                                "{{ collect.annual_season_precpt }}",
-                                "{{ collect.annual_season_temp }}"
+                                "{{ sample.sampleid }}",
+                                 "{{ sample.sample_name }}",
+                                "{{ sample.organism }}",
+                                "{{ sample.title }}",
+                                "{{ sample.seq_method }}",
+                                "{{ sample.collection_date }}",
+                                "{{ sample.biome }}",
+                                "{{ sample.feature }}",
+                                "{{ sample.geo_loc }}",
+                                "{{ sample.material }}",
+                                "{{ sample.lat_lon }}",
+                                "{{ sample.elevation }}"
                              ]).draw();
                         }
                     {% endfor %}
                 {% endfor %}
-        });
-    }
+            });
+        }
 
-    function updateSoilClassTable(selKeys) {
-        var table = $('#soil_classTable').DataTable();
-        table.rows().remove().draw();
-        $.each(selKeys, function (index, value) {
-                {% for project in projects %}
-                    {% for collect in project.soil_class_set.all %}
-                        var id = "{{ collect.sampleid_id }}";
-                        if (id == value) {
-                             table.row.add([
-                                "{{ project.project_name }}",
-                                "{{ collect.sampleid.sample_name }}",
-                                "{{ collect.bulk_density }}",
-                                "{{ collect.drainage_class }}",
-                                "{{ collect.fao_class }}",
-                                "{{ collect.horizon }}",
-                                "{{ collect.local_class }}",
-                                "{{ collect.porosity }}",
-                                "{{ collect.profile_position }}",
-                                "{{ collect.slope_aspect }}",
-                                "{{ collect.slope_gradient }}",
-                                "{{ collect.soil_type }}",
-                                "{{ collect.texture_class }}",
-                                "{{ collect.water_content_soil }}"
-                             ]).draw();
-                        }
+        function updateCollectTable(selKeys) {
+            var table = $('#collectTable').DataTable();
+            table.rows().remove().draw();
+            $.each(selKeys, function (index, value) {
+                    {% for project in projects %}
+                        {% for collect in project.collect_set.all %}
+                            var id = "{{ collect.sampleid_id }}";
+                            if (id == value) {
+                                 table.row.add([
+                                    "{{ project.project_name }}",
+                                    "{{ collect.sampleid.sample_name }}",
+                                    "{{ collect.depth }}",
+                                    "{{ collect.pool_dna_extracts }}",
+                                    "{{ collect.samp_size }}",
+                                    "{{ collect.samp_collection_device }}",
+                                    "{{ collect.samp_weight_dna_ext }}",
+                                    "{{ collect.sieving }}",
+                                    "{{ collect.storage_cond }}"
+                                 ]).draw();
+                            }
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
-        });
-    }
+            });
+        }
 
-    function updateSoilNutrTable(selKeys) {
-        var table = $('#soil_nutrTable').DataTable();
-        table.rows().remove().draw();
-        $.each(selKeys, function (index, value) {
-                {% for project in projects %}
-                    {% for collect in project.soil_nutrient_set.all %}
-                        var id = "{{ collect.sampleid_id }}";
-                        if (id == value) {
-                             table.row.add([
-                                "{{ project.project_name }}",
-                                "{{ collect.sampleid.sample_name }}",
-                                "{{ collect.pH }}",
-                                "{{ collect.EC }}",
-                                "{{ collect.tot_C }}",
-                                "{{ collect.tot_OM }}",
-                                "{{ collect.tot_N }}",
-                                "{{ collect.NO3_N }}",
-                                "{{ collect.NH4_N }}",
-                                "{{ collect.P }}",
-                                "{{ collect.K }}",
-                                "{{ collect.S }}",
-                                "{{ collect.Zn }}",
-                                "{{ collect.Fe }}",
-                                "{{ collect.Cu }}",
-                                "{{ collect.Mn }}",
-                                "{{ collect.Ca }}",
-                                "{{ collect.Mg }}",
-                                "{{ collect.Na }}",
-                                "{{ collect.B }}"
-                             ]).draw();
-                        }
+        function updateClimateTable(selKeys) {
+            var table = $('#climateTable').DataTable();
+            table.rows().remove().draw();
+            $.each(selKeys, function (index, value) {
+                    {% for project in projects %}
+                        {% for collect in project.climate_set.all %}
+                            var id = "{{ collect.sampleid_id }}";
+                            if (id == value) {
+                                 table.row.add([
+                                    "{{ project.project_name }}",
+                                    "{{ collect.sampleid.sample_name }}",
+                                    "{{ collect.annual_season_precpt }}",
+                                    "{{ collect.annual_season_temp }}"
+                                 ]).draw();
+                            }
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
-        });
-    }
+            });
+        }
 
-    function updateMgtTable(selKeys) {
-        var table = $('#mgtTable').DataTable();
-        table.rows().remove().draw();
-        $.each(selKeys, function (index, value) {
-                {% for project in projects %}
-                    {% for collect in project.management_set.all %}
-                        var id = "{{ collect.sampleid_id }}";
-                        if (id == value) {
-                             table.row.add([
-                                "{{ project.project_name }}",
-                                "{{ collect.sampleid.sample_name }}",
-                                "{{ collect.agrochem_addition }}",
-                                "{{ collect.biological_amendment }}",
-                                "{{ collect.cover_crop }}",
-                                "{{ collect.crop_rotation }}",
-                                "{{ collect.cur_land_use }}",
-                                "{{ collect.cur_vegetation }}",
-                                "{{ collect.cur_crop }}",
-                                "{{ collect.cur_cultivar }}",
-                                "{{ collect.organic }}",
-                                "{{ collect.previous_land_use }}",
-                                "{{ collect.soil_amendments }}",
-                                "{{ collect.tillage }}"
-                             ]).draw();
-                        }
+        function updateSoilClassTable(selKeys) {
+            var table = $('#soil_classTable').DataTable();
+            table.rows().remove().draw();
+            $.each(selKeys, function (index, value) {
+                    {% for project in projects %}
+                        {% for collect in project.soil_class_set.all %}
+                            var id = "{{ collect.sampleid_id }}";
+                            if (id == value) {
+                                 table.row.add([
+                                    "{{ project.project_name }}",
+                                    "{{ collect.sampleid.sample_name }}",
+                                    "{{ collect.bulk_density }}",
+                                    "{{ collect.drainage_class }}",
+                                    "{{ collect.fao_class }}",
+                                    "{{ collect.horizon }}",
+                                    "{{ collect.local_class }}",
+                                    "{{ collect.porosity }}",
+                                    "{{ collect.profile_position }}",
+                                    "{{ collect.slope_aspect }}",
+                                    "{{ collect.slope_gradient }}",
+                                    "{{ collect.soil_type }}",
+                                    "{{ collect.texture_class }}",
+                                    "{{ collect.water_content_soil }}"
+                                 ]).draw();
+                            }
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
-        });
-    }
+            });
+        }
 
-    function updateMicrobeTable(selKeys) {
-        var table = $('#microbeTable').DataTable();
-        table.rows().remove().draw();
-        $.each(selKeys, function (index, value) {
-                {% for project in projects %}
-                    {% for collect in project.microbial_set.all %}
-                        var id = "{{ collect.sampleid_id }}";
-                        if (id == value) {
-                             table.row.add([
-                                "{{ project.project_name }}",
-                                "{{ collect.sampleid.sample_name }}",
-                                "{{ collect.rRNA_copies }}",
-                                "{{ collect.microbial_biomass_C }}",
-                                "{{ collect.microbial_biomass_N }}",
-                                "{{ collect.microbial_respiration }}"
-                             ]).draw();
-                        }
+        function updateSoilNutrTable(selKeys) {
+            var table = $('#soil_nutrTable').DataTable();
+            table.rows().remove().draw();
+            $.each(selKeys, function (index, value) {
+                    {% for project in projects %}
+                        {% for collect in project.soil_nutrient_set.all %}
+                            var id = "{{ collect.sampleid_id }}";
+                            if (id == value) {
+                                 table.row.add([
+                                    "{{ project.project_name }}",
+                                    "{{ collect.sampleid.sample_name }}",
+                                    "{{ collect.pH }}",
+                                    "{{ collect.EC }}",
+                                    "{{ collect.tot_C }}",
+                                    "{{ collect.tot_OM }}",
+                                    "{{ collect.tot_N }}",
+                                    "{{ collect.NO3_N }}",
+                                    "{{ collect.NH4_N }}",
+                                    "{{ collect.P }}",
+                                    "{{ collect.K }}",
+                                    "{{ collect.S }}",
+                                    "{{ collect.Zn }}",
+                                    "{{ collect.Fe }}",
+                                    "{{ collect.Cu }}",
+                                    "{{ collect.Mn }}",
+                                    "{{ collect.Ca }}",
+                                    "{{ collect.Mg }}",
+                                    "{{ collect.Na }}",
+                                    "{{ collect.B }}"
+                                 ]).draw();
+                            }
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
-        });
-    }
+            });
+        }
 
-    function updateUsrTable(selKeys) {
-        var table = $('#usrTable').DataTable();
-        table.rows().remove().draw();
-        $.each(selKeys, function (index, value) {
-                {% for project in projects %}
-                    {% for collect in project.user_set.all %}
-                        var id = "{{ collect.sampleid_id }}";
-                        if (id == value) {
-                             table.row.add([
-                                "{{ project.project_name }}",
-                                "{{ collect.sampleid.sample_name }}",
-                                "{{ collect.usr_cat1 }}",
-                                "{{ collect.usr_cat2 }}",
-                                "{{ collect.usr_cat3 }}",
-                                "{{ collect.usr_cat4 }}",
-                                "{{ collect.usr_cat5 }}",
-                                "{{ collect.usr_cat6 }}",
-                                "{{ collect.usr_quant1 }}",
-                                "{{ collect.usr_quant2 }}",
-                                "{{ collect.usr_quant3 }}",
-                                "{{ collect.usr_quant4 }}",
-                                "{{ collect.usr_quant5 }}",
-                                "{{ collect.usr_quant6 }}"
-                             ]).draw();
-                        }
+        function updateMgtTable(selKeys) {
+            var table = $('#mgtTable').DataTable();
+            table.rows().remove().draw();
+            $.each(selKeys, function (index, value) {
+                    {% for project in projects %}
+                        {% for collect in project.management_set.all %}
+                            var id = "{{ collect.sampleid_id }}";
+                            if (id == value) {
+                                 table.row.add([
+                                    "{{ project.project_name }}",
+                                    "{{ collect.sampleid.sample_name }}",
+                                    "{{ collect.agrochem_addition }}",
+                                    "{{ collect.biological_amendment }}",
+                                    "{{ collect.cover_crop }}",
+                                    "{{ collect.crop_rotation }}",
+                                    "{{ collect.cur_land_use }}",
+                                    "{{ collect.cur_vegetation }}",
+                                    "{{ collect.cur_crop }}",
+                                    "{{ collect.cur_cultivar }}",
+                                    "{{ collect.organic }}",
+                                    "{{ collect.previous_land_use }}",
+                                    "{{ collect.soil_amendments }}",
+                                    "{{ collect.tillage }}"
+                                 ]).draw();
+                            }
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
-        });
-    }
+            });
+        }
+
+        function updateMicrobeTable(selKeys) {
+            var table = $('#microbeTable').DataTable();
+            table.rows().remove().draw();
+            $.each(selKeys, function (index, value) {
+                    {% for project in projects %}
+                        {% for collect in project.microbial_set.all %}
+                            var id = "{{ collect.sampleid_id }}";
+                            if (id == value) {
+                                 table.row.add([
+                                    "{{ project.project_name }}",
+                                    "{{ collect.sampleid.sample_name }}",
+                                    "{{ collect.rRNA_copies }}",
+                                    "{{ collect.microbial_biomass_C }}",
+                                    "{{ collect.microbial_biomass_N }}",
+                                    "{{ collect.microbial_respiration }}"
+                                 ]).draw();
+                            }
+                        {% endfor %}
+                    {% endfor %}
+            });
+        }
+
+        function updateUsrTable(selKeys) {
+            var table = $('#usrTable').DataTable();
+            table.rows().remove().draw();
+            $.each(selKeys, function (index, value) {
+                    {% for project in projects %}
+                        {% for collect in project.user_set.all %}
+                            var id = "{{ collect.sampleid_id }}";
+                            if (id == value) {
+                                 table.row.add([
+                                    "{{ project.project_name }}",
+                                    "{{ collect.sampleid.sample_name }}",
+                                    "{{ collect.usr_cat1 }}",
+                                    "{{ collect.usr_cat2 }}",
+                                    "{{ collect.usr_cat3 }}",
+                                    "{{ collect.usr_cat4 }}",
+                                    "{{ collect.usr_cat5 }}",
+                                    "{{ collect.usr_cat6 }}",
+                                    "{{ collect.usr_quant1 }}",
+                                    "{{ collect.usr_quant2 }}",
+                                    "{{ collect.usr_quant3 }}",
+                                    "{{ collect.usr_quant4 }}",
+                                    "{{ collect.usr_quant5 }}",
+                                    "{{ collect.usr_quant6 }}"
+                                 ]).draw();
+                            }
+                        {% endfor %}
+                    {% endfor %}
+            });
+        }
+    }); // document ready function
+
     </script>
 {% endblock javascript %}
 
@@ -398,6 +398,7 @@
                 <thead>
                     <tr>
                         <th>Project Name</th>
+                        <th>Sample ID</th>
                         <th>Sample Name</th>
                         <th>Organism</th>
                         <th>Title</th>

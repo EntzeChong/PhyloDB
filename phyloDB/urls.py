@@ -4,6 +4,7 @@ from django.conf.urls import *
 urlpatterns = patterns('',
 
     url(r'^home/$', 'database.views.home', name='home'),
+    url(r'^instructions/$', 'database.views.instructions', name='instructions'),
     url(r'^upload/$', 'database.views.upload', name='upload'),
     url(r'^select/$', 'database.views.select', name='select'),
     url(r'^alpha_graphs/$', 'database.views.alpha_diversity', name='alpha'),
@@ -26,6 +27,7 @@ urlpatterns = patterns('',
     url(r'^getCatBetaData', 'database.trees.getCatBetaData', name='getCatBetaData'),
     url(r'^getQuantBetaData', 'database.trees.getQuantBetaData', name='getQuantBetaData'),
 
+    #url(r'^project', '..samples/Project/csv', name='project')
 )
 
 

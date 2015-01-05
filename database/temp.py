@@ -1,11 +1,53 @@
-{
-    "series": [{
-                   "regressionSettings": {
-                       "type": "linear"
-                   },
-                   "data": [[2.0, 0.260203], [4.0, 0.424837], [15.0, 0.376032], [9.0, 0.50685], [1.0, 0.439192], [11.0, 0.378694], [24.0, 0.254904], [28.0, 0.378378], [14.0, 0.39607], [19.0, 0.316781], [20.0, 0.506513], [12.0, 0.341087], [27.0, 0.329546], [6.0, 0.243907], [8.0, 0.434632], [10.0, 0.231461], [29.0, 0.440445], [3.0, 0.59891], [26.0, 0.220585], [30.0, 0.43806], [13.0, 0.353845], [22.0, 0.463916], [16.0, 0.373134], [25.0, 0.513513], [18.0, 0.365888], [23.0, 0.29075], [21.0, 0.278299], [17.0, 0.45135], [5.0, 0.170087], [7.0, 0.648148]],
-                   "regression": "true",
-                   "name": "Phyla: Proteobacteria"
-               }],
-    "xAxis": {"title": {"text": "usr_quant1"}},
-    "yAxis": {"title": {"text": "Relative Abundance"}}}
+import numpy as np
+from numpy import shape, sum, sqrt, argsort, newaxis
+from numpy.linalg import eigh
+
+
+def principal_coordinates_analysis(distance_matrix):
+    E_matrix = make_E_matrix(distance_matrix)
+    F_matrix = make_F_matrix(E_matrix)
+    eigvals, eigvecs = run_eig(F_matrix)
+    eigvals = eigvals.real
+    eigvecs = eigvecs.real
+    point_matrix = get_principal_coordinates(eigvals, eigvecs)
+    return point_matrix, eigvals, eigvecs
+
+
+def make_E_matrix(dist_matrix):
+    return (dist_matrix * dist_matrix) / -2.0
+
+
+def make_F_matrix(E_matrix):
+    num_rows, num_cols = shape(E_matrix)
+    column_means = np.mean(E_matrix, axis=0)
+    row_sums = np.sum(E_matrix, axis=1)
+    row_means = row_sums / num_cols
+    matrix_mean = sum(row_sums) / (num_rows * num_cols)
+
+    E_matrix -= row_means
+    E_matrix -= column_means
+    E_matrix += matrix_mean
+    return E_matrix
+
+
+def run_eig(F_matrix):
+    eigvals, eigvecs = eigh(F_matrix)
+    return eigvals, eigvecs.transpose()
+
+
+def get_principal_coordinates(eigvals, eigvecs):
+    return eigvecs * sqrt(abs(eigvals))[:, newaxis]
+
+
+
+u = [[0, 0.1, 0.1, 0.4, 0.5],
+     [0.1, 0, 0.3, 0.2, 0.5],
+     [0.1, 0.3, 0, 0.3, 0.5],
+     [0.4, 0.2, 0.3, 0, 0.5],
+     [0.5, 0.5, 0.5, 0.5, 0]]
+
+mtx = np.asmatrix(u)
+point_matrix, eigvals, eigvecs = principal_coordinates_analysis(mtx)
+print 'matrix\n', point_matrix
+print 'eigvals\n', eigvals
+print 'eigvecs\n', eigvecs
