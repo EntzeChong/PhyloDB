@@ -5,24 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f5def0b1-44de-4e55-9c23-a7de3aa1fb18" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/samples/Project.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/samples/Sample.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/samples/final.shared" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/samples/final.taxonomy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/phyloDB/requirements.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dbMicrobe" afterPath="$PROJECT_DIR$/dbMicrobe" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/alpha.html" afterPath="$PROJECT_DIR$/templates/alpha.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/base.html" afterPath="$PROJECT_DIR$/templates/base.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/beta.html" afterPath="$PROJECT_DIR$/templates/beta.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/home.html" afterPath="$PROJECT_DIR$/templates/home.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/media/css/new_style.css" afterPath="$PROJECT_DIR$/media/css/new_style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/phyloDB.iml" afterPath="$PROJECT_DIR$/.idea/phyloDB.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/select.html" afterPath="$PROJECT_DIR$/templates/select.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/temp.py" afterPath="$PROJECT_DIR$/database/temp.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/trees.py" afterPath="$PROJECT_DIR$/database/trees.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phyloDB/urls.py" afterPath="$PROJECT_DIR$/phyloDB/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/utils.py" afterPath="$PROJECT_DIR$/database/utils.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/views.py" afterPath="$PROJECT_DIR$/database/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="PhyloDB.iws" />
@@ -35,9 +23,9 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/phyloDB$parsers.coverage" NAME="parsers Coverage Results" MODIFIED="1414389352709" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/database" />
-    <SUITE FILE_PATH="coverage/phyloDB$urls.coverage" NAME="urls Coverage Results" MODIFIED="1406770963692" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/phyloDB" />
     <SUITE FILE_PATH="coverage/phyloDB$temp.coverage" NAME="temp Coverage Results" MODIFIED="1420327932159" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/database" />
+    <SUITE FILE_PATH="coverage/phyloDB$urls.coverage" NAME="urls Coverage Results" MODIFIED="1406770963692" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/phyloDB" />
+    <SUITE FILE_PATH="coverage/phyloDB$parsers.coverage" NAME="parsers Coverage Results" MODIFIED="1414389352709" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/database" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -54,19 +42,21 @@
       <file leaf-file-name="home.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/home.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="600" max-vertical-offset="1071">
+            <state vertical-scroll-proportion="-0.0" vertical-offset="684" max-vertical-offset="1134">
               <caret line="38" column="89" selection-start-line="38" selection-start-column="89" selection-end-line="38" selection-end-column="89" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="utils.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="utils.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/database/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="14552" max-vertical-offset="15249">
-              <caret line="856" column="0" selection-start-line="856" selection-start-column="0" selection-end-line="856" selection-end-column="0" />
-              <folding />
+            <state vertical-scroll-proportion="0.6804734" vertical-offset="14674" max-vertical-offset="15876">
+              <caret line="828" column="40" selection-start-line="828" selection-start-column="40" selection-end-line="828" selection-end-column="40" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -74,28 +64,20 @@
       <file leaf-file-name="trees.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/database/trees.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="693" max-vertical-offset="18173">
-              <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
-              <folding />
+            <state vertical-scroll-proportion="0.0" vertical-offset="16996" max-vertical-offset="18846">
+              <caret line="952" column="24" selection-start-line="952" selection-start-column="24" selection-end-line="952" selection-end-column="24" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="select.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/templates/select.html">
+      <file leaf-file-name="beta.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/beta.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.47619048" vertical-offset="952" max-vertical-offset="9707">
-              <caret line="66" column="0" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="alpha.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/alpha.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="7905" max-vertical-offset="10353">
-              <caret line="478" column="0" selection-start-line="478" selection-start-column="0" selection-end-line="478" selection-end-column="0" />
+            <state vertical-scroll-proportion="52.666668" vertical-offset="6534" max-vertical-offset="8370">
+              <caret line="284" column="0" selection-start-line="284" selection-start-column="0" selection-end-line="284" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -170,13 +152,13 @@
         <option value="$PROJECT_DIR$/templates/instructions.html" />
         <option value="$PROJECT_DIR$/phyloDB/requirements.txt" />
         <option value="$PROJECT_DIR$/database/temp.py" />
-        <option value="$PROJECT_DIR$/database/utils.py" />
         <option value="$PROJECT_DIR$/media/css/new_style.css" />
+        <option value="$PROJECT_DIR$/media/dynatree/src/jquery.dynatree.js" />
+        <option value="$PROJECT_DIR$/templates/select.html" />
+        <option value="$PROJECT_DIR$/templates/alpha.html" />
         <option value="$PROJECT_DIR$/templates/beta.html" />
         <option value="$PROJECT_DIR$/database/trees.py" />
-        <option value="$PROJECT_DIR$/media/dynatree/src/jquery.dynatree.js" />
-        <option value="$PROJECT_DIR$/templates/alpha.html" />
-        <option value="$PROJECT_DIR$/templates/select.html" />
+        <option value="$PROJECT_DIR$/database/utils.py" />
       </list>
     </option>
   </component>
@@ -185,8 +167,10 @@
     <config-path>C:\Users\daniel.manter\Documents\GitHub\phyloDB\bower.json</config-path>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="805" />
-    <option name="height" value="720" />
+    <option name="x" value="-1" />
+    <option name="y" value="304" />
+    <option name="width" value="1282" />
+    <option name="height" value="721" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -230,7 +214,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -273,47 +256,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="media" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
               <option name="myItemId" value="phyloDB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="phyloDB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="media" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dynatree" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="phyloDB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="phyloDB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="media" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dynatree" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -333,6 +276,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -458,23 +402,6 @@
       <option name="USE_KEYWORD" value="false" />
       <method />
     </configuration>
-    <configuration default="true" type="Python.AppEngineServer" factoryName="App Engine server">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="phyloDB" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="launchJavascriptDebuger" value="false" />
-      <option name="host" value="127.0.0.1" />
-      <option name="browserUrl" value="" />
-      <option name="additionalOptions" value="" />
-      <method />
-    </configuration>
     <configuration default="true" type="tests" factoryName="Nosetests">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -495,6 +422,23 @@
       <option name="USE_PATTERN" value="false" />
       <option name="PARAMS" value="" />
       <option name="USE_PARAM" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Python.AppEngineServer" factoryName="App Engine server">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="phyloDB" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="host" value="127.0.0.1" />
+      <option name="browserUrl" value="" />
+      <option name="additionalOptions" value="" />
       <method />
     </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
@@ -533,44 +477,7 @@
       <option name="CONFIGURATION_FILE" value="" />
       <method />
     </configuration>
-    <configuration default="true" type="NodeWebKit" factoryName="Node-webkit">
-      <option name="name" value="" />
-      <method />
-    </configuration>
-    <configuration default="true" type="tests" factoryName="Unittests">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="PhyloDB" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PUREUNITTEST" value="true" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
-      <method />
-    </configuration>
-    <configuration default="true" type="PyRemoteDebugConfigurationType" factoryName="Python Remote Debug">
-      <module name="" />
-      <option name="PORT" value="0" />
-      <option name="HOST" value="null" />
-      <PathMappingSettings>
-        <option name="pathMappings">
-          <list />
-        </option>
-      </PathMappingSettings>
-      <option name="REDIRECT_OUTPUT" value="true" />
-      <option name="SUSPEND_AFTER_CONNECT" value="true" />
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
       <method />
     </configuration>
     <configuration default="true" type="Python.DjangoServer" factoryName="Django server">
@@ -596,7 +503,44 @@
       <option name="customRunCommand" value="" />
       <method />
     </configuration>
-    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+    <configuration default="true" type="PyRemoteDebugConfigurationType" factoryName="Python Remote Debug">
+      <module name="" />
+      <option name="PORT" value="0" />
+      <option name="HOST" value="null" />
+      <PathMappingSettings>
+        <option name="pathMappings">
+          <list />
+        </option>
+      </PathMappingSettings>
+      <option name="REDIRECT_OUTPUT" value="true" />
+      <option name="SUSPEND_AFTER_CONNECT" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Unittests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="PhyloDB" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <option name="PUREUNITTEST" value="true" />
+      <option name="PARAMS" value="" />
+      <option name="USE_PARAM" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="NodeWebKit" factoryName="Node-webkit">
+      <option name="name" value="" />
       <method />
     </configuration>
     <configuration default="true" type="tests" factoryName="Doctests">
@@ -652,9 +596,9 @@
         <env name="PYTHONUNBUFFERED" value="1" />
         <env name="DJANGO_SETTINGS_MODULE" value="phyloDB.settings" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="/usr/bin/python2.7" />
       <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="phyloDB" />
@@ -795,25 +739,25 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="805" height="720" extended-state="0" />
-    <editor active="false" />
+    <frame x="-1" y="304" width="1282" height="721" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32911393" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3132716" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32753164" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="top" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15822785" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2494382" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37980768" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19921875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38801262" sideWeight="0.5032051" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34449762" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" x="329" y="268" width="622" height="184" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4050633" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4046875" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32753164" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32911393" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39872408" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24968944" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -835,9 +779,9 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2494382" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.37980768" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24968944" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39872408" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4050633" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39872408" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24968944" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -873,6 +817,142 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/database/trees.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1062" max-vertical-offset="19242">
+          <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/select.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1188" max-vertical-offset="10278">
+          <caret line="66" column="0" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
+          <folding>
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{&quot;checkbox&quot;: true...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{&quot;url&quot;: &quot;/getProjectTree/&quot;...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{&quot;url&quot;: '/getProjectTreeChildren/'...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{&quot;type&quot;: 'GET'...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/alpha.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="8604" max-vertical-offset="10962">
+          <caret line="478" column="0" selection-start-line="478" selection-start-column="0" selection-end-line="478" selection-end-column="0" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#0;n#tr#0;n#table#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/templates/beta.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8772">
@@ -1058,20 +1138,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://C:/Python27/Lib/site-packages/pandas/core/generic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.342711" vertical-offset="23853" max-vertical-offset="65688">
-          <caret line="1436" column="27" selection-start-line="1436" selection-start-column="27" selection-end-line="1436" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Python27/Lib/site-packages/pandas/core/ops.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33168316" vertical-offset="7329" max-vertical-offset="16524">
-          <caret line="450" column="0" selection-start-line="450" selection-start-column="0" selection-end-line="450" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/media/dynatree/src/skin/icons.gif">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -1140,20 +1206,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/instructions.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="493" max-vertical-offset="765">
-          <caret line="29" column="47" selection-start-line="29" selection-start-column="47" selection-end-line="29" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/phyloDB/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="204">
-          <caret line="0" column="5" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/database/temp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="348" max-vertical-offset="952">
@@ -1176,29 +1228,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/database/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="14535" max-vertical-offset="15249">
-          <caret line="856" column="0" selection-start-line="856" selection-start-column="0" selection-end-line="856" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/trees.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="693" max-vertical-offset="18173">
-          <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/beta.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.71903324" vertical-offset="8092" max-vertical-offset="8551">
-          <caret line="490" column="8" selection-start-line="490" selection-start-column="8" selection-end-line="490" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/database/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1836" max-vertical-offset="2703">
@@ -1214,19 +1243,165 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/select.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0" vertical-offset="1188" max-vertical-offset="10278">
+          <caret line="66" column="0" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
+          <folding>
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{&quot;checkbox&quot;: true...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{&quot;url&quot;: &quot;/getProjectTree/&quot;...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{&quot;url&quot;: '/getProjectTreeChildren/'...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{&quot;type&quot;: 'GET'...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="[...]" />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1420482427758" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/templates/alpha.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="7905" max-vertical-offset="10353">
-          <caret line="478" column="0" selection-start-line="478" selection-start-column="0" selection-end-line="478" selection-end-column="0" />
+        <state vertical-scroll-proportion="-3.3333333" vertical-offset="9990" max-vertical-offset="10962">
+          <caret line="560" column="17" selection-start-line="560" selection-start-column="17" selection-end-line="560" selection-end-column="17" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#0;n#tr#0;n#table#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/beta.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="52.666668" vertical-offset="6534" max-vertical-offset="8370">
+          <caret line="284" column="0" selection-start-line="284" selection-start-column="0" selection-end-line="284" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/select.html">
+    <entry file="file://$PROJECT_DIR$/phyloDB/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.47619048" vertical-offset="952" max-vertical-offset="9707">
-          <caret line="66" column="0" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="216">
+          <caret line="0" column="5" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/trees.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="16996" max-vertical-offset="18846">
+          <caret line="952" column="24" selection-start-line="952" selection-start-column="24" selection-end-line="952" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6804734" vertical-offset="14674" max-vertical-offset="15876">
+          <caret line="828" column="40" selection-start-line="828" selection-start-column="40" selection-end-line="828" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

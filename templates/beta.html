@@ -20,7 +20,7 @@
             var chart1 = {};
             var catOptions = {}, quantOptions = {};
             var distance = 4, PC1 = 'PC1', PC2 ='PC2';
-            var center = 0, standardize = 0;
+
             // start of dynatrees
             $("#tree_metaCat").dynatree({
                 checkbox: true,
@@ -44,7 +44,7 @@
                         });
                     }
                     nodesCat = node.tree.getSelectedNodes();
-                    chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize);
+                    chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
                 }
             }); // end tree_metaCat
 
@@ -58,7 +58,7 @@
                 },
                 onSelect: function(select, node) {
                     nodesQuant = node.tree.getSelectedNodes();
-                    chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize);
+                    chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
                 }
             }); // end tree_metaQuant
 
@@ -124,64 +124,42 @@
             $("#button1").change(function () {
                 button1 = $(this).val();
                 chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize);
+                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
             });
 
             //dependent variable
             $("#button2").change(function () {
                 button2 = $(this).val();
                 chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize);
+                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
             });
 
             // get all nodes for specified taxa levels
             $("#selectall").change(function () {
                 taxaLevel = $(this).val();
                 chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize);
+                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
             });
 
             // distance score
             $("#distance").change(function () {
                 distance = $(this).val();
                 chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize);
+                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
             });
 
             // PC1
             $("#PC1").change(function () {
                 PC1 = $(this).val();
                 chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize);
+                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
             });
 
             // PC2
             $("#PC2").change(function () {
                 PC2 = $(this).val();
                 chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize);
-            });
-
-            // Center data
-            $("#center").change(function () {
-                if ( $(this).is("checked") ) {
-                    center = 1
-                } else {
-                    center = 0
-                }
-                chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize);
-            });
-
-            // Standardize data
-            $("#standardize").change(function () {
-                if ( $(this).is("checked") ) {
-                    standardize = 1
-                } else {
-                    standardize = 0
-                }
-                chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize);
+                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
             });
 
            // Clear all selected nodes
@@ -211,16 +189,16 @@
         }
 
         // select categorical or quantitative data
-        function chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize) {
+        function chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2) {
             if ((nodesCat != "") && (taxaLevel != "") && (button1 == 1)) {
                 $("#container-1").empty();
                 $("#container-1").append('Analysis is running...please be patient');
-                getCatGraphData(button2, nodesCat, taxaLevel, distance, PC1, PC2, center, standardize);
+                getCatGraphData(button2, nodesCat, taxaLevel, distance, PC1, PC2);
             }
             else if ((nodesQuant != "") && (taxaLevel != "") && (button1 == 2)) {
                 $("#container-1").empty();
                 $("#container-1").append('Analysis is running...please be patient');
-                getQuantGraphData(button2, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize);
+                getQuantGraphData(button2, nodesQuant, taxaLevel, distance, PC1, PC2);
             }
             else if ((nodesCat != "") && (taxaLevel == "") && (button1 == 1)) {
                 $("#container-1").empty();
@@ -244,7 +222,7 @@
             }
         }
 
-        function getCatGraphData(button2, nodesCat, taxaLevel, distance, PC1, PC2, center, standardize) {
+        function getCatGraphData(button2, nodesCat, taxaLevel, distance, PC1, PC2) {
             var array1 = [];
             for (i in nodesCat) {
                 var key1 = nodesCat[i].data.id;
@@ -263,8 +241,6 @@
             myDict['distance'] = distance;
             myDict['PC1'] = PC1;
             myDict['PC2'] = PC2;
-            myDict['center'] = center;
-            myDict['standardize'] = standardize;
             var jsonDict = JSON.stringify(myDict);
 
             $.ajax({
@@ -287,7 +263,7 @@
             });
         }
 
-        function getQuantGraphData(button2, nodesQuant, taxaLevel, distance, PC1, PC2, center, standardize) {
+        function getQuantGraphData(button2, nodesQuant, taxaLevel, distance, PC1, PC2) {
             var array1 = [];
             for (var i = 0; i < nodesQuant.length; i++) {
                 var key1 = nodesQuant[i].data.tooltip;
@@ -306,8 +282,6 @@
             myDict['distance'] = distance;
             myDict['PC1'] = PC1;
             myDict['PC2'] = PC2;
-            myDict['center'] = center;
-            myDict['standardize'] = standardize;
             var jsonDict = JSON.stringify(myDict);
 
             $.ajax({
@@ -436,18 +410,6 @@
                     <option value="PC5">PC5</option>
                 </select>
                 &nbsp<-- Principal component selected (y-axis)
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="white" width="5px"></td>
-            <td bgcolor="white">
-                <input type="checkbox" id="center">&nbsp<-- Center data
-            </td>
-        </tr>
-       <tr>
-            <td bgcolor="white" width="5px"></td>
-            <td bgcolor="white">
-                <input type="checkbox" id="standardize">&nbsp<-- Standardize data
             </td>
         </tr>
     </table>

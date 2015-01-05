@@ -805,17 +805,6 @@ def betaTaxaDF(metaDF, myset, taxaLevel):
     return finalDF
 
 
-def principalComponents(matrix):
-    deviationMatrix = (matrix.T - np.mean(matrix, axis=1)).T
-    covarianceMatrix = np.cov(deviationMatrix)
-    eigenvalues, principalComponents = np.linalg.eig(covarianceMatrix)
-
-    indexList = np.argsort(-eigenvalues)
-    eigenvalues = eigenvalues[indexList]
-    principalComponents = principalComponents[:, indexList]
-    return eigenvalues, principalComponents
-
-
 stats.ss = lambda l: sum(a*a for a in l)
 def above_diagonal(n):
     row = xrange(n)
@@ -830,7 +819,7 @@ def select_ss(dm, levels,  included):
     return stats.ss(distances)
 
 
-def permanova_oneway(dm, levels, permutations=200):
+def permanova_oneway(dm, levels, permutations=1000):
     bigf = f_oneway(dm, levels)
     above = below = 0
     nf = 0
@@ -857,14 +846,17 @@ def f_oneway(dm, levels):
     return fstat
 
 
-def principal_coordinates_analysis(distance_matrix):
-    E_matrix = make_E_matrix(distance_matrix)
+def PCoA(dm):
+    E_matrix = make_E_matrix(dm)
     F_matrix = make_F_matrix(E_matrix)
-    eigvals, eigvecs = run_eig(F_matrix)
-    eigvals = eigvals.real
-    eigvecs = eigvecs.real
-    point_matrix = get_principal_coordinates(eigvals, eigvecs)
-    return point_matrix, eigvals, eigvecs
+    eigvals, eigvecs = np.linalg.eigh(F_matrix)
+    negative_close_to_zero = np.isclose(eigvals, 0)
+    eigvals[negative_close_to_zero] = 0
+    idxs_descending = eigvals.argsort()[::-1]
+    eigvals = eigvals[idxs_descending]
+    eigvecs = eigvecs[:, idxs_descending]
+    eigvals, coordinates, proportion_explained = scores(eigvals, eigvecs)
+    return eigvals, coordinates, proportion_explained
 
 
 def make_E_matrix(dist_matrix):
@@ -872,20 +864,13 @@ def make_E_matrix(dist_matrix):
 
 
 def make_F_matrix(E_matrix):
-    column_means = np.mean(E_matrix, axis=1, dtype=np.float64)
-    row_means = np.mean(E_matrix, axis=0, dtype=np.float64)
-    matrix_mean = np.mean(E_matrix, dtype=np.float64)
-
-    E_matrix -= row_means
-    E_matrix -= column_means
-    E_matrix += matrix_mean
-    return E_matrix
+    col_means = E_matrix.mean(axis=1, keepdims=True, dtype=np.float64)
+    row_means = E_matrix.mean(axis=0, keepdims=True, dtype=np.float64)
+    matrix_mean = E_matrix.mean(dtype=np.float64)
+    return E_matrix - row_means - col_means + matrix_mean
 
 
-def run_eig(F_matrix):
-    eigvals, eigvecs = eigh(F_matrix)
-    return eigvals, eigvecs.transpose()
-
-
-def get_principal_coordinates(eigvals, eigvecs):
-    return eigvecs * sqrt(abs(eigvals))[:, newaxis]
+def scores(eigvals, eigvecs):
+    coordinates = eigvecs * np.sqrt(eigvals)
+    proportion_explained = eigvals / eigvals.sum()
+    return eigvals, coordinates, proportion_explained

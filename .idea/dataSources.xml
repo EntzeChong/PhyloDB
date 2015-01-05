@@ -4,7 +4,7 @@
     <data-source source="LOCAL" name="Django default" uuid="8e33788a-d82a-441a-ac24-3c5723e7627e">
       <driver-ref>sqlite.xerial</driver-ref>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\daniel.manter\Documents\GitHub\phyloDB\dbMicrobe</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/dbMicrobe</jdbc-url>
       <libraries />
     </data-source>
   </component>

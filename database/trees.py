@@ -8,8 +8,7 @@ from models import Project, Sample, Collect, Soil_class, Management, User
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
 from models import ProfileKingdom, ProfilePhyla, ProfileClass, ProfileOrder, ProfileFamily, ProfileGenus, ProfileSpecies
 from utils import multidict, catAlphaDF, quantAlphaDF, alphaTaxaDF, catBetaMetaDF, quantBetaMetaDF, betaTaxaDF
-from utils import principalComponents, principal_coordinates_analysis
-from utils import permanova_oneway
+from utils import permanova_oneway, PCoA
 import pandas as pd
 import numpy as np
 from numpy import *
@@ -672,8 +671,6 @@ def getCatBetaData(request):
         button = int(all["button"])
         taxaLevel = int(all["taxa"])
         distance = int(all["distance"])
-        centered = all["center"]
-        standardize = all["standardize"]
         PC1 = all["PC1"]
         PC2 = all["PC2"]
 
@@ -757,19 +754,7 @@ def getCatBetaData(request):
             dist = pdist(datamtx, 'jaccard')
             dists = squareform(dist)
 
-        ### add a step here to center and standardize 'dists' ###
-        dists_final = ""
-        if centered == 0 and standardize == 0:
-            dists_final = dists
-        elif centered == 1 and standardize == 0:
-            dists_final = dists - dists.mean(1)
-        elif centered == 0 and standardize == 1:
-            dists_final = dists / dists.std(1)
-        elif centered == 1 and standardize == 1:
-            dists_center = dists - dists.mean(1)
-            dists_final = dists_center / dists_center.std(1)
-
-        point_matrix, eigvals, pcoa = principal_coordinates_analysis(dists_final)
+        eigvals, coordinates, proportion_explained = PCoA(dists)
 
         numaxes = len(eigvals)
         axesList = []
@@ -777,13 +762,16 @@ def getCatBetaData(request):
             j = i + 1
             axesList.append('PC' + str(j))
 
-        eigenDF = pd.DataFrame(eigvals, columns=['EigenVectors'], index=axesList)
-        pcoaDF = pd.DataFrame(pcoa, columns=axesList, index=sampleList)
+        valsDF = pd.DataFrame(eigvals, columns=['EigenVals'], index=axesList)
+        propDF = pd.DataFrame(proportion_explained, columns=['Variance Explained (R2)'], index=axesList)
+        eigenDF = valsDF.join(propDF)
+
+        pcoaDF = pd.DataFrame(coordinates, columns=axesList, index=sampleList)
         resultDF = metaDF.join(pcoaDF)
         pd.set_option('display.max_rows', resultDF.shape[0], 'display.max_columns', resultDF.shape[1], 'display.width', 1000)
 
         trtList = list(finalDF[fieldList[0]].T)
-        bigf, p = permanova_oneway(dists_final, trtList, 200)
+        bigf, p = permanova_oneway(dists, trtList, 200)
 
         finalDict = {}
         seriesList = []
@@ -880,8 +868,6 @@ def getQuantBetaData(request):
         button = int(all["button"])
         taxaLevel = int(all["taxa"])
         distance = int(all["distance"])
-        centered = all["center"]
-        standardize = all["standardize"]
         PC1 = all["PC1"]
         PC2 = all["PC2"]
 
@@ -964,18 +950,7 @@ def getQuantBetaData(request):
             dist = pdist(datamtx, 'jaccard')
             dists = squareform(dist)
 
-        dists_final = ""
-        if centered == 0 and standardize == 0:
-            dists_final = dists
-        elif centered == 1 and standardize == 0:
-            dists_final = dists - dists.mean(1)
-        elif centered == 0 and standardize == 1:
-            dists_final = dists / dists.std(1)
-        elif centered == 1 and standardize == 1:
-            dists_center = dists - dists.mean(1)
-            dists_final = dists_center / dists_center.std(1)
-
-        point_matrix, eigvals, pcoa = principal_coordinates_analysis(dists_final)
+        eigvals, coordinates, proportion_explained = PCoA(dists)
 
         numaxes = len(eigvals)
         axesList = []
@@ -983,8 +958,11 @@ def getQuantBetaData(request):
             j = i + 1
             axesList.append('PC' + str(j))
 
-        eigenDF = pd.DataFrame(eigvals, columns=['EigenVectors'], index=axesList)
-        pcoaDF = pd.DataFrame(pcoa, columns=axesList, index=sampleList)
+        valsDF = pd.DataFrame(eigvals, columns=['EigenVals'], index=axesList)
+        propDF = pd.DataFrame(proportion_explained, columns=['Variance Explained (R2)'], index=axesList)
+        eigenDF = valsDF.join(propDF)
+
+        pcoaDF = pd.DataFrame(coordinates, columns=axesList, index=sampleList)
         resultDF = metaDF.join(pcoaDF)
         pd.set_option('display.max_rows', resultDF.shape[0], 'display.max_columns', resultDF.shape[1], 'display.width', 1000)
 
