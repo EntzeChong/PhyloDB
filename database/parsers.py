@@ -31,7 +31,7 @@ def parse_sample(Document, p_uuid):
         s_uuid = uuid4().hex
         rowDict = row
         project = Project.objects.get(projectid=p_uuid)
-        wanted_keys = ['sample_name', 'organism', 'title', 'seq_method', 'collection_date', 'biome', 'feature', 'geo_loc', 'lat_lon', 'material', 'elevation']
+        wanted_keys = ['sample_name', 'organism', 'title', 'seq_method', 'collection_date', 'biome', 'feature', 'geo_loc_country', 'geo_loc_state', 'geo_loc_city', 'latitude', 'longitude', 'material', 'elevation']
         sampleDict = {x: rowDict[x] for x in wanted_keys if x in rowDict}
         m = Sample(projectid=project, sampleid=s_uuid, **sampleDict)
         m.save()

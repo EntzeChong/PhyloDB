@@ -27,8 +27,11 @@ class Sample(models.Model):
     collection_date = models.CharField(max_length=15, blank=True)
     biome = models.CharField(max_length=45, blank=True)
     feature = models.CharField(max_length=45, blank=True)
-    geo_loc = models.CharField(max_length=45, blank=True)
-    lat_lon = models.CharField(max_length=45, blank=True)
+    geo_loc_country = models.CharField(max_length=45, blank=True)
+    geo_loc_state = models.CharField(max_length=45, blank=True)
+    geo_loc_city = models.CharField(max_length=45, blank=True)
+    latitude = models.CharField(max_length=45, blank=True)
+    longitude = models.CharField(max_length=45, blank=True)
     material = models.CharField(max_length=45, blank=True)
     elevation = models.CharField(max_length=45, blank=True)
 

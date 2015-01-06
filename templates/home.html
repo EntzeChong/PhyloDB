@@ -5,53 +5,86 @@
 {% endblock pagetitle %}
 
 {% block my_content %}
-    <div>
-        <h2>What is PhyloDB?</h2>
-        <p style="width: 750px; padding-left: 25px;">A user-friendly web-interface for accessing and analyzing taxonomic
-            data from multiple projects and/or sequencing runs.<br><br>
-            The goal of PhyloDB is to allow for easy comparisons and statistical analysis of microbial (i.e., fungi
-            or bacteria) taxonomic abundance across projects, soil types, and management scenarios.<br><br>
-            Data may be obtained from any sequencing platform; however,
-            currently only <a href="http://www.mothur.org">mothur</a>-formatted files are supported.
-<!--            An example mothur-pipeline to generate the required files can be obtained
-            <a href="../samples/pipeline.txt">here</a>.  -->
-        </p>
-
-        <br>
-        <h2>Database</h2>
-        <p style="width: 750px; padding-left: 25px;">PhyloDB stores sample information, taxonomic data and counts from multiple projects in a single SQL database.</p>
-
-        <br>
-        <h2>Data Input</h2>
-        <p style="width: 750px; padding-left: 25px;">PhyloDB currently requires four datafiles for each stored project.
-            Currently four template files are required:<br>(right-click on the links to get sample files)<br>
-        </p>
-        <ul>
-            <li><a href="../samples/Project.csv">Project File</a>: General project information</li>
-            <li><a href="../samples/Sample.csv">Sample File</a>: Meta data for each sample including Mimark compliant sample information, edaphic (soil) factors, and management options</li>
-            <li><a href="../samples/final.shared">Shared File</a>: Species (or operational taxonomic unit, OTU) table based on the mothur-format as described <a href="http://www.mothur.org/wiki/Make.shared">here</a></li>
-            <li><a href="../samples/final.taxonomy">Taxonomy File</a>: Consensus taxonomy file as described <a href="http://www.mothur.org/wiki/Classify.otu">here</a></li>
-        </ul>
-
-        <br>
-        <h2>Analysis Options:</h2>
-        <p style="width: 750px; padding-left: 25px;">Samples can be selected from any project currently stored in the user's database.
-            Once selected, taxonomy alpha-diversity (e.g., raw counts, relative abundance, species richness, or Shannon's diversity)
-            can be compared graphically and statistically (ANOVA) for any meta variable contained in the
-            database.  Beta-diversity (e.g., Bray-Curtis distance) can also be graphically and statistically (perMANOVA)
-            compared for any meta variable contained in the database.
-        </p>
-
-        <br>
-        <h2>Contact Info:</h2>
-        <p style="width: 750px; padding-left: 25px;">For questions/comments or requests for additional features please contact:</p>
-        <p style="padding-left: 50px">
-            <a href="mailto: daniel.manter@ars.usda.gov?subject=PhyloDB">Daniel Manter</a><br>
-            Soil-Plant-Nutrient Research Unit<br>
-            USDA-ARS<br>
-            Fort Collins, CO 80526<br>
-            phone: (970) 492-7255<br>
-        </p>
-    </div>
+    <table style="width: 950px;" border="1">
+        <tr>
+            <th style="text-align: left"><strong><em>What is PhyloDB?</em></strong></th>
+        </tr>
+        <tr>
+            <td>
+                <p style="padding-left: 25px;">A user-friendly web-interface for accessing and analyzing taxonomic
+                    data from multiple projects and/or sequencing runs.<br><br>
+                    The goal of PhyloDB is to allow for easy comparisons and statistical analysis of microbial (i.e., fungi
+                    or bacteria) taxonomic abundance across projects, soil types, and management scenarios.<br><br>
+                    Data may be obtained from any sequencing platform; however,
+                    currently only <a href="http://www.mothur.org" target="_blank">mothur</a>-formatted files are supported.
+        <!--            An example mothur-pipeline to generate the required files can be obtained
+                    <a href="../samples/pipeline.txt">here</a>.  -->
+                </p>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <table style="width: 950px;" border="1">
+        <tr>
+            <th style="text-align: left"><strong><em>Database:</em></strong></th>
+        </tr>
+        <tr>
+            <td>
+                <p style="padding-left: 25px;">PhyloDB stores sample information, taxonomic data and counts from multiple projects in a single SQL database.</p>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <table style="width: 950px;" border="1">
+        <tr>
+            <th style="text-align: left"><strong><em>Data Input:</em></strong></th>
+        </tr>
+        <tr>
+            <td>
+                <p style="padding-left: 25px;">PhyloDB currently requires four data files for each stored project.<br>
+                    Example files can be downloaded using the following links:</p>
+                <ul>
+                    <li><a href="{% url "project_file" %}" download>Project File</a>: General project information.</li>
+                    <li><a href="{% url "sample_file" %}" download>Sample File</a>: Meta data for each sample including Mimark compliant sample information, edaphic (soil) factors, and management options.</li>
+                    <li><a href="{% url "shared_file" %}" download>Shared File</a>: Species (or operational taxonomic unit, OTU) table based on the mothur-format as described <a href="http://www.mothur.org/wiki/Make.shared" target="_blank">here.</a></li>
+                    <li><a href="{% url "taxonomy_file" %}" download>Taxonomy File</a>: Consensus taxonomy file as described <a href="http://www.mothur.org/wiki/Classify.otu" target="_blank">here.</a></li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <table style="width: 950px;" border="1">
+        <tr>
+            <th style="text-align: left"><strong><em>Analysis Options:</em></strong></th>
+        </tr>
+        <tr>
+            <td>
+                <p style="padding-left: 25px;">Samples can be selected from any project currently stored in the user's database.
+                    Once selected, taxonomy alpha-diversity (e.g., raw counts, relative abundance, species richness, or Shannon's diversity)
+                    can be compared graphically and statistically (ANOVA) for any meta variable contained in the
+                    database.  Beta-diversity (e.g., Bray-Curtis distance) can also be graphically and statistically (perMANOVA)
+                    compared for any meta variable contained in the database.
+                </p>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <table style="width: 950px;" border="1">
+        <tr>
+            <th style="text-align: left"><strong><em>Contact Info:</em></strong></th>
+        </tr>
+        <tr>
+            <td>
+                <p style="padding-left: 25px;">For questions/comments or requests for additional features please contact:</p>
+                <p style="padding-left: 50px">
+                    <a href="mailto: daniel.manter@ars.usda.gov?subject=PhyloDB">Daniel Manter</a><br>
+                    Soil-Plant-Nutrient Research Unit<br>
+                    USDA-ARS<br>
+                    Fort Collins, CO 80526<br>
+                    phone: (970) 492-7255<br>
+                </p>
+            </td>
+        </tr>
+    </table>
 {% endblock my_content %}
 

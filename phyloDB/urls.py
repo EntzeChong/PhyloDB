@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^getSampleCatTreeChildren/$', 'database.trees.getSampleCatTreeChildren', name='getSampleCatTreeChildren'),
 
     url(r'^getSampleQuantTree/$', 'database.trees.getSampleQuantTree', name='getSampleQuantTree'),
+    url(r'^getSampleQuantTreeChildren/$', 'database.trees.getSampleQuantTreeChildren', name='getSampleQuantTreeChildren'),
 
     url(r'^getTaxaTree/$', 'database.trees.getTaxaTree', name='getTaxaTree'),
 
@@ -27,7 +28,10 @@ urlpatterns = patterns('',
     url(r'^getCatBetaData', 'database.trees.getCatBetaData', name='getCatBetaData'),
     url(r'^getQuantBetaData', 'database.trees.getQuantBetaData', name='getQuantBetaData'),
 
-    #url(r'^project', '..samples/Project/csv', name='project')
+    url(r'^project_file', 'database.views.project_file', name='project_file'),
+    url(r'^sample_file', 'database.views.sample_file', name='sample_file'),
+    url(r'^shared_file', 'database.views.shared_file', name='shared_file'),
+    url(r'^taxonomy_file', 'database.views.taxonomy_file', name='taxonomy_file'),
 )
 
 

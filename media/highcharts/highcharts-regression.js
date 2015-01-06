@@ -72,18 +72,12 @@
         var sum = [0, 0, 0, 0, 0, 0], results = [];
 
         for (var n = 0; n < data.length; n++) {
-          if (data[n]['x']) {
-            data[n][0] = data[n]['x'];
-            data[n][1] = data[n]['y'];
-          }
-          if (data[n][1]) {
             sum[0] += data[n][0]; // X
             sum[1] += data[n][1]; // Y
             sum[2] += data[n][0] * data[n][0] * data[n][1]; // XXY
             sum[3] += data[n][1] * Math.log(data[n][1]); // Y Log Y
             sum[4] += data[n][0] * data[n][1] * Math.log(data[n][1]); //YY Log Y
             sum[5] += data[n][0] * data[n][1]; //XY
-          }
         }
 
         var denominator = (sum[1] * sum[2] - sum[5] * sum[5]);
@@ -111,17 +105,11 @@
         var sum = [0, 0, 0, 0, 0], results = [], N = data.length;
 
         for (var n = 0; n < data.length; n++) {
-          if (data[n]['x']) {
-            data[n][0] = data[n]['x'];
-            data[n][1] = data[n]['y'];
-          }
-          if (data[n][1]) {
             sum[0] += data[n][0]; //Î£(X)
             sum[1] += data[n][1]; //Î£(Y)
             sum[2] += data[n][0] * data[n][0]; //Î£(X^2)
             sum[3] += data[n][0] * data[n][1]; //Î£(XY)
             sum[4] += data[n][1] * data[n][1]; //Î£(Y^2)
-          }
         }
 
         var gradient = (N * sum[3] - sum[0] * sum[1]) / (N * sum[2] - sum[0] * sum[0]);
@@ -148,16 +136,10 @@
         var sum = [0, 0, 0, 0], results = [], N = data.length;
 
         for (var n = 0; n < data.length; n++) {
-          if (data[n]['x']) {
-            data[n][0] = data[n]['x'];
-            data[n][1] = data[n]['y'];
-          }
-          if (data[n][1]) {
             sum[0] += Math.log(data[n][0]);
             sum[1] += data[n][1] * Math.log(data[n][0]);
             sum[2] += data[n][1];
             sum[3] += Math.pow(Math.log(data[n][0]), 2);
-          }
         }
 
         var B = (N * sum[1] - sum[2] * sum[0]) / (N * sum[3] - sum[0] * sum[0]);
@@ -184,16 +166,10 @@
         var sum = [0, 0, 0, 0], results = [], N = data.length;
 
         for (var n = 0; n < data.length; n++) {
-          if (data[n]['x']) {
-            data[n][0] = data[n]['x'];
-            data[n][1] = data[n]['y'];
-          }
-          if (data[n][1]) {
             sum[0] += Math.log(data[n][0]);
             sum[1] += Math.log(data[n][1]) * Math.log(data[n][0]);
             sum[2] += Math.log(data[n][1]);
             sum[3] += Math.pow(Math.log(data[n][0]), 2);
-          }
         }
 
         var B = (N * sum[1] - sum[2] * sum[0]) / (N * sum[3] - sum[0] * sum[0]);
@@ -298,7 +274,6 @@
      }
 
     function coefficientOfDetermination(data, pred) {
-
         var mean = 0, SStot = 0, SSexp = 0;
 
         // Calc the mean

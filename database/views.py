@@ -9,6 +9,8 @@ from models import Project, Sample
 from forms import UploadForm1, UploadForm2, UploadForm3, UploadForm4, UploadForm5
 from utils import handle_uploaded_file, remove_list
 from parsers import parse_project, parse_sample, parse_taxonomy, parse_profile, taxaprofile
+from django.core.servers.basehttp import FileWrapper
+import os
 
 
 def home(request):
@@ -161,3 +163,39 @@ def cookie(request):
         text = 'Selected sample(s) have been recorded!'
         res = simplejson.dumps(text, encoding="Latin-1")
         return HttpResponse(res, content_type='application/json')
+
+
+def project_file(request):
+    filename = "samples/Project.csv"
+    wrapper = FileWrapper(file(filename))
+    response = HttpResponse(wrapper, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="Project.csv"'
+    response['Content-Length'] = os.path.getsize(filename)
+    return response
+
+
+def sample_file(request):
+    filename = "samples/Sample.csv"
+    wrapper = FileWrapper(file(filename))
+    response = HttpResponse(wrapper, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="Sample.csv"'
+    response['Content-Length'] = os.path.getsize(filename)
+    return response
+
+
+def shared_file(request):
+    filename = "samples/final.shared"
+    wrapper = FileWrapper(file(filename))
+    response = HttpResponse(wrapper, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename="final.shared"'
+    response['Content-Length'] = os.path.getsize(filename)
+    return response
+
+
+def taxonomy_file(request):
+    filename = "samples/final.taxonomy"
+    wrapper = FileWrapper(file(filename))
+    response = HttpResponse(wrapper, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename="final.taxonomy"'
+    response['Content-Length'] = os.path.getsize(filename)
+    return response

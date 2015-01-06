@@ -11,14 +11,12 @@
     <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <!-- main table -->
         <table width="100%" border="0" cellspacing="0" cellpadding="5">
             <tr>
-                <td colspan="2"><p>1.) Select associated meta files (required):</p></td>
+                <td colspan="2">1.) Select associated meta files (required):</td>
             </tr>
             <tr>
                 <td colspan="2">
-                    <!-- sub-table one -->
                     <table id="meta_files" width="100%" border="2" cellspacing="0" cellpadding="1">
                         <th colspan="2">Metadata files:</th>
                         <tr>
@@ -30,18 +28,19 @@
                             <td>{{ form1.docfile2 }}</td>
                         </tr>
                     </table>
-                    <!-- end table -->
                 </td>
             </tr>
+        </table>
+        <br>
+        <table width="100%" border="0" cellspacing="0" cellpadding="5">
             <tr>
-                <td colspan="2"><p>2.) Choose one of the following formats for your taxonomic profile data:</p></td>
+                <td colspan="2">2.) Choose one of the following formats for your taxonomic profile data:</td>
             </tr>
             <tr>
                 <td colspan="2"></td>
             </tr>
             <tr>
                 <td colspan="2">
-                    <!-- sub-table two -->
                     <table id="mothur" width="100%" border="2" cellspacing="0" cellpadding="1">
                         <th colspan="2">Mothur files:</th>
                         <tr>
@@ -53,7 +52,6 @@
                             <td>{{ form2.docfile4 }}</td>
                         </tr>
                     </table>
-                    <!-- end table -->
                 </td>
             </tr>
             <tr>
@@ -61,7 +59,6 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <!-- sub-table three -->
                     <table id="QIIME" width="100%" border="2" cellspacing="0" cellpadding="1">
                         <th colspan="2">QIIME OTU Table (BIOM, v1.5.0+):</th>
                         <tr>
@@ -69,7 +66,6 @@
                             <td>{{ form3.docfile5 }}</td>
                         </tr>
                     </table>
-                    <!-- end table -->
                 </td>
             </tr>
             <tr>
@@ -77,7 +73,6 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <!-- sub-table four -->
                     <table id="QIIME_classic" width="100%" border="2" cellspacing="0" cellpadding="1">
                         <th colspan="2">Classic QIIME OTU Table (v1.4.0 and earlier):</th>
                         <tr>
@@ -85,7 +80,6 @@
                             <td>{{ form4.docfile6 }}</td>
                         </tr>
                     </table>
-                    <!-- end table -->
                 </td>
             </tr>
             <tr>
@@ -93,7 +87,6 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <!-- sub-table five -->
                     <table id="MG-RAST" width="100%" border="2" cellspacing="0" cellpadding="1">
                         <th colspan="2">MG-RAST organism abundance table (.tsv):</th>
                         <tr>
@@ -101,17 +94,12 @@
                             <td>{{ form5.docfile7 }}</td>
                         </tr>
                     </table>
-                    <!-- end table -->
                 </td>
             </tr>
         </table>
-        <!-- end main table -->
 
         <p><input name='Upload' type="submit" value="Upload Files"/></p>
-        <br>
     </form>
-
-
 
     <h2>List of previously uploaded projects:</h2>
     <form method="post" action="{% url 'upload' %}">

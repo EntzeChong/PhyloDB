@@ -15,11 +15,11 @@
     <script type="text/javascript">
         $(function () {
             // initialize variables
-            var button1 = 1, button2 = 2;
-            var nodesCat = "", nodesQuant = "", taxaLevel = 6;
+            var button1 = 1, button2 = 2, selTheme = 0;
+            var nodesCat = "", nodesQuant = "", taxaLevel = 7;
             var chart1 = {};
-            var catOptions = {}, quantOptions = {};
-            var distance = 4, PC1 = 'PC1', PC2 ='PC2';
+            var quantOptions = {};
+            var distance = 1, PC1 = 'PC1', PC2 ='PC2';
 
             // start of dynatrees
             $("#tree_metaCat").dynatree({
@@ -50,13 +50,25 @@
 
             $("#tree_metaQuant").dynatree({
                 checkbox: true,
-                selectMode: 1,
+                selectMode: 3,
                 initAjax: {
                     url: '/getSampleQuantTree/',
                     dataType: 'jsonp',
                     data: {}
                 },
-                onSelect: function(select, node) {
+                onLazyRead: function(node) {
+                    node.appendAjax({
+                        url: '/getSampleQuantTreeChildren/',
+                        data: {field: node.data.title}
+                    });
+                },
+                onSelect: function(flag, node) {
+                    if (flag && node.childList == undefined) {
+                        node.reloadChildren(function () {
+                            node.select(false);
+                            node.select(true);
+                        });
+                    }
                     nodesQuant = node.tree.getSelectedNodes();
                     chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
                 }
@@ -64,58 +76,58 @@
 
             // set highchart theme
             $("#theme").change(function () {
-                var selTheme = $(this).val();
+                selTheme = $(this).val();
 
                 if (selTheme == 1) {
                         $("#container-1").empty();
-                        new Highcharts.Chart(catOptions);
+                        new Highcharts.Chart(quantOptions);
                 }
                 else if (selTheme == 2) {
                     $.getScript('../media/highcharts/themes/dark-blue.js', function () {
                         $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
                     });
                 }
                 else if (selTheme == 3) {
                     $.getScript('../media/highcharts/themes/dark-green.js', function () {
                         $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
                     });
                 }
                 else if (selTheme == 4) {
                     $.getScript('../media/highcharts/themes/dark-unica.js', function () {
                         $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
                     });
                 }
                 else if (selTheme == 5) {
                     $.getScript('../media/highcharts/themes/gray.js', function () {
                         $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
                     });
                 }
                 else if (selTheme == 6) {
                     $.getScript('../media/highcharts/themes/grid.js', function () {
                         $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
                     });
                 }
                 else if (selTheme == 7) {
                     $.getScript('../media/highcharts/themes/grid-light.js', function () {
                         $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
                     });
                 }
                 else if (selTheme == 8) {
                     $.getScript('../media/highcharts/themes/sand-signika.js', function () {
                         $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
                     });
                 }
                 else if (selTheme == 9) {
                     $.getScript('../media/highcharts/themes/skies.js', function () {
                         $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
                     });
                 }
             });
@@ -367,8 +379,8 @@
                     <option value="3">Classes</option>
                     <option value="4">Orders</option>
                     <option value="5">Families</option>
-                    <option value="6" selected="selected">Genera</option>
-                    <option value="7">Species</option>
+                    <option value="6">Genera</option>
+                    <option value="7" selected="selected">Species</option>
                 </select>
                 &nbsp<-- Taxa Level selected
             </td>
@@ -377,10 +389,10 @@
             <td bgcolor="white" width="5px"></td>
             <td bgcolor="white">
                 <select id="distance">
-                    <option value="1">Bray-Curtis</option>
+                    <option value="1" selected="selected">Bray-Curtis</option>
                     <option value="2">Canberra</option>
                     <option value="3">Dice</option>
-                    <option value="4" selected="selected">Euclidean</option>
+                    <option value="4">Euclidean</option>
                     <option value="5">Jaccard</option>
                 </select>
                 &nbsp<-- Distance score selected

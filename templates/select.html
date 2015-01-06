@@ -28,13 +28,13 @@
                     dataType: "jsonp",
                     data: {}
                 },
-                onLazyRead: function(node) {
+                onLazyRead: function (node) {
                     node.appendAjax({
                         url: '/getProjectTreeChildren/',
                         data: {id: node.data.id}
                     });
                 },
-                onSelect: function(flag, node) {
+                onSelect: function (flag, node) {
                     if (flag && node.childList == undefined) {
                         node.reloadChildren(function () {
                             node.select(false);
@@ -42,11 +42,9 @@
                         });
                     }
 
-                    selNodes = node.tree.getSelectedNodes();
-                    selKeys = $.map(selNodes, function (node) {
+                    selKeys = $.map(node.tree.getSelectedNodes(), function (node) {
                         return node.data.id;
                     });
-
                     updateNodes(selKeys);
                 }
             });
