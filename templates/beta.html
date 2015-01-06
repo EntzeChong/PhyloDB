@@ -33,7 +33,12 @@
                 onLazyRead: function(node) {
                     node.appendAjax({
                         url: '/getSampleCatTreeChildren/',
-                        data: {field: node.data.title}
+                        data: {field: node.data.title},
+                        success: function(node) {
+                            if (node.childList == undefined) {
+                                alert('No samples are available for this variable!');
+                            }
+                        }
                     });
                 },
                 onSelect: function(flag, node) {
@@ -407,6 +412,12 @@
                     <option value="PC3">PC3</option>
                     <option value="PC4">PC4</option>
                     <option value="PC5">PC5</option>
+                    <option value="PC6">PC6</option>
+                    <option value="PC7">PC7</option>
+                    <option value="PC8">PC8</option>
+                    <option value="PC9">PC9</option>
+                    <option value="PC10">PC10</option>
+
                 </select>
                 &nbsp<-- Principal component selected (x-axis)
             </td>
@@ -420,6 +431,11 @@
                     <option value="PC3">PC3</option>
                     <option value="PC4">PC4</option>
                     <option value="PC5">PC5</option>
+                    <option value="PC6">PC6</option>
+                    <option value="PC7">PC7</option>
+                    <option value="PC8">PC8</option>
+                    <option value="PC9">PC9</option>
+                    <option value="PC10">PC10</option>
                 </select>
                 &nbsp<-- Principal component selected (y-axis)
             </td>
@@ -427,31 +443,32 @@
     </table>
     </div>
     <br>
-    <div  style="float: left;">Select dependent variable:
-        <select id="button2">
-            <option value="1" >Sequence Reads</option>
-            <option value="2" selected="selected">Relative Abundance</option>
-            <option value="3">Species Richness</option>
-            <option value="4">Shannon Diversity</option>
-        </select>
-    </div>
-
-    <div style="float: right;">Select chart theme:
-        <select id="theme">
-            <option value="1" selected="selected">default</option>
-            <option value="2">dark-blue</option>
-            <option value="3">dark-green</option>
-            <option value="4">dark-unica</option>
-            <option value="5">gray</option>
-            <option value="6">grid</option>
-            <option value="7">grid-light</option>
-            <option value="8">sand-signika</option>
-            <option value="9">skies</option>
-        </select>
-    </div>
     <table width="950px" border="2">
         <tr>
             <th style="padding-right: 10px;">GraphData</th>
+        </tr>
+        <tr>
+            <td  style="float: left;">Select dependent variable:
+                <select id="button2">
+                    <option value="1" >Sequence Reads</option>
+                    <option value="2" selected="selected">Relative Abundance</option>
+                    <option value="3">Species Richness</option>
+                    <option value="4">Shannon Diversity</option>
+                </select>
+            </td>
+            <td style="float: right;">Select chart theme:
+                <select id="theme">
+                    <option value="1" selected="selected">default</option>
+                    <option value="2">dark-blue</option>
+                    <option value="3">dark-green</option>
+                    <option value="4">dark-unica</option>
+                    <option value="5">gray</option>
+                    <option value="6">grid</option>
+                    <option value="7">grid-light</option>
+                    <option value="8">sand-signika</option>
+                    <option value="9">skies</option>
+                </select>
+            </td>
         </tr>
         <tr>
             <td>

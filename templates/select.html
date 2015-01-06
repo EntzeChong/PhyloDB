@@ -133,9 +133,12 @@
                                 "{{ sample.collection_date }}",
                                 "{{ sample.biome }}",
                                 "{{ sample.feature }}",
-                                "{{ sample.geo_loc }}",
+                                "{{ sample.geo_loc_country }}",
+                                "{{ sample.geo_loc_state }}",
+                                "{{ sample.geo_loc_city }}",
                                 "{{ sample.material }}",
-                                "{{ sample.lat_lon }}",
+                                "{{ sample.latitude }}",
+                                "{{ sample.longitude }}",
                                 "{{ sample.elevation }}"
                              ]).draw();
                         }
@@ -404,9 +407,12 @@
                         <th>Collection Date</th>
                         <th>Biome</th>
                         <th>Feature</th>
-                        <th>Location</th>
+                        <th>Country</th>
+                        <th>State</th>
+                        <th>City</th>
                         <th>Material</th>
-                        <th>Lat Lon</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
                         <th>Elevation</th>
                     </tr>
                 </thead>

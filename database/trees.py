@@ -14,6 +14,7 @@ import numpy as np
 from numpy import *
 from pyvttbl import Anova1way
 from scipy.spatial.distance import *
+from scipy import stats
 
 
 def getProjectTree(request):
@@ -431,7 +432,7 @@ def getSampleQuantTreeChildren(request):
                 myNode.append(myNode1)
 
         elif field in microbial:
-            table_field = 'microbial' + field
+            table_field = 'microbial__' + field
             exclude_list = []
             exclude_list.append(Q(**{table_field: 'null'}))
             items = Sample.objects.filter(sampleid__in=selected).exclude(reduce(operator.or_, exclude_list)).order_by('sample_name')
@@ -579,7 +580,7 @@ def getCatAlphaData(request):
         taxaString = all["taxa"]
         taxaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(taxaString)
         sig_only = int(all["sig_only"])
-        print sig_only
+
         metaString = all["meta"]
         metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
 
@@ -613,8 +614,13 @@ def getCatAlphaData(request):
                     trtList.append(name)
                     valList.append(list(group.T))
 
-                D = Anova1way()
-                D.run(valList, conditions_list=trtList)
+                try:
+                    D = Anova1way()
+                    D.run(valList, conditions_list=trtList)
+                    error = 'no'
+                except:
+                    D['p'] = 1
+                    error = 'yes'
 
                 if sig_only == 1:
                     if D['p'] <= 0.05:
@@ -630,7 +636,10 @@ def getCatAlphaData(request):
                         elif button == 4:
                             result = result + 'Dependent Variable: Shannon Diversity' + '\n'
                         result = result + 'Independent Variable: ' + str(field) + '\n'
-                        result = result + str(D) + '\n'
+                        if error == 'no':
+                            result = result + str(D) + '\n'
+                        else:
+                            result = result + 'Analysis cannot be performed...' + '\n'
                         result = result + '===============================================\n'
                         result = result + '\n\n\n\n'
 
@@ -693,7 +702,10 @@ def getCatAlphaData(request):
                     elif button == 4:
                         result = result + 'Dependent Variable: Shannon Diversity' + '\n'
                     result = result + 'Independent Variable: ' + str(field) + '\n'
-                    result = result + str(D) + '\n'
+                    if error == 'no':
+                        result = result + str(D) + '\n'
+                    else:
+                        result = result + 'Analysis cannot be performed...' + '\n'
                     result = result + '===============================================\n'
                     result = result + '\n\n\n\n'
 
@@ -747,9 +759,11 @@ def getCatAlphaData(request):
         finalDict['xAxis'] = xAxisDict
         finalDict['yAxis'] = yAxisDict
         finalDict['text'] = result
-
+        if not seriesList:
+            finalDict['empty'] = 0
+        else:
+            finalDict['empty'] = 1
         res = simplejson.dumps(finalDict)
-
         return HttpResponse(res, content_type='application/json')
 
 
@@ -764,7 +778,7 @@ def getQuantAlphaData(request):
         all = simplejson.loads(allJson)
 
         button = int(all["button"])
-        regType = int(all["regType"])
+        sig_only = int(all["sig_only"])
 
         metaString = all["meta"]
         metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
@@ -788,33 +802,68 @@ def getQuantAlphaData(request):
         grouped1 = finalDF.groupby(['rank', 'taxa', 'taxa_name', 'taxa_id'])
         for name1, group1 in grouped1:
             dataList = []
+            x = []
+            y = []
             if button == 1:
                 dataList = group1[['x-value', 'count']].values.tolist()
+                x = group1['x-value'].values.tolist()
+                y = group1['count'].values.tolist()
             elif button == 2:
                 dataList = group1[['x-value', 'rel_abund']].values.tolist()
+                x = group1['x-value'].values.tolist()
+                y = group1['rel_abund'].values.tolist()
             elif button == 3:
                 dataList = group1[['x-value', 'rich']].values.tolist()
+                x = group1['x-value'].values.tolist()
+                y = group1['rich'].values.tolist()
             elif button == 4:
                 dataList = group1[['x-value', 'diversity']].values.tolist()
+                x = group1['x-value'].values.tolist()
+                y = group1['diversity'].values.tolist()
 
-            seriesDict = {}
-            seriesDict['regression'] = 'true'
-            regDict = {}
-            if regType == 1:
-                regDict['type'] = 'linear'
-            elif regType == 2:
-                regDict['type'] = 'polynomial'
-            elif regType == 3:
-                regDict['type'] = 'exponential'
-            elif regType == 4:
-                regDict['type'] = 'logarithmic'
-            elif regType == 5:
-                regDict['type'] = 'power'
+            if max(x) == min(x):
+                stop = 0
+            else:
+                stop = 1
+                slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+                p_value = "%0.3f" % p_value
+                r_square = r_value * r_value
+                r_square = "%0.4f" % r_square
+                min_y = slope*min(x) + intercept
+                max_y = slope*max(x) + intercept
 
-            seriesDict['regressionSettings'] = regDict
-            seriesDict['name'] = name1[1] + ": " + name1[2]
-            seriesDict['data'] = dataList
-            seriesList.append(seriesDict)
+                regrList = []
+                regrList.append([min(x), min_y])
+                regrList.append([max(x), max_y])
+
+            if sig_only == 0:
+                seriesDict = {}
+                seriesDict['type'] = 'scatter'
+                seriesDict['name'] = name1[1] + ": " + name1[2]
+                seriesDict['data'] = dataList
+                seriesList.append(seriesDict)
+                if stop == 0:
+                    regDict = {}
+                elif stop == 1:
+                    regrDict = {}
+                    regrDict['type'] = 'line'
+                    regrDict['name'] = 'R2: ' + str(r_square) + '; p-value: ' + str(p_value)
+                    regrDict['data'] = regrList
+                    seriesList.append(regrDict)
+
+            if sig_only == 1:
+                if p_value <= 0.05:
+                    seriesDict = {}
+                    seriesDict['type'] = 'scatter'
+                    seriesDict['name'] = name1[1] + ": " + name1[2]
+                    seriesDict['data'] = dataList
+                    seriesList.append(seriesDict)
+
+                    regrDict = {}
+                    regrDict['type'] = 'line'
+                    regrDict['name'] = 'R2: ' + str(r_square) + '; p-value: ' + str(p_value)
+                    regrDict['data'] = regrList
+                    seriesList.append(regrDict)
 
             xTitle = {}
             xTitle['text'] = final_fieldList[0]
@@ -834,7 +883,10 @@ def getQuantAlphaData(request):
         finalDict['series'] = seriesList
         finalDict['xAxis'] = xAxisDict
         finalDict['yAxis'] = yAxisDict
-
+        if not seriesList:
+            finalDict['empty'] = 0
+        else:
+            finalDict['empty'] = 1
         res = simplejson.dumps(finalDict)
         return HttpResponse(res, content_type='application/json')
 
@@ -952,7 +1004,7 @@ def getCatBetaData(request):
         pd.set_option('display.max_rows', resultDF.shape[0], 'display.max_columns', resultDF.shape[1], 'display.width', 1000)
 
         trtList = list(finalDF[fieldList[0]].T)
-        bigf, p = permanova_oneway(dists, trtList, 200)
+        bigf, p = permanova_oneway(dists, trtList, 1000)
 
         finalDict = {}
         seriesList = []
