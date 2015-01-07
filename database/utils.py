@@ -65,7 +65,9 @@ def catAlphaDF(qs1, metaDict):
             else:
                 for item in value:
                     args_list.append(Q(**{field: item}))
-            qs2 = qs1.filter(reduce(operator.or_, args_list)).values(*field_list)
+            exclude_list = []
+            exclude_list.append(Q(**{field: 'null'}))
+            qs2 = qs1.filter(reduce(operator.or_, args_list)).values(*field_list).exclude(reduce(operator.or_, exclude_list))
             tempDF = pd.DataFrame.from_records(qs2, columns=field_list)
             if metaDF.empty:
                 metaDF = tempDF
@@ -81,7 +83,9 @@ def catAlphaDF(qs1, metaDict):
             else:
                 for item in value:
                     args_list.append(Q(**{field: item}))
-            qs2 = qs1.filter(reduce(operator.or_, args_list)).values(*field_list)
+            exclude_list = []
+            exclude_list.append(Q(**{field: 'null'}))
+            qs2 = qs1.filter(reduce(operator.or_, args_list)).values(*field_list).exclude(reduce(operator.or_, exclude_list))
             tempDF = pd.DataFrame.from_records(qs2, columns=field_list)
             tempDF.rename(columns={field: key}, inplace=True)
             if metaDF.empty:
@@ -98,7 +102,9 @@ def catAlphaDF(qs1, metaDict):
             else:
                 for item in value:
                     args_list.append(Q(**{field: item}))
-            qs2 = qs1.filter(reduce(operator.or_, args_list)).values(*field_list)
+            exclude_list = []
+            exclude_list.append(Q(**{field: 'null'}))
+            qs2 = qs1.filter(reduce(operator.or_, args_list)).values(*field_list).exclude(reduce(operator.or_, exclude_list))
             tempDF = pd.DataFrame.from_records(qs2, columns=field_list)
             tempDF.rename(columns={field: key}, inplace=True)
             if metaDF.empty:
@@ -115,7 +121,9 @@ def catAlphaDF(qs1, metaDict):
             else:
                 for item in value:
                     args_list.append(Q(**{field: item}))
-            qs2 = qs1.filter(reduce(operator.or_, args_list)).values(*field_list)
+            exclude_list = []
+            exclude_list.append(Q(**{field: 'null'}))
+            qs2 = qs1.filter(reduce(operator.or_, args_list)).values(*field_list).exclude(reduce(operator.or_, exclude_list))
             tempDF = pd.DataFrame.from_records(qs2, columns=field_list)
             tempDF.rename(columns={field: key}, inplace=True)
             if metaDF.empty:
@@ -132,7 +140,9 @@ def catAlphaDF(qs1, metaDict):
             else:
                 for item in value:
                     args_list.append(Q(**{field: item}))
-            qs2 = qs1.filter(reduce(operator.or_, args_list)).values(*field_list)
+            exclude_list = []
+            exclude_list.append(Q(**{field: 'null'}))
+            qs2 = qs1.filter(reduce(operator.or_, args_list)).values(*field_list).exclude(reduce(operator.or_, exclude_list))
             tempDF = pd.DataFrame.from_records(qs2, columns=field_list)
             tempDF.rename(columns={field: key}, inplace=True)
             if metaDF.empty:
@@ -153,7 +163,9 @@ def quantAlphaDF(qs1, metaDict):
             field_list.append('sampleid')
             field_list.append(value)
             final_fieldList.append(value)
-            qs2 = qs1.values(*field_list)
+            exclude_list = []
+            exclude_list.append(Q(**{value: 'null'}))
+            qs2 = qs1.values(*field_list).exclude(reduce(operator.or_, exclude_list))
             tempDF = pd.DataFrame.from_records(qs2, columns=field_list)
             tempDF.rename(columns={value: 'x-value'}, inplace=True)
             if metaDF.empty:
@@ -166,7 +178,9 @@ def quantAlphaDF(qs1, metaDict):
             field = 'collect__' + str(value)
             field_list.append(field)
             final_fieldList.append(value)
-            qs2 = qs1.values(*field_list)
+            exclude_list = []
+            exclude_list.append(Q(**{field: 'null'}))
+            qs2 = qs1.values(*field_list).exclude(reduce(operator.or_, exclude_list))
             tempDF = pd.DataFrame.from_records(qs2, columns=field_list)
             tempDF.rename(columns={field: 'x-value'}, inplace=True)
             if metaDF.empty:
@@ -179,7 +193,9 @@ def quantAlphaDF(qs1, metaDict):
             field = 'climate__' + str(value)
             field_list.append(field)
             final_fieldList.append(value)
-            qs2 = qs1.values(*field_list)
+            exclude_list = []
+            exclude_list.append(Q(**{field: 'null'}))
+            qs2 = qs1.values(*field_list).exclude(reduce(operator.or_, exclude_list))
             tempDF = pd.DataFrame.from_records(qs2, columns=field_list)
             tempDF.rename(columns={field: 'x-value'}, inplace=True)
             if metaDF.empty:
@@ -192,7 +208,9 @@ def quantAlphaDF(qs1, metaDict):
             field = 'soil_class__' + str(value)
             field_list.append(field)
             final_fieldList.append(value)
-            qs2 = qs1.values(*field_list)
+            exclude_list = []
+            exclude_list.append(Q(**{field: 'null'}))
+            qs2 = qs1.values(*field_list).exclude(reduce(operator.or_, exclude_list))
             tempDF = pd.DataFrame.from_records(qs2, columns=field_list)
             tempDF.rename(columns={field: 'x-value'}, inplace=True)
             if metaDF.empty:
@@ -205,7 +223,9 @@ def quantAlphaDF(qs1, metaDict):
             field = 'soil_nutrient__' + str(value)
             field_list.append(field)
             final_fieldList.append(value)
-            qs2 = qs1.values(*field_list)
+            exclude_list = []
+            exclude_list.append(Q(**{field: 'null'}))
+            qs2 = qs1.values(*field_list).exclude(reduce(operator.or_, exclude_list))
             tempDF = pd.DataFrame.from_records(qs2, columns=field_list)
             tempDF.rename(columns={field: 'x-value'}, inplace=True)
             if metaDF.empty:
@@ -218,7 +238,9 @@ def quantAlphaDF(qs1, metaDict):
             field = 'microbial__' + str(value)
             field_list.append(field)
             final_fieldList.append(value)
-            qs2 = qs1.values(*field_list)
+            exclude_list = []
+            exclude_list.append(Q(**{field: 'null'}))
+            qs2 = qs1.values(*field_list).exclude(reduce(operator.or_, exclude_list))
             tempDF = pd.DataFrame.from_records(qs2, columns=field_list)
             tempDF.rename(columns={field: 'x-value'}, inplace=True)
             if metaDF.empty:
@@ -231,7 +253,9 @@ def quantAlphaDF(qs1, metaDict):
             field = 'user__' + str(value)
             field_list.append(field)
             final_fieldList.append(value)
-            qs2 = qs1.values(*field_list)
+            exclude_list = []
+            exclude_list.append(Q(**{field: 'null'}))
+            qs2 = qs1.values(*field_list).exclude(reduce(operator.or_, exclude_list))
             tempDF = pd.DataFrame.from_records(qs2, columns=field_list)
             tempDF.rename(columns={field: 'x-value'}, inplace=True)
             if metaDF.empty:
@@ -683,11 +707,13 @@ def quantBetaMetaDF(qs1, metaDict):
             final_fieldList.append(value)
             qs2 = qs1.values(*field_list)
             tempDF = pd.DataFrame.from_records(qs2, columns=field_list)
-#            tempDF.rename(columns={value: 'x-value'}, inplace=True)
             if metaDF.empty:
                 metaDF = tempDF
+                metaDF[value] = metaDF[value].astype(float)
             else:
                 metaDF = metaDF.merge(tempDF, on='sampleid', how='outer')
+                metaDF[value] = metaDF[value].astype(float)
+
 
         elif key == 'collect':
             field_list.append('sampleid')
@@ -699,8 +725,10 @@ def quantBetaMetaDF(qs1, metaDict):
             tempDF.rename(columns={field: value}, inplace=True)
             if metaDF.empty:
                 metaDF = tempDF
+                metaDF[value] = metaDF[value].astype(float)
             else:
                 metaDF = metaDF.merge(tempDF, on='sampleid', how='outer')
+                metaDF[value] = metaDF[value].astype(float)
 
         elif key == 'climate':
             field_list.append('sampleid')
@@ -712,8 +740,10 @@ def quantBetaMetaDF(qs1, metaDict):
             tempDF.rename(columns={field: value}, inplace=True)
             if metaDF.empty:
                 metaDF = tempDF
+                metaDF[value] = metaDF[value].astype(float)
             else:
                 metaDF = metaDF.merge(tempDF, on='sampleid', how='outer')
+                metaDF[value] = metaDF[value].astype(float)
 
         elif key == 'soil_class':
             field_list.append('sampleid')
@@ -725,8 +755,10 @@ def quantBetaMetaDF(qs1, metaDict):
             tempDF.rename(columns={field: value}, inplace=True)
             if metaDF.empty:
                 metaDF = tempDF
+                metaDF[value] = metaDF[value].astype(float)
             else:
                 metaDF = metaDF.merge(tempDF, on='sampleid', how='outer')
+                metaDF[value] = metaDF[value].astype(float)
 
         elif key == 'soil_nutrient':
             field_list.append('sampleid')
@@ -738,8 +770,10 @@ def quantBetaMetaDF(qs1, metaDict):
             tempDF.rename(columns={field: value}, inplace=True)
             if metaDF.empty:
                 metaDF = tempDF
+                metaDF[value] = metaDF[value].astype(float)
             else:
                 metaDF = metaDF.merge(tempDF, on='sampleid', how='outer')
+                metaDF[value] = metaDF[value].astype(float)
 
         elif key == 'microbial':
             field_list.append('sampleid')
@@ -751,8 +785,10 @@ def quantBetaMetaDF(qs1, metaDict):
             tempDF.rename(columns={field: value}, inplace=True)
             if metaDF.empty:
                 metaDF = tempDF
+                metaDF[value] = metaDF[value].astype(float)
             else:
                 metaDF = metaDF.merge(tempDF, on='sampleid', how='outer')
+                metaDF[value] = metaDF[value].astype(float)
 
         elif key == 'user':
             field_list.append('sampleid')
@@ -764,8 +800,10 @@ def quantBetaMetaDF(qs1, metaDict):
             tempDF.rename(columns={field: value}, inplace=True)
             if metaDF.empty:
                 metaDF = tempDF
+                metaDF[value] = metaDF[value].astype(float)
             else:
                 metaDF = metaDF.merge(tempDF, on='sampleid', how='outer')
+                metaDF[value] = metaDF[value].astype(float)
 
     return metaDF
 

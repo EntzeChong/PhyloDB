@@ -1102,7 +1102,6 @@ def getQuantBetaData(request):
         taxaLevel = int(all["taxa"])
         distance = int(all["distance"])
         PC1 = all["PC1"]
-        PC2 = all["PC2"]
 
         metaString = all["meta"]
         metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
@@ -1203,7 +1202,7 @@ def getQuantBetaData(request):
         seriesList = []
         xAxisDict = {}
         yAxisDict = {}
-        dataList = resultDF[[PC1, PC2]].values.tolist()
+        dataList = resultDF[[PC1, fieldList[0]]].values.tolist()
 
         seriesDict = {}
         seriesDict['name'] = fieldList
@@ -1215,7 +1214,7 @@ def getQuantBetaData(request):
         xAxisDict['title'] = xTitle
 
         yTitle = {}
-        yTitle['text'] = PC2
+        yTitle['text'] = fieldList[0]
         yAxisDict['title'] = yTitle
 
         finalDict['series'] = seriesList

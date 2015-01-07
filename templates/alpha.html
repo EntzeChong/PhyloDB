@@ -55,7 +55,7 @@
 
             $("#tree_metaQuant").dynatree({
                 checkbox: true,
-                selectMode: 3,
+                selectMode: 1,
                 initAjax: {
                     url: '/getSampleQuantTree/',
                     dataType: 'jsonp',
@@ -467,6 +467,10 @@
                 chart: { renderTo: 'container-1', type: 'column' },
                 title: { text: null },
                 legend: {
+                    itemStyle: {
+                        fontSize: '7px',
+                        font: '7pt Trebuchet MS, Verdana, sans-serif'
+                    },
                     align: 'right',
                     verticalAlign: 'top',
                     layout: 'vertical',
@@ -494,6 +498,10 @@
                 chart: { renderTo: 'container-2', type: 'scatter', zoomType: 'xy'},
                 title: { text: null },
                 legend: {
+                    itemStyle: {
+                        fontSize: '7px',
+                        font: '7pt Trebuchet MS, Verdana, sans-serif'
+                    },
                     align: 'right',
                     verticalAlign: 'top',
                     layout: 'vertical',
@@ -530,7 +538,7 @@
         <select id="selectall">
             <option value="0">Off</option>
             <option value="2">Kingdoms</option>
-            <option value="3">Phylas</option>
+            <option value="3">Phyla</option>
             <option value="4">Classes</option>
             <option value="5">Orders</option>
             <option value="6">Families</option>

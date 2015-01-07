@@ -55,7 +55,7 @@
 
             $("#tree_metaQuant").dynatree({
                 checkbox: true,
-                selectMode: 3,
+                selectMode: 1,
                 initAjax: {
                     url: '/getSampleQuantTree/',
                     dataType: 'jsonp',
@@ -198,10 +198,14 @@
             if (button1 == 1) {
                 $("#tree_metaQuant").hide();
                 $("#tree_metaCat").show();
+                $("#PC2").show();
+                $("#PC2-text").show();
             }
             else if (button1 == 2) {
                 $("#tree_metaCat").hide();
                 $("#tree_metaQuant").show();
+                $("#PC2").hide();
+                $("#PC2-text").hide();
             }
         }
 
@@ -215,7 +219,7 @@
             else if ((nodesQuant != "") && (taxaLevel != "") && (button1 == 2)) {
                 $("#container-1").empty();
                 $("#container-1").append('Analysis is running...please be patient');
-                getQuantGraphData(button2, nodesQuant, taxaLevel, distance, PC1, PC2);
+                getQuantGraphData(button2, nodesQuant, taxaLevel, distance, PC1);
             }
             else if ((nodesCat != "") && (taxaLevel == "") && (button1 == 1)) {
                 $("#container-1").empty();
@@ -280,7 +284,7 @@
             });
         }
 
-        function getQuantGraphData(button2, nodesQuant, taxaLevel, distance, PC1, PC2) {
+        function getQuantGraphData(button2, nodesQuant, taxaLevel, distance, PC1) {
             var array1 = [];
             for (var i = 0; i < nodesQuant.length; i++) {
                 var key1 = nodesQuant[i].data.tooltip;
@@ -298,7 +302,6 @@
             myDict['button'] = button2;
             myDict['distance'] = distance;
             myDict['PC1'] = PC1;
-            myDict['PC2'] = PC2;
             var jsonDict = JSON.stringify(myDict);
 
             $.ajax({
@@ -326,6 +329,10 @@
                 chart: { renderTo: 'container-1', type: 'scatter', zoomType: 'xy'},
                 title: { text: null },
                 legend: {
+                    itemStyle: {
+                        fontSize: '7px',
+                        font: '7pt Trebuchet MS, Verdana, sans-serif'
+                    },
                     align: 'right',
                     verticalAlign: 'top',
                     layout: 'vertical',
@@ -337,7 +344,7 @@
                 series: series,
                 tooltip: {
                     formatter: function () {
-                        return '{' + series.name + '}' + '<br>' + '(' + this.x + ',' + this.y + ')'
+                        return '{' + this.series.name + '}' + '<br>' + '(' + this.x + ',' + this.y + ')'
                     }
                 },
                 credits: { enabled: false }
@@ -380,7 +387,7 @@
             <td bgcolor="white" width="5px"></td>
             <td bgcolor="white">
                 <select id="selectall">
-                    <option value="2">Phylas</option>
+                    <option value="2">Phyla</option>
                     <option value="3">Classes</option>
                     <option value="4">Orders</option>
                     <option value="5">Families</option>
@@ -417,14 +424,13 @@
                     <option value="PC8">PC8</option>
                     <option value="PC9">PC9</option>
                     <option value="PC10">PC10</option>
-
                 </select>
                 &nbsp<-- Principal component selected (x-axis)
             </td>
         </tr>
         <tr>
             <td bgcolor="white" width="5px"></td>
-            <td bgcolor="white">
+            <td bgcolor="white" id="PC2-text">
                 <select id="PC2">
                     <option value="PC1">PC1</option>
                     <option value="PC2" selected="selected">PC2</option>
