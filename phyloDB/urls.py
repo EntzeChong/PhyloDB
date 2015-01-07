@@ -10,7 +10,8 @@ urlpatterns = patterns('',
     url(r'^alpha_graphs/$', 'database.views.alpha_diversity', name='alpha'),
     url(r'^beta-graphs/$', 'database.views.beta_diversity', name='beta'),
 
-    url(r'^cookie/$', 'database.views.cookie', name='cookie'),
+    url(r'^saveCookie/$', 'database.views.saveCookie', name='saveCookie'),
+    url(r'^getCookie/$', 'database.views.getCookie', name='getCookie'),
 
     url(r'^getProjectTree/$', 'database.trees.getProjectTree', name='getProjectTree'),
     url(r'^getProjectTreeChildren/$', 'database.trees.getProjectTreeChildren', name='getProjectTreeChildren'),

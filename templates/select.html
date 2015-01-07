@@ -9,7 +9,6 @@
         var selNodes = "", selKeys = "";
 
         $(function () {
-
             $('#projectTable').DataTable();
             $('#sampleTable').DataTable();
             $('#collectTable').DataTable();
@@ -41,11 +40,10 @@
                             node.select(true);
                         });
                     }
-
-                    selKeys = $.map(node.tree.getSelectedNodes(), function (node) {
-                        return node.data.id;
-                    });
-                    updateNodes(selKeys);
+                    if (node.childList !=  undefined) {
+                        selNodes = node.tree.getSelectedNodes();
+                        updateNodes(selNodes);
+                    }
                 }
             });
 
@@ -60,24 +58,35 @@
                 $("#tree").dynatree("getRoot").visit(function (node) {
                     node.select(false);
                 });
-                updateNodes(selKeys);
+                updateNodes();
             });
 
             $("#submit").click(function () {
                 var jsonDict = JSON.stringify(selKeys);
                 $.ajax({
                     type: 'GET',
-                    url: '/cookie/',
+                    url: '/saveCookie/',
                     dataType: 'json',
                     data: {all: jsonDict},
                     success: function(data) {
                         var result = JSON.stringify(data);
                         alert(result);
+                        $("#link0").show();
+                        $("#link1").show();
+                        $("#link2").show();
                     }
                 });
             });
 
-        function updateNodes(selKeys) {
+        function updateNodes(selNodes) {
+            var array = [];
+            for (var i = 0; i < selNodes.length; i++) {
+                var key = selNodes[i].data.id;
+                array.push(key);
+            }
+            selKeys = ','.join(array);
+            alert(selKeys);
+
             updateProjectTable(selKeys);
             updateSampleTable(selKeys);
             updateCollectTable(selKeys);

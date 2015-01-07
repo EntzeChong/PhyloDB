@@ -48,8 +48,10 @@
                             node.select(true);
                         });
                     }
-                    nodesCat = node.tree.getSelectedNodes();
-                    chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa, sig_only);
+                    if (node.childList !=  undefined) {
+                        nodesCat = node.tree.getSelectedNodes();
+                        chooseData();
+                    }
                 }
             }); // end tree_metaCat
 
@@ -80,8 +82,10 @@
                             node.select(true);
                         });
                     }
-                    nodesQuant = node.tree.getSelectedNodes();
-                    chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa, sig_only);
+                    if (node.childList !=  undefined) {
+                        nodesQuant = node.tree.getSelectedNodes();
+                        chooseData();
+                    }
                 }
             }); // end tree_metaQuant
 
@@ -97,7 +101,7 @@
                     nodesTaxa = node.tree.getSelectedNodes();
                     searchData(nodesTaxa);
                     if (toggle == "on") {
-                        chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa, sig_only);
+                        chooseData();
                     }
                 }
 
@@ -106,15 +110,15 @@
             // categorical or quantitative data
             $("#button1").change(function () {
                 button1 = $(this).val();
-                chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa, sig_only);
+                chooseDisplay();
+                chooseData();
             });
 
             // dependent variable
             $("#button2").change(function () {
                 button2 = $(this).val();
-                chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa, sig_only);
+                chooseDisplay();
+                chooseData();
             });
 
             $("#sig_box").change(function () {
@@ -123,8 +127,8 @@
                 } else {
                     sig_only = 0
                 }
-                chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa, sig_only);
+                chooseDisplay();
+                chooseData();
             });
 
             // set highchart theme
@@ -260,7 +264,7 @@
                     node.select(false);
                 });
                 toggle = "on";
-                chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa, sig_only);
+                chooseData();
             });
 
             // get all nodes for specified taxa levels
@@ -282,12 +286,12 @@
                 toggle = "off";
                 nodesTaxa = $("#tree_taxa").dynatree("getSelectedNodes");
                 toggle = "on";
-                chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa, sig_only);
+                chooseData();
             });
 
 
         // Choose what tree/graph/text to display
-        function chooseDisplay(button1) {
+        function chooseDisplay() {
             if (button1 == 1) {
                 $("#tree_metaQuant").hide();
                 $("#tree_metaCat").show();
@@ -307,16 +311,16 @@
         }
 
         // select categorical or quantitative data
-        function chooseData(button1, button2, nodesCat, nodesQuant, nodesTaxa, sig_only) {
+        function chooseData() {
             if ((nodesCat != "") && (nodesTaxa != "") && (button1 == 1)) {
                 $("#container-1").empty();
                 $("#container-1").append('Analysis is running...please be patient');
-                getCatGraphData(button2, nodesCat, nodesTaxa, sig_only);
+                getCatGraphData();
             }
             else if ((nodesQuant != "") && (nodesTaxa != "") && (button1 == 2)) {
                 $("#container-2").empty();
                 $("#container-2").append('Analysis is running...please be patient');
-                getQuantGraphData(button2, nodesQuant, nodesTaxa, sig_only);
+                getQuantGraphData();
             }
             else if ((nodesCat != "") && (nodesTaxa == "") && (button1 == 1)) {
                 $("#container-1").empty();
@@ -356,9 +360,9 @@
             $("#Google").attr("href", "http://www.google.com/search?q=" + search);
         }
 
-        function getCatGraphData(button2, nodesCat, nodesTaxa, sig_only) {
+        function getCatGraphData() {
             var array1 = [];
-            for (i = 0; i < nodesCat.length; i++) {
+            for (var i = 0; i < nodesCat.length; i++) {
                 var key1 = nodesCat[i].data.id;
                 var value1 = nodesCat[i].data.title;
                 if (nodesCat[i].getLevel() == 4) {
@@ -411,9 +415,9 @@
             });
         }
 
-        function getQuantGraphData(button2, nodesQuant, nodesTaxa, sig_only) {
+        function getQuantGraphData() {
             var array1 = [];
-            for (i = 0; i < nodesQuant.length; i++) {
+            for (var i = 0; i < nodesQuant.length; i++) {
                 var key1 = nodesQuant[i].data.tooltip;
                 var value1 = nodesQuant[i].data.title;
                 if (nodesQuant[i].getLevel() == 3) {

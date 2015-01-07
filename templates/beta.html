@@ -17,8 +17,8 @@
             // initialize variables
             var button1 = 1, button2 = 2, selTheme = 0;
             var nodesCat = "", nodesQuant = "", taxaLevel = 7;
-            var chart1 = {};
-            var quantOptions = {};
+            var chart1 = {}, chart2 = {};
+            var catOptions = {}, quantOptions = {};
             var distance = 1, PC1 = 'PC1', PC2 ='PC2';
 
             // start of dynatrees
@@ -48,8 +48,10 @@
                             node.select(true);
                         });
                     }
-                    nodesCat = node.tree.getSelectedNodes();
-                    chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
+                    if (node.childList !=  undefined) {
+                        nodesCat = node.tree.getSelectedNodes();
+                        chooseData();
+                    }
                 }
             }); // end tree_metaCat
 
@@ -64,7 +66,12 @@
                 onLazyRead: function(node) {
                     node.appendAjax({
                         url: '/getSampleQuantTreeChildren/',
-                        data: {field: node.data.title}
+                        data: {field: node.data.title},
+                        success: function(node) {
+                            if (node.childList == undefined) {
+                                alert('No samples are available for this variable!');
+                            }
+                        }
                     });
                 },
                 onSelect: function(flag, node) {
@@ -74,8 +81,10 @@
                             node.select(true);
                         });
                     }
-                    nodesQuant = node.tree.getSelectedNodes();
-                    chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
+                    if (node.childList !=  undefined) {
+                        nodesQuant = node.tree.getSelectedNodes();
+                        chooseData();
+                    }
                 }
             }); // end tree_metaQuant
 
@@ -84,55 +93,109 @@
                 selTheme = $(this).val();
 
                 if (selTheme == 1) {
+                    if (button1 == 1) {
                         $("#container-1").empty();
+                        new Highcharts.Chart(catOptions);
+                    }
+                    else if (button1 == 2) {
+                        $("#container-2").empty();
                         new Highcharts.Chart(quantOptions);
+                    }
                 }
                 else if (selTheme == 2) {
                     $.getScript('../media/highcharts/themes/dark-blue.js', function () {
-                        $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        if (button1 == 1) {
+                            $("#container-1").empty();
+                            new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        }
+                        else if (button1 == 2) {
+                            $("#container-2").empty();
+                            new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        }
                     });
                 }
                 else if (selTheme == 3) {
                     $.getScript('../media/highcharts/themes/dark-green.js', function () {
-                        $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        if (button1 == 1) {
+                            $("#container-1").empty();
+                            new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        }
+                        else if (button1 == 2) {
+                            $("#container-2").empty();
+                            new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        }
                     });
                 }
                 else if (selTheme == 4) {
                     $.getScript('../media/highcharts/themes/dark-unica.js', function () {
-                        $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        if (button1 == 1) {
+                            $("#container-1").empty();
+                            new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        }
+                        else if (button1 == 2) {
+                            $("#container-2").empty();
+                            new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        }
                     });
                 }
                 else if (selTheme == 5) {
                     $.getScript('../media/highcharts/themes/gray.js', function () {
-                        $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        if (button1 == 1) {
+                            $("#container-1").empty();
+                            new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        }
+                        else if (button1 == 2) {
+                            $("#container-2").empty();
+                            new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        }
                     });
                 }
                 else if (selTheme == 6) {
                     $.getScript('../media/highcharts/themes/grid.js', function () {
-                        $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        if (button1 == 1) {
+                            $("#container-1").empty();
+                            new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        }
+                        else if (button1 == 2) {
+                            $("#container-2").empty();
+                            new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        }
                     });
                 }
                 else if (selTheme == 7) {
                     $.getScript('../media/highcharts/themes/grid-light.js', function () {
-                        $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        if (button1 == 1) {
+                            $("#container-1").empty();
+                            new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        }
+                        else if (button1 == 2) {
+                            $("#container-2").empty();
+                            new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        }
                     });
                 }
                 else if (selTheme == 8) {
                     $.getScript('../media/highcharts/themes/sand-signika.js', function () {
-                        $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        if (button1 == 1) {
+                            $("#container-1").empty();
+                            new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        }
+                        else if (button1 == 2) {
+                            $("#container-2").empty();
+                            new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        }
                     });
                 }
                 else if (selTheme == 9) {
                     $.getScript('../media/highcharts/themes/skies.js', function () {
-                        $("#container-1").empty();
-                        new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        if (button1 == 1) {
+                            $("#container-1").empty();
+                            new Highcharts.Chart(Highcharts.merge(catOptions, theme));
+                        }
+                        else if (button1 == 2) {
+                            $("#container-2").empty();
+                            new Highcharts.Chart(Highcharts.merge(quantOptions, theme));
+                        }
                     });
                 }
             });
@@ -140,43 +203,43 @@
             // categorical or quantitative data
             $("#button1").change(function () {
                 button1 = $(this).val();
-                chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
+                chooseDisplay();
+                chooseData();
             });
 
             //dependent variable
             $("#button2").change(function () {
                 button2 = $(this).val();
-                chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
+                chooseDisplay();
+                chooseData();
             });
 
             // get all nodes for specified taxa levels
             $("#selectall").change(function () {
                 taxaLevel = $(this).val();
-                chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
+                chooseDisplay();
+                chooseData();
             });
 
             // distance score
             $("#distance").change(function () {
                 distance = $(this).val();
-                chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
+                chooseDisplay();
+                chooseData();
             });
 
             // PC1
             $("#PC1").change(function () {
                 PC1 = $(this).val();
-                chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
+                chooseDisplay();
+                chooseData();
             });
 
             // PC2
             $("#PC2").change(function () {
                 PC2 = $(this).val();
-                chooseDisplay(button1);
-                chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2);
+                chooseDisplay();
+                chooseData();
             });
 
            // Clear all selected nodes
@@ -194,32 +257,36 @@
             });
 
         // Choose what tree/graph/text to display
-        function chooseDisplay(button1) {
+        function chooseDisplay() {
             if (button1 == 1) {
                 $("#tree_metaQuant").hide();
                 $("#tree_metaCat").show();
+                $("#container-2").hide();
+                $("#container-1").show();
                 $("#PC2").show();
                 $("#PC2-text").show();
             }
             else if (button1 == 2) {
                 $("#tree_metaCat").hide();
                 $("#tree_metaQuant").show();
+                $("#container-1").hide();
+                $("#container-2").show();
                 $("#PC2").hide();
                 $("#PC2-text").hide();
             }
         }
 
         // select categorical or quantitative data
-        function chooseData(button1, button2, nodesCat, nodesQuant, taxaLevel, distance, PC1, PC2) {
-            if ((nodesCat != "") && (taxaLevel != "") && (button1 == 1)) {
+        function chooseData() {
+            if ((nodesCat != "") && (button1 == 1)) {
                 $("#container-1").empty();
                 $("#container-1").append('Analysis is running...please be patient');
-                getCatGraphData(button2, nodesCat, taxaLevel, distance, PC1, PC2);
+                getCatGraphData();
             }
-            else if ((nodesQuant != "") && (taxaLevel != "") && (button1 == 2)) {
-                $("#container-1").empty();
-                $("#container-1").append('Analysis is running...please be patient');
-                getQuantGraphData(button2, nodesQuant, taxaLevel, distance, PC1);
+            else if ((nodesQuant != "") && (button1 == 2)) {
+                $("#container-2").empty();
+                $("#container-2").append('Analysis is running...please be patient');
+                getQuantGraphData();
             }
             else if ((nodesCat != "") && (taxaLevel == "") && (button1 == 1)) {
                 $("#container-1").empty();
@@ -227,8 +294,8 @@
                 $("#text-1").val('No data selected');
             }
             else if ((nodesQuant != "") && (taxaLevel == "") && (button1 == 2)) {
-                $("#container-1").empty();
-                $("#container-1").append('Please also choose a taxa level!');
+                $("#container-2").empty();
+                $("#container-2").append('Please also choose a taxa level!');
                 $("#text-1").val('No data selected');
             }
             else if ((nodesCat == "") && (taxaLevel != "") && (button1 == 1)) {
@@ -237,15 +304,15 @@
                 $("#text-1").val('No data selected');
             }
             else if ((nodesQuant == "") && (taxaLevel != "") && (button1 == 2)) {
-                $("#container-1").empty();
-                $("#container-1").append('Please also choose your meta variable(s)!');
+                $("#container-2").empty();
+                $("#container-2").append('Please also choose your meta variable(s)!');
                 $("#text-1").val('No data selected');
             }
         }
 
-        function getCatGraphData(button2, nodesCat, taxaLevel, distance, PC1, PC2) {
+        function getCatGraphData() {
             var array1 = [];
-            for (i in nodesCat) {
+            for (var i = 0; i < nodesCat.length; i++) {
                 var key1 = nodesCat[i].data.id;
                 var value1 = nodesCat[i].data.title;
                 if (nodesCat[i].getLevel() == 4) {
@@ -277,14 +344,14 @@
                     var xAxis = obj['xAxis'];
                     var series = obj['series'];
                     var yAxis = obj['yAxis'];
-                    linechart(xAxis, yAxis, series);
+                    linechart1(xAxis, yAxis, series);
                     var text = obj['text'];
                     $('#text-1').val(text);
                 }
             });
         }
 
-        function getQuantGraphData(button2, nodesQuant, taxaLevel, distance, PC1) {
+        function getQuantGraphData() {
             var array1 = [];
             for (var i = 0; i < nodesQuant.length; i++) {
                 var key1 = nodesQuant[i].data.tooltip;
@@ -317,15 +384,15 @@
                     var xAxis = obj['xAxis'];
                     var series = obj['series'];
                     var yAxis = obj['yAxis'];
-                    linechart(xAxis, yAxis, series);
+                    linechart2(xAxis, yAxis, series);
                     var text = obj['text'];
                     $('#text-1').val(text);
                 }
             });
         }
 
-        function linechart(xAxis, yAxis, series) {
-            quantOptions = {
+        function linechart1(xAxis, yAxis, series) {
+            catOptions = {
                 chart: { renderTo: 'container-1', type: 'scatter', zoomType: 'xy'},
                 title: { text: null },
                 legend: {
@@ -349,7 +416,35 @@
                 },
                 credits: { enabled: false }
             };
-            chart1 = new Highcharts.Chart(quantOptions);
+            chart1 = new Highcharts.Chart(catOptions);
+        }
+
+        function linechart2(xAxis, yAxis, series) {
+            quantOptions = {
+                chart: { renderTo: 'container-2', type: 'scatter', zoomType: 'xy'},
+                title: { text: null },
+                legend: {
+                    itemStyle: {
+                        fontSize: '7px',
+                        font: '7pt Trebuchet MS, Verdana, sans-serif'
+                    },
+                    align: 'right',
+                    verticalAlign: 'top',
+                    layout: 'vertical',
+                    x: 0,
+                    y: 20
+                },
+                xAxis: xAxis,
+                yAxis: yAxis,
+                series: series,
+                tooltip: {
+                    formatter: function () {
+                        return '{' + this.series.name + '}' + '<br>' + '(' + this.x + ',' + this.y + ')'
+                    }
+                },
+                credits: { enabled: false }
+            };
+            chart2 = new Highcharts.Chart(quantOptions);
         }
 
     }); // end document ready function
@@ -479,6 +574,7 @@
         <tr>
             <td>
                 <div id="container-1" style="height: 400px;">No Data has been selected!</div>
+                <div id="container-2" style="height: 400px; display: none">No Data has been selected!</div>
             </td>
         </tr>
     </table>

@@ -153,7 +153,7 @@ def beta_diversity(request):
     )
 
 
-def cookie(request):
+def saveCookie(request):
     if request.is_ajax():
         allJson = request.GET["all"]
         selList = simplejson.loads(allJson)
@@ -163,6 +163,15 @@ def cookie(request):
         text = 'Selected sample(s) have been recorded!'
         res = simplejson.dumps(text, encoding="Latin-1")
         return HttpResponse(res, content_type='application/json')
+
+
+def getCookie(request):
+    samples = Sample.objects.all()
+    try:
+        samples.query = pickle.loads(request.session['selected_samples'])
+        return HttpResponse('yes', content_type='application/text')
+    except:
+        return HttpResponse('no', content_type='application/text')
 
 
 def project_file(request):

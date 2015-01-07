@@ -579,6 +579,7 @@ def getCatAlphaData(request):
 
         taxaString = all["taxa"]
         taxaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(taxaString)
+
         sig_only = int(all["sig_only"])
 
         metaString = all["meta"]
@@ -598,98 +599,35 @@ def getCatAlphaData(request):
         yAxisDict = {}
         grouped1 = finalDF.groupby(['rank', 'taxa', 'taxa_name', 'taxa_id'])
         for name1, group1 in grouped1:
-            for field in final_fieldList:
-                trtList = []
-                valList = []
-                grouped2 = pd.DataFrame()
-                if button == 1:
-                    grouped2 = group1.groupby(field)['count']
-                elif button == 2:
-                    grouped2 = group1.groupby(field)['rel_abund']
-                elif button == 3:
-                    grouped2 = group1.groupby(field)['rich']
-                elif button == 4:
-                    grouped2 = group1.groupby(field)['diversity']
-                for name, group in grouped2:
-                    trtList.append(name)
-                    valList.append(list(group.T))
+            trtList = []
+            valList = []
+            grouped2 = pd.DataFrame()
+            if button == 1:
+                grouped2 = group1.groupby(final_fieldList)['count']
+            elif button == 2:
+                grouped2 = group1.groupby(final_fieldList)['rel_abund']
+            elif button == 3:
+                grouped2 = group1.groupby(final_fieldList)['rich']
+            elif button == 4:
+                grouped2 = group1.groupby(final_fieldList)['diversity']
+            for name2, group2 in grouped2:
+                if isinstance(name2, unicode):
+                    trt = name2
+                else:
+                    trt = ' & '.join(list(name2))
+                trtList.append(trt)
+                valList.append(list(group2.T))
 
-                try:
-                    D = Anova1way()
-                    D.run(valList, conditions_list=trtList)
-                    error = 'no'
-                except:
-                    D['p'] = 1
-                    error = 'yes'
+            try:
+                D = Anova1way()
+                D.run(valList, conditions_list=trtList)
+                error = 'no'
+            except:
+                D['p'] = 1
+                error = 'yes'
 
-                if sig_only == 1:
-                    if D['p'] <= 0.05:
-                        result = result + '===============================================\n'
-                        result = result + 'Taxa level: ' + str(name1[1]) + '\n'
-                        result = result + 'Taxa name: ' + str(name1[2]) + '\n'
-                        if button == 1:
-                            result = result + 'Dependent Variable: Sequence Reads' + '\n'
-                        elif button == 2:
-                            result = result + 'Dependent Variable: Relative Abundance' + '\n'
-                        elif button == 3:
-                            result = result + 'Dependent Variable: Species Richness' + '\n'
-                        elif button == 4:
-                            result = result + 'Dependent Variable: Shannon Diversity' + '\n'
-                        result = result + 'Independent Variable: ' + str(field) + '\n'
-                        if error == 'no':
-                            result = result + str(D) + '\n'
-                        else:
-                            result = result + 'Analysis cannot be performed...' + '\n'
-                        result = result + '===============================================\n'
-                        result = result + '\n\n\n\n'
-
-                        categoryList = []
-                        dataList = []
-                        groupedList = []
-                        for field in final_fieldList:
-                            grouped2 = group1.groupby(field).mean()
-                            categoryDict = {}
-                            categoryDict['name'] = field
-                            categoryDict['categories'] = list(grouped2.index.T)
-                            categoryList.append(categoryDict)
-                            if button == 1:
-                                dataList.extend(list(grouped2['count'].T))
-                            elif button == 2:
-                                dataList.extend(list(grouped2['rel_abund'].T))
-                            elif button == 3:
-                                dataList.extend(list(grouped2['rich'].T))
-                            elif button == 4:
-                                dataList.extend(list(grouped2['diversity'].T))
-                            groupedDict = {}
-                            groupedDict['rotation'] = 0
-                            groupedList.append(groupedDict)
-
-                        seriesDict = {}
-                        seriesDict['name'] = name1[1] + ": " + name1[2]
-                        seriesDict['data'] = dataList
-                        seriesList.append(seriesDict)
-
-                        xTitle = {}
-                        xTitle['text'] = ''
-                        labelDict = {}
-                        labelDict['groupedOptions'] = groupedList
-                        labelDict['rotation'] = 0
-                        xAxisDict['title'] = xTitle
-                        xAxisDict['categories'] = categoryList
-                        xAxisDict['labels'] = labelDict
-
-                        yTitle = {}
-                        if button == 1:
-                            yTitle['text'] = 'Sequence Reads'
-                        elif button == 2:
-                            yTitle['text'] = 'Relative Abundance'
-                        elif button == 3:
-                            yTitle['text'] = 'Species Richness'
-                        elif button == 4:
-                            yTitle['text'] = 'Shannon Diversity'
-                        yAxisDict['title'] = yTitle
-
-                if sig_only == 0:
+            if sig_only == 1:
+                if D['p'] <= 0.05:
                     result = result + '===============================================\n'
                     result = result + 'Taxa level: ' + str(name1[1]) + '\n'
                     result = result + 'Taxa name: ' + str(name1[2]) + '\n'
@@ -701,7 +639,10 @@ def getCatAlphaData(request):
                         result = result + 'Dependent Variable: Species Richness' + '\n'
                     elif button == 4:
                         result = result + 'Dependent Variable: Shannon Diversity' + '\n'
-                    result = result + 'Independent Variable: ' + str(field) + '\n'
+
+                    indVar = ' x '.join(final_fieldList)
+                    result = result + 'Independent Variable: ' + str(indVar) + '\n'
+
                     if error == 'no':
                         result = result + str(D) + '\n'
                     else:
@@ -709,26 +650,17 @@ def getCatAlphaData(request):
                     result = result + '===============================================\n'
                     result = result + '\n\n\n\n'
 
-                    categoryList = []
                     dataList = []
-                    groupedList = []
-                    for field in final_fieldList:
-                        grouped2 = group1.groupby(field).mean()
-                        categoryDict = {}
-                        categoryDict['name'] = field
-                        categoryDict['categories'] = list(grouped2.index.T)
-                        categoryList.append(categoryDict)
-                        if button == 1:
-                            dataList.extend(list(grouped2['count'].T))
-                        elif button == 2:
-                            dataList.extend(list(grouped2['rel_abund'].T))
-                        elif button == 3:
-                            dataList.extend(list(grouped2['rich'].T))
-                        elif button == 4:
-                            dataList.extend(list(grouped2['diversity'].T))
-                        groupedDict = {}
-                        groupedDict['rotation'] = 0
-                        groupedList.append(groupedDict)
+                    grouped2 = group1.groupby(final_fieldList).mean()
+
+                    if button == 1:
+                        dataList.extend(list(grouped2['count'].T))
+                    elif button == 2:
+                        dataList.extend(list(grouped2['rel_abund'].T))
+                    elif button == 3:
+                        dataList.extend(list(grouped2['rich'].T))
+                    elif button == 4:
+                        dataList.extend(list(grouped2['diversity'].T))
 
                     seriesDict = {}
                     seriesDict['name'] = name1[1] + ": " + name1[2]
@@ -736,13 +668,9 @@ def getCatAlphaData(request):
                     seriesList.append(seriesDict)
 
                     xTitle = {}
-                    xTitle['text'] = ''
-                    labelDict = {}
-                    labelDict['groupedOptions'] = groupedList
-                    labelDict['rotation'] = 0
+                    xTitle['text'] = indVar
                     xAxisDict['title'] = xTitle
-                    xAxisDict['categories'] = categoryList
-                    xAxisDict['labels'] = labelDict
+                    xAxisDict['categories'] = trtList
 
                     yTitle = {}
                     if button == 1:
@@ -754,6 +682,61 @@ def getCatAlphaData(request):
                     elif button == 4:
                         yTitle['text'] = 'Shannon Diversity'
                     yAxisDict['title'] = yTitle
+
+            if sig_only == 0:
+                result = result + '===============================================\n'
+                result = result + 'Taxa level: ' + str(name1[1]) + '\n'
+                result = result + 'Taxa name: ' + str(name1[2]) + '\n'
+                if button == 1:
+                    result = result + 'Dependent Variable: Sequence Reads' + '\n'
+                elif button == 2:
+                    result = result + 'Dependent Variable: Relative Abundance' + '\n'
+                elif button == 3:
+                    result = result + 'Dependent Variable: Species Richness' + '\n'
+                elif button == 4:
+                    result = result + 'Dependent Variable: Shannon Diversity' + '\n'
+
+                indVar = ' x '.join(final_fieldList)
+                result = result + 'Independent Variable: ' + str(indVar) + '\n'
+
+                if error == 'no':
+                    result = result + str(D) + '\n'
+                else:
+                    result = result + 'Analysis cannot be performed...' + '\n'
+                result = result + '===============================================\n'
+                result = result + '\n\n\n\n'
+
+                dataList = []
+                grouped2 = group1.groupby(final_fieldList).mean()
+                if button == 1:
+                    dataList.extend(list(grouped2['count'].T))
+                elif button == 2:
+                    dataList.extend(list(grouped2['rel_abund'].T))
+                elif button == 3:
+                    dataList.extend(list(grouped2['rich'].T))
+                elif button == 4:
+                    dataList.extend(list(grouped2['diversity'].T))
+
+                seriesDict = {}
+                seriesDict['name'] = name1[1] + ": " + name1[2]
+                seriesDict['data'] = dataList
+                seriesList.append(seriesDict)
+
+                xTitle = {}
+                xTitle['text'] = indVar
+                xAxisDict['title'] = xTitle
+                xAxisDict['categories'] = trtList
+
+                yTitle = {}
+                if button == 1:
+                    yTitle['text'] = 'Sequence Reads'
+                elif button == 2:
+                    yTitle['text'] = 'Relative Abundance'
+                elif button == 3:
+                    yTitle['text'] = 'Species Richness'
+                elif button == 4:
+                    yTitle['text'] = 'Shannon Diversity'
+                yAxisDict['title'] = yTitle
 
         finalDict['series'] = seriesList
         finalDict['xAxis'] = xAxisDict
@@ -1010,15 +993,19 @@ def getCatBetaData(request):
         seriesList = []
         xAxisDict = {}
         yAxisDict = {}
-        for field in fieldList:
-            grouped = resultDF.groupby(field)
-            for name, group in grouped:
-                dataList = group[[PC1, PC2]].values.tolist()
+        grouped = resultDF.groupby(fieldList)
+        for name, group in grouped:
+            dataList = group[[PC1, PC2]].values.tolist()
 
-                seriesDict = {}
-                seriesDict['name'] = field + ": " + name
-                seriesDict['data'] = dataList
-                seriesList.append(seriesDict)
+            if isinstance(name, unicode):
+                trt = name
+            else:
+                trt = ' & '.join(list(name))
+
+            seriesDict = {}
+            seriesDict['name'] = trt
+            seriesDict['data'] = dataList
+            seriesList.append(seriesDict)
 
         xTitle = {}
         xTitle['text'] = PC1
@@ -1058,7 +1045,8 @@ def getCatBetaData(request):
         elif button == 4:
             result = result + 'Dependent Variable: Shannon Diversity' + '\n'
 
-        result = result + 'Independent Variable: ' + str(fieldList[0]) + '\n'
+        indVar = ' x '.join(fieldList)
+        result = result + 'Independent Variable: ' + str(indVar) + '\n'
 
         if distance == 1:
             result = result + 'Distance score: Bray-Curtis' + '\n'
@@ -1205,9 +1193,37 @@ def getQuantBetaData(request):
         dataList = resultDF[[PC1, fieldList[0]]].values.tolist()
 
         seriesDict = {}
+        seriesDict['type'] = 'scatter'
         seriesDict['name'] = fieldList
         seriesDict['data'] = dataList
         seriesList.append(seriesDict)
+
+        x = resultDF[PC1].values.tolist()
+        y = resultDF[fieldList[0]].values.tolist()
+
+        if max(x) == min(x):
+            stop = 0
+        else:
+            stop = 1
+            slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+            p_value = "%0.3f" % p_value
+            r_square = r_value * r_value
+            r_square = "%0.4f" % r_square
+            min_y = slope*min(x) + intercept
+            max_y = slope*max(x) + intercept
+
+            regrList = []
+            regrList.append([min(x), min_y])
+            regrList.append([max(x), max_y])
+
+            if stop == 0:
+                regDict = {}
+            elif stop == 1:
+                regrDict = {}
+                regrDict['type'] = 'line'
+                regrDict['name'] = 'R2: ' + str(r_square) + '; p-value: ' + str(p_value)
+                regrDict['data'] = regrList
+                seriesList.append(regrDict)
 
         xTitle = {}
         xTitle['text'] = PC1
