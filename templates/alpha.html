@@ -15,7 +15,7 @@
     <script type="text/javascript">
         $(function () {
             // initialize variables
-            var button1 = 1, button2 = 2, toggle = "on", selTheme = 0, i = 0;
+            var button1 = 1, button2 = 2, toggle = "on", selTheme = 0, i = 0, normalize = 1;
             var nodesCat = "", nodesQuant = "", nodesTaxa = "";
             var chart1 = {}, chart2 = {};
             var catOptions = {}, quantOptions = {};
@@ -127,6 +127,12 @@
                 } else {
                     sig_only = 0
                 }
+                chooseDisplay();
+                chooseData();
+            });
+
+            $("#normalize").change(function () {
+                normalize = $(this).val();
                 chooseDisplay();
                 chooseData();
             });
@@ -328,6 +334,7 @@
                 $("#container-2").empty();
                 $("#container-2").append('Please also choose your taxa level(s)!');
                 $("#text-1").val('No data selected');
+                $("#text-raw").val('No data selected');
             }
             else if ((nodesQuant != "") && (nodesTaxa == "") && (button1 == 2)) {
                 $("#container-1").empty();
@@ -341,6 +348,7 @@
                 $("#container-2").empty();
                 $("#container-2").append('Please also choose your meta variable(s)!');
                 $("#text-1").val('No data selected');
+                $("#text-raw").val('No data selected');
             }
             else if ((nodesQuant == "") && (nodesTaxa != "") && (button1 == 2)) {
                 $("#container-1").empty();
@@ -388,6 +396,7 @@
             myDict['taxa'] = taxa;
             myDict['button'] = button2;
             myDict['sig_only'] = sig_only;
+            myDict['normalize'] = normalize;
             var jsonDict = JSON.stringify(myDict);
 
             $.ajax({
@@ -410,6 +419,8 @@
                     barchart(xAxis, yAxis, series);
                     var text = obj['text'];
                     $('#text-1').val(text);
+                    var finalDF = obj['finalDF'];
+                    $('#text-raw').val(finalDF);
 
                 }
             });
@@ -442,6 +453,7 @@
             myDict['taxa'] = taxa;
             myDict['button'] = button2;
             myDict['sig_only'] = sig_only;
+            myDict['normalize'] = normalize;
             var jsonDict = JSON.stringify(myDict);
 
             $.ajax({
@@ -462,6 +474,8 @@
                         alert('No significant regressions!');
                     }
                     linechart(xAxis, yAxis, series);
+                    var finalDF = obj['finalDF'];
+                    $('#text-raw').val(finalDF);
                 }
             });
         }
@@ -597,8 +611,21 @@
     <br>
     <div style="float: left; padding-left: 10px;" id="sig_text">
         Display only significantly different taxa (p <= 0.05): &nbsp
+        <input type="checkbox" id="sig_box">
     </div>
-    <input type="checkbox" id="sig_box">
+    <div  style="float: right; padding-right: 10px;">Select chart theme:
+        <select id="theme">
+            <option value="1" selected="selected">default</option>
+            <option value="2">dark-blue</option>
+            <option value="3">dark-green</option>
+            <option value="4">dark-unica</option>
+            <option value="5">gray</option>
+            <option value="6">grid</option>
+            <option value="7">grid-light</option>
+            <option value="8">sand-signika</option>
+            <option value="9">skies</option>
+        </select>
+    </div>
     <table width="950px" border="2">
         <tr>
             <th style="padding-right: 10px;">GraphData</th>
@@ -612,18 +639,16 @@
                     <option value="4">Shannon Diversity</option>
                 </select>
             </td>
-            <td  style="float: right;">Select chart theme:
-                <select id="theme">
-                    <option value="1" selected="selected">default</option>
-                    <option value="2">dark-blue</option>
-                    <option value="3">dark-green</option>
-                    <option value="4">dark-unica</option>
-                    <option value="5">gray</option>
-                    <option value="6">grid</option>
-                    <option value="7">grid-light</option>
-                    <option value="8">sand-signika</option>
-                    <option value="9">skies</option>
+            <td  style="float: right;">Normalize data (sequence reads):
+                <select id="normalize">
+                    <option value="1" selected="selected">None</option>
+                    <option value="2">Minimum</option>
+                    <option value="3">10th percentile</option>
+                    <option value="4">Mean</option>
+                    <option value="5">Median</option>
+                    <option value="6">90th percentile</option>
                 </select>
+
             </td>
         </tr>
         <tr>
@@ -637,6 +662,11 @@
     <div id="txt-1">
         <p>Test Results:</p>
         <textarea style="width: 950px;" wrap="off" id="text-1" rows="20">No data selected</textarea>
+        <br>
+    </div>
+    <div id="txt-raw">
+        <p>Raw Data:</p>
+        <textarea style="width: 950px;" wrap="off" id="text-raw" rows="20">No data selected</textarea>
     </div>
     <br>
     <br>

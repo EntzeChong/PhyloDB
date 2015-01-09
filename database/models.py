@@ -30,6 +30,8 @@ class Sample(models.Model):
     geo_loc_country = models.CharField(max_length=45, blank=True)
     geo_loc_state = models.CharField(max_length=45, blank=True)
     geo_loc_city = models.CharField(max_length=45, blank=True)
+    geo_loc_farm = models.CharField(max_length=45, blank=True)
+    geo_loc_plot = models.CharField(max_length=45, blank=True)
     latitude = models.CharField(max_length=45, blank=True)
     longitude = models.CharField(max_length=45, blank=True)
     material = models.CharField(max_length=45, blank=True)
@@ -229,77 +231,9 @@ class Profile(models.Model):
     genusid = models.ForeignKey(Genus)
     speciesid = models.ForeignKey(Species)
     count = models.IntegerField()
-    total = models.IntegerField()
-    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
-    binary = models.IntegerField()
-    diversity = models.DecimalField(max_digits=6, decimal_places=4)
+#    total = models.IntegerField()
+#    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
+#    binary = models.IntegerField()
+#    diversity = models.DecimalField(max_digits=6, decimal_places=4)
 
-
-class ProfileKingdom(models.Model):
-    projectid = models.ForeignKey(Project)
-    sampleid = models.ForeignKey(Sample)
-    kingdomid = models.ForeignKey(Kingdom)
-    count = models.IntegerField()
-    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
-    rich = models.IntegerField()
-    diversity = models.DecimalField(max_digits=6, decimal_places=4)
-
-
-class ProfilePhyla(models.Model):
-    projectid = models.ForeignKey(Project)
-    sampleid = models.ForeignKey(Sample)
-    phylaid = models.ForeignKey(Phyla)
-    count = models.IntegerField()
-    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
-    rich = models.IntegerField()
-    diversity = models.DecimalField(max_digits=6, decimal_places=4)
-
-
-class ProfileClass(models.Model):
-    projectid = models.ForeignKey(Project)
-    sampleid = models.ForeignKey(Sample)
-    classid = models.ForeignKey(Class)
-    count = models.IntegerField()
-    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
-    rich = models.IntegerField()
-    diversity = models.DecimalField(max_digits=6, decimal_places=4)
-
-class ProfileOrder(models.Model):
-    projectid = models.ForeignKey(Project)
-    sampleid = models.ForeignKey(Sample)
-    orderid = models.ForeignKey(Order)
-    count = models.IntegerField()
-    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
-    rich = models.IntegerField()
-    diversity = models.DecimalField(max_digits=6, decimal_places=4)
-
-
-class ProfileFamily(models.Model):
-    projectid = models.ForeignKey(Project)
-    sampleid = models.ForeignKey(Sample)
-    familyid = models.ForeignKey(Family)
-    count = models.IntegerField()
-    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
-    rich = models.IntegerField()
-    diversity = models.DecimalField(max_digits=6, decimal_places=4)
-
-
-class ProfileGenus(models.Model):
-    projectid = models.ForeignKey(Project)
-    sampleid = models.ForeignKey(Sample)
-    genusid = models.ForeignKey(Genus)
-    count = models.IntegerField()
-    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
-    rich = models.IntegerField()
-    diversity = models.DecimalField(max_digits=6, decimal_places=4)
-
-
-class ProfileSpecies(models.Model):
-    projectid = models.ForeignKey(Project)
-    sampleid = models.ForeignKey(Sample)
-    speciesid = models.ForeignKey(Species)
-    count = models.IntegerField()
-    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
-    rich = models.IntegerField()
-    diversity = models.DecimalField(max_digits=6, decimal_places=4)
 

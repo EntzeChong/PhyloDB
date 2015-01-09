@@ -8,7 +8,7 @@ from django.template import RequestContext
 from models import Project, Sample
 from forms import UploadForm1, UploadForm2, UploadForm3, UploadForm4, UploadForm5
 from utils import handle_uploaded_file, remove_list
-from parsers import parse_project, parse_sample, parse_taxonomy, parse_profile, taxaprofile
+from parsers import parse_project, parse_sample, parse_taxonomy, parse_profile
 from django.core.servers.basehttp import FileWrapper
 import os
 
@@ -63,8 +63,8 @@ def upload(request):
                 parse_profile(dest, p_uuid)
                 print("Parsed profile!")
 
-                taxaprofile(p_uuid)
-                print("Taxa profiles created")
+                #taxaprofile(p_uuid)
+                #print("Taxa profiles created")
 
             elif form3.is_valid():
                 name = ".".join(["project", "csv"])

@@ -6,7 +6,6 @@ from uuid import uuid4
 from decimal import *
 from models import Project, Sample, Collect, Climate, Soil_class, Soil_nutrient, Management, Microbial, User
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
-from models import ProfileKingdom, ProfilePhyla, ProfileClass, ProfileOrder, ProfileFamily, ProfileGenus, ProfileSpecies
 from django.db.models import Sum, Count
 import fileinput
 from itertools import izip
@@ -31,7 +30,7 @@ def parse_sample(Document, p_uuid):
         s_uuid = uuid4().hex
         rowDict = row
         project = Project.objects.get(projectid=p_uuid)
-        wanted_keys = ['sample_name', 'organism', 'title', 'seq_method', 'collection_date', 'biome', 'feature', 'geo_loc_country', 'geo_loc_state', 'geo_loc_city', 'latitude', 'longitude', 'material', 'elevation']
+        wanted_keys = ['sample_name', 'organism', 'title', 'seq_method', 'collection_date', 'biome', 'feature', 'geo_loc_country', 'geo_loc_state', 'geo_loc_city', 'geo_loc_farm', 'geo_loc_plot', 'latitude', 'longitude', 'material', 'elevation']
         sampleDict = {x: rowDict[x] for x in wanted_keys if x in rowDict}
         m = Sample(projectid=project, sampleid=s_uuid, **sampleDict)
         m.save()
@@ -78,7 +77,7 @@ def parse_taxonomy(Document):
     f.next()
 
     for line in f:
-        subbed = re.sub(r'\(.*?\)', '', line[2])
+        subbed = re.sub(r'(\(.*?\)|k__|p__|c__|o__|f__|g__|s__)', '', line[2])
         taxon = subbed.split(';')
 
         if not Kingdom.objects.filter(kingdomName=taxon[0]).exists():
@@ -135,10 +134,9 @@ def parse_profile(path, p_uuid):
 
     df4 = df1.merge(df3, left_index=True, right_index=True, how='outer')
 
-    df4['Taxonomy'].replace(to_replace='\(.*?\)', value='', regex=True, inplace=True)
-    df4.reset_index(inplace=True)
+    df4['Taxonomy'].replace(to_replace='(\(.*?\)|k__|p__|c__|o__|f__|g__|s__)', value='', regex=True, inplace=True)
+    df4.reset_index(drop=True, inplace=True)
 
-    df4.drop(['OTU'], axis=1, inplace=True)
     df4.set_index(['Taxonomy'], inplace=True)
     df5 = df4.unstack().reset_index(name='count')
     df5.rename(columns={'level_0': 'sample'}, inplace=True)
@@ -146,9 +144,6 @@ def parse_profile(path, p_uuid):
     df6 = df5.groupby('sample')['count'].sum().reset_index()
     df6.rename(columns={'count': 'total'}, inplace=True)
     df7 = df5.merge(df6, on='sample', how='outer')
-    df7['rel_abund'] = df7['count'] / df7['total']
-    df7['binary'] = df7['count'].apply(lambda x: 1 if x > 0 else 0)
-    df7['diversity'] = df7['rel_abund'].apply(lambda x: -1 * x * math.log(x) if x > 0 else 0)
 
     df8 = df7['Taxonomy'].str.split(';').apply(Series, 1)
     df8.rename(columns={0: 'kingdom', 1: 'phyla', 2: 'class', 3: 'order', 4: 'family', 5: 'genus', 6: 'species'}, inplace=True)
@@ -158,17 +153,13 @@ def parse_profile(path, p_uuid):
         if row['count'] > 0:
             name = row['sample']
             k = row['kingdom']
-            p =  row['phyla']
+            p = row['phyla']
             c = row['class']
             o = row['order']
             f = row['family']
             g = row['genus']
             s = row['species']
             count = row['count']
-            total = row['total']
-            rel_abund = row['rel_abund']
-            binary = row['binary']
-            diversity = row['diversity']
             project = Project.objects.get(projectid=p_uuid)
             sample = Sample.objects.filter(projectid=p_uuid).get(sample_name=name)
             t_kingdom = Kingdom.objects.get(kingdomName=k)
@@ -178,89 +169,5 @@ def parse_profile(path, p_uuid):
             t_family = Family.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyName=f)
             t_genus = Genus.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyid_id=t_family, genusName=g)
             t_species = Species.objects.get(kingdomid_id=t_kingdom, phylaid_id=t_phyla, classid_id=t_class, orderid_id=t_order, familyid_id=t_family, genusid_id=t_genus, speciesName=s)
-            record = Profile(projectid=project, sampleid=sample, kingdomid=t_kingdom, phylaid=t_phyla, classid=t_class, orderid=t_order, familyid=t_family, genusid=t_genus, speciesid=t_species, count=count, total=total, rel_abund=rel_abund, binary=binary, diversity=diversity)
+            record = Profile(projectid=project, sampleid=sample, kingdomid=t_kingdom, phylaid=t_phyla, classid=t_class, orderid=t_order, familyid=t_family, genusid=t_genus, speciesid=t_species, count=count)
             record.save()
-
-
-def taxaprofile(p_uuid):
-    getcontext().prec = 6
-    project = Project.objects.get(projectid=p_uuid)
-
-    q1 = Profile.objects.filter(projectid_id=project)
-
-    dict = q1.values('kingdomid', 'sampleid').annotate(count=Sum('count'), rel_abund=Sum('rel_abund'), rich=Sum('binary'), diversity=Sum('diversity'))
-    for myDict in dict:
-        s_uuid = myDict['sampleid']
-        del myDict['sampleid']
-        sample = Sample.objects.get(sampleid=s_uuid)
-        k_uuid = myDict['kingdomid']
-        kingdom = Kingdom.objects.get(kingdomid=k_uuid)
-        del myDict['kingdomid']
-        m = ProfileKingdom(projectid=project, sampleid=sample, kingdomid=kingdom, **myDict)
-        m.save()
-
-    dict = q1.values('phylaid', 'sampleid').annotate(count=Sum('count'), rel_abund=Sum('rel_abund'), rich=Sum('binary'), diversity=Sum('diversity'))
-    for myDict in dict:
-        s_uuid = myDict['sampleid']
-        del myDict['sampleid']
-        sample = Sample.objects.get(sampleid=s_uuid)
-        p_uuid = myDict['phylaid']
-        phyla = Phyla.objects.get(phylaid=p_uuid)
-        del myDict['phylaid']
-        m = ProfilePhyla(projectid=project, sampleid=sample, phylaid=phyla, **myDict)
-        m.save()
-
-    dict = q1.values('classid', 'sampleid').annotate(count=Sum('count'), rel_abund=Sum('rel_abund'), rich=Sum('binary'), diversity=Sum('diversity'))
-    for myDict in dict:
-        s_uuid = myDict['sampleid']
-        del myDict['sampleid']
-        sample = Sample.objects.get(sampleid=s_uuid)
-        c_uuid = myDict['classid']
-        classes = Class.objects.get(classid=c_uuid)
-        del myDict['classid']
-        m = ProfileClass(projectid=project, sampleid=sample, classid=classes, **myDict)
-        m.save()
-
-    dict = q1.values('orderid', 'sampleid').annotate(count=Sum('count'), rel_abund=Sum('rel_abund'), rich=Sum('binary'), diversity=Sum('diversity'))
-    for myDict in dict:
-        s_uuid = myDict['sampleid']
-        del myDict['sampleid']
-        sample = Sample.objects.get(sampleid=s_uuid)
-        o_uuid = myDict['orderid']
-        order = Order.objects.get(orderid=o_uuid)
-        del myDict['orderid']
-        m = ProfileOrder(projectid=project, sampleid=sample, orderid=order, **myDict)
-        m.save()
-
-    dict = q1.values('familyid', 'sampleid').annotate(count=Sum('count'), rel_abund=Sum('rel_abund'), rich=Sum('binary'), diversity=Sum('diversity'))
-    for myDict in dict:
-        s_uuid = myDict['sampleid']
-        del myDict['sampleid']
-        sample = Sample.objects.get(sampleid=s_uuid)
-        f_uuid = myDict['familyid']
-        family = Family.objects.get(familyid=f_uuid)
-        del myDict['familyid']
-        m = ProfileFamily(projectid=project, sampleid=sample, familyid=family, **myDict)
-        m.save()
-
-    dict = q1.values('genusid', 'sampleid').annotate(count=Sum('count'), rel_abund=Sum('rel_abund'), rich=Sum('binary'), diversity=Sum('diversity'))
-    for myDict in dict:
-        s_uuid = myDict['sampleid']
-        del myDict['sampleid']
-        sample = Sample.objects.get(sampleid=s_uuid)
-        g_uuid = myDict['genusid']
-        genus = Genus.objects.get(genusid=g_uuid)
-        del myDict['genusid']
-        m = ProfileGenus(projectid=project, sampleid=sample, genusid=genus, **myDict)
-        m.save()
-
-    dict = q1.values('speciesid', 'sampleid').annotate(count=Sum('count'), rel_abund=Sum('rel_abund'), rich=Sum('binary'), diversity=Sum('diversity'))
-    for myDict in dict:
-        s_uuid = myDict['sampleid']
-        del myDict['sampleid']
-        sample = Sample.objects.get(sampleid=s_uuid)
-        s_uuid = myDict['speciesid']
-        species = Species.objects.get(speciesid=s_uuid)
-        del myDict['speciesid']
-        m = ProfileSpecies(projectid=project, sampleid=sample, speciesid=species, **myDict)
-        m.save()

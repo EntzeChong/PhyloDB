@@ -15,7 +15,7 @@
     <script type="text/javascript">
         $(function () {
             // initialize variables
-            var button1 = 1, button2 = 2, selTheme = 0;
+            var button1 = 1, button2 = 2, selTheme = 0, normalize = 1;
             var nodesCat = "", nodesQuant = "", taxaLevel = 7;
             var chart1 = {}, chart2 = {};
             var catOptions = {}, quantOptions = {};
@@ -87,6 +87,12 @@
                     }
                 }
             }); // end tree_metaQuant
+
+            $("#normalize").change(function () {
+                normalize = $(this).val();
+                chooseDisplay();
+                chooseData();
+            });
 
             // set highchart theme
             $("#theme").change(function () {
@@ -292,21 +298,26 @@
                 $("#container-1").empty();
                 $("#container-1").append('Please also choose a taxa level!');
                 $("#text-1").val('No data selected');
+                $("#text-raw").val('No data selected');
+
             }
             else if ((nodesQuant != "") && (taxaLevel == "") && (button1 == 2)) {
                 $("#container-2").empty();
                 $("#container-2").append('Please also choose a taxa level!');
                 $("#text-1").val('No data selected');
+                $("#text-raw").val('No data selected');
             }
             else if ((nodesCat == "") && (taxaLevel != "") && (button1 == 1)) {
                 $("#container-1").empty();
                 $("#container-1").append('Please also choose your meta variable(s)!');
                 $("#text-1").val('No data selected');
+                $("#text-raw").val('No data selected');
             }
             else if ((nodesQuant == "") && (taxaLevel != "") && (button1 == 2)) {
                 $("#container-2").empty();
                 $("#container-2").append('Please also choose your meta variable(s)!');
                 $("#text-1").val('No data selected');
+                $("#text-raw").val('No data selected');
             }
         }
 
@@ -329,6 +340,7 @@
             myDict['distance'] = distance;
             myDict['PC1'] = PC1;
             myDict['PC2'] = PC2;
+            myDict['normalize'] = normalize;
             var jsonDict = JSON.stringify(myDict);
 
             $.ajax({
@@ -347,6 +359,8 @@
                     linechart1(xAxis, yAxis, series);
                     var text = obj['text'];
                     $('#text-1').val(text);
+                    var finalDF = obj['finalDF'];
+                    $('#text-raw').val(finalDF);
                 }
             });
         }
@@ -369,6 +383,7 @@
             myDict['button'] = button2;
             myDict['distance'] = distance;
             myDict['PC1'] = PC1;
+            myDict['normalize'] = normalize;
             var jsonDict = JSON.stringify(myDict);
 
             $.ajax({
@@ -387,6 +402,8 @@
                     linechart2(xAxis, yAxis, series);
                     var text = obj['text'];
                     $('#text-1').val(text);
+                    var finalDF = obj['finalDF'];
+                    $('#text-raw').val(finalDF);
                 }
             });
         }
@@ -544,6 +561,19 @@
     </table>
     </div>
     <br>
+    <div style="float: right;">Select chart theme:
+        <select id="theme">
+            <option value="1" selected="selected">default</option>
+            <option value="2">dark-blue</option>
+            <option value="3">dark-green</option>
+            <option value="4">dark-unica</option>
+            <option value="5">gray</option>
+            <option value="6">grid</option>
+            <option value="7">grid-light</option>
+            <option value="8">sand-signika</option>
+            <option value="9">skies</option>
+        </select>
+    </div>
     <table width="950px" border="2">
         <tr>
             <th style="padding-right: 10px;">GraphData</th>
@@ -557,18 +587,16 @@
                     <option value="4">Shannon Diversity</option>
                 </select>
             </td>
-            <td style="float: right;">Select chart theme:
-                <select id="theme">
-                    <option value="1" selected="selected">default</option>
-                    <option value="2">dark-blue</option>
-                    <option value="3">dark-green</option>
-                    <option value="4">dark-unica</option>
-                    <option value="5">gray</option>
-                    <option value="6">grid</option>
-                    <option value="7">grid-light</option>
-                    <option value="8">sand-signika</option>
-                    <option value="9">skies</option>
+            <td  style="float: right;">Normalize data (sequence reads):
+                <select id="normalize">
+                    <option value="1" selected="selected">None</option>
+                    <option value="2">Minimum</option>
+                    <option value="3">10th percentile</option>
+                    <option value="4">Mean</option>
+                    <option value="5">Median</option>
+                    <option value="6">90th percentile</option>
                 </select>
+
             </td>
         </tr>
         <tr>
@@ -579,9 +607,14 @@
         </tr>
     </table>
 
-    <div>
+    <div id="txt-1">
         <p>Test Results:</p>
         <textarea style="width: 950px;" wrap="off" id="text-1" rows="20">No data selected</textarea>
+        <br>
+    </div>
+    <div id="txt-raw">
+        <p>Distance Matrix:</p>
+        <textarea style="width: 950px;" wrap="off" id="text-raw" rows="20">No data selected</textarea>
     </div>
     <br>
     <br>

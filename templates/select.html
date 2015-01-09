@@ -41,8 +41,10 @@
                         });
                     }
                     if (node.childList !=  undefined) {
-                        selNodes = node.tree.getSelectedNodes();
-                        updateNodes(selNodes);
+                        selKeys = $.map(node.tree.getSelectedNodes(), function (node) {
+                            return node.data.id;
+                        });
+                        updateNodes(selKeys);
                     }
                 }
             });
@@ -78,15 +80,7 @@
                 });
             });
 
-        function updateNodes(selNodes) {
-            var array = [];
-            for (var i = 0; i < selNodes.length; i++) {
-                var key = selNodes[i].data.id;
-                array.push(key);
-            }
-            selKeys = ','.join(array);
-            alert(selKeys);
-
+        function updateNodes(selKeys) {
             updateProjectTable(selKeys);
             updateSampleTable(selKeys);
             updateCollectTable(selKeys);
@@ -145,6 +139,8 @@
                                 "{{ sample.geo_loc_country }}",
                                 "{{ sample.geo_loc_state }}",
                                 "{{ sample.geo_loc_city }}",
+                                "{{ sample.geo_loc_farm }}",
+                                "{{ sample.geo_loc_plot }}",
                                 "{{ sample.material }}",
                                 "{{ sample.latitude }}",
                                 "{{ sample.longitude }}",
@@ -419,6 +415,8 @@
                         <th>Country</th>
                         <th>State</th>
                         <th>City</th>
+                        <th>Farm/Site</th>
+                        <th>Plot</th>
                         <th>Material</th>
                         <th>Latitude</th>
                         <th>Longitude</th>

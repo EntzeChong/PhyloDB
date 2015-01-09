@@ -4,10 +4,9 @@ import operator
 import simplejson
 from django.http import HttpResponse, StreamingHttpResponse
 from django.db.models import Q
-from models import Project, Sample, Collect, Soil_class, Management, User
+from models import Project, Sample
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
-from models import ProfileKingdom, ProfilePhyla, ProfileClass, ProfileOrder, ProfileFamily, ProfileGenus, ProfileSpecies
-from utils import multidict, catAlphaDF, quantAlphaDF, alphaTaxaDF, catBetaMetaDF, quantBetaMetaDF, betaTaxaDF
+from utils import multidict, catAlphaDF, quantAlphaDF, taxaProfileDF, normalizeAlpha, normalizeBeta, catBetaMetaDF, quantBetaMetaDF
 from utils import permanova_oneway, PCoA
 import pandas as pd
 import numpy as np
@@ -73,7 +72,7 @@ def getSampleCatTree(request):
     management = {'title': 'Management', 'id': 'management', 'tooltip': 'Category', 'isFolder': True,  'hideCheckbox': True, 'children': []}
     user = {'title': 'User-defined', 'id': 'user', 'tooltip': 'Category', 'isFolder': True,  'hideCheckbox': True, 'children': []}
 
-    list = ['sample_name', 'organism', 'seq_method', 'collection_date', 'biome', 'feature', 'geo_loc_country', 'geo_loc_state', 'geo_loc_city', 'material']
+    list = ['sample_name', 'organism', 'seq_method', 'collection_date', 'biome', 'feature', 'geo_loc_country', 'geo_loc_state', 'geo_loc_city', 'geo_loc_farm', 'geo_loc_plot', 'material']
     for i in range(len(list)):
         myNode = {'title': list[i], 'isFolder': True, 'tooltip': 'Field', 'isLazy': True, 'children': []}
         mimark['children'].append(myNode)
@@ -125,7 +124,7 @@ def getSampleCatTreeChildren(request):
 
     if request.is_ajax():
         field = request.GET["field"]
-        mimark = ['sample_name', 'organism', 'seq_method', 'collection_date', 'biome', 'feature', 'geo_loc_country', 'geo_loc_state', 'geo_loc_city', 'material']
+        mimark = ['sample_name', 'organism', 'seq_method', 'collection_date', 'biome', 'feature', 'geo_loc_country', 'geo_loc_state', 'geo_loc_city',  'geo_loc_farm', 'geo_loc_plot', 'material']
         collect = ['depth', 'pool_dna_extracts', 'samp_collection_device', 'sieving', 'storage_cond']
         soil_class = ['drainage_class', 'fao_class', 'horizon', 'local_class', 'profile_position', 'slope_aspect', 'soil_type', 'texture_class']
         management = ['agrochem_addition', 'biological_amendment', 'cover_crop', 'crop_rotation', 'cur_land_use', 'cur_vegetation', 'cur_crop', 'cur_cultivar', 'organic', 'previous_land_use', 'soil_amendments', 'tillage']
@@ -487,7 +486,7 @@ def getTaxaTree(request):
             'id': kingdom.kingdomid,
             'tooltip': "Kingdom",
             'isFolder': True,
-            'expand': True,
+            'expand': False,
             'children': []
         }
         for phyla in phylas:
@@ -576,17 +575,39 @@ def getCatAlphaData(request):
         all = simplejson.loads(allJson)
 
         button = int(all["button"])
+        sig_only = int(all["sig_only"])
+        norm = int(all["normalize"])
 
         taxaString = all["taxa"]
         taxaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(taxaString)
 
-        sig_only = int(all["sig_only"])
-
         metaString = all["meta"]
         metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
-
         metaDF = catAlphaDF(qs1, metaDict)
-        finalDF = alphaTaxaDF(metaDF, taxaDict)
+
+        myList = metaDF['sampleid'].tolist()
+        mySet = list(set(myList))
+        taxaDF = taxaProfileDF(mySet)
+
+        factor = 'none'
+        if norm == 1:
+            factor = 'none'
+        elif norm == 2:
+            factor = 'min'
+        elif norm == 3:
+            factor = '10th percentile'
+        elif norm == 4:
+            factor = 'median'
+        elif norm == 5:
+            factor = 'mean'
+        elif norm == 6:
+            factor = '90th percentile'
+
+        normDF = normalizeAlpha(taxaDF, taxaDict, mySet, factor)
+
+        finalDF = metaDF.merge(normDF, on='sampleid', how='outer')
+        finalDF[['count', 'rel_abund', 'rich', 'diversity']] = finalDF[['count', 'rel_abund', 'rich', 'diversity']].astype(float)
+        pd.set_option('display.max_rows', finalDF.shape[0], 'display.max_columns', finalDF.shape[1], 'display.width', 1000)
 
         final_fieldList = []
         for key in metaDict:
@@ -597,7 +618,8 @@ def getCatAlphaData(request):
         seriesList = []
         xAxisDict = {}
         yAxisDict = {}
-        grouped1 = finalDF.groupby(['rank', 'taxa', 'taxa_name', 'taxa_id'])
+        grouped1 = finalDF.groupby(['rank', 'taxa_name', 'taxa_id'])
+        equal_error = 'no'
         for name1, group1 in grouped1:
             trtList = []
             valList = []
@@ -608,6 +630,8 @@ def getCatAlphaData(request):
                 grouped2 = group1.groupby(final_fieldList)['rel_abund']
             elif button == 3:
                 grouped2 = group1.groupby(final_fieldList)['rich']
+                if group1['rich'].sum() == group1['rich'].count():
+                    equal_error = 'yes'
             elif button == 4:
                 grouped2 = group1.groupby(final_fieldList)['diversity']
             for name2, group2 in grouped2:
@@ -618,19 +642,23 @@ def getCatAlphaData(request):
                 trtList.append(trt)
                 valList.append(list(group2.T))
 
-            try:
-                D = Anova1way()
-                D.run(valList, conditions_list=trtList)
-                error = 'no'
-            except:
+            D = Anova1way()
+            if equal_error == 'no':
+                try:
+                    D.run(valList, conditions_list=trtList)
+                    anova_error = 'no'
+                except:
+                    D['p'] = 1
+                    anova_error = 'yes'
+            else:
                 D['p'] = 1
-                error = 'yes'
+                anova_error = 'yes'
 
             if sig_only == 1:
                 if D['p'] <= 0.05:
                     result = result + '===============================================\n'
-                    result = result + 'Taxa level: ' + str(name1[1]) + '\n'
-                    result = result + 'Taxa name: ' + str(name1[2]) + '\n'
+                    result = result + 'Taxa level: ' + str(name1[0]) + '\n'
+                    result = result + 'Taxa name: ' + str(name1[1]) + '\n'
                     if button == 1:
                         result = result + 'Dependent Variable: Sequence Reads' + '\n'
                     elif button == 2:
@@ -643,10 +671,10 @@ def getCatAlphaData(request):
                     indVar = ' x '.join(final_fieldList)
                     result = result + 'Independent Variable: ' + str(indVar) + '\n'
 
-                    if error == 'no':
-                        result = result + str(D) + '\n'
-                    else:
+                    if equal_error == 'yes' or anova_error == 'yes':
                         result = result + 'Analysis cannot be performed...' + '\n'
+                    else:
+                        result = result + str(D) + '\n'
                     result = result + '===============================================\n'
                     result = result + '\n\n\n\n'
 
@@ -663,7 +691,7 @@ def getCatAlphaData(request):
                         dataList.extend(list(grouped2['diversity'].T))
 
                     seriesDict = {}
-                    seriesDict['name'] = name1[1] + ": " + name1[2]
+                    seriesDict['name'] = str(name1[0]) + ": " + str(name1[1])
                     seriesDict['data'] = dataList
                     seriesList.append(seriesDict)
 
@@ -685,8 +713,8 @@ def getCatAlphaData(request):
 
             if sig_only == 0:
                 result = result + '===============================================\n'
-                result = result + 'Taxa level: ' + str(name1[1]) + '\n'
-                result = result + 'Taxa name: ' + str(name1[2]) + '\n'
+                result = result + 'Taxa level: ' + str(name1[0]) + '\n'
+                result = result + 'Taxa name: ' + str(name1[1]) + '\n'
                 if button == 1:
                     result = result + 'Dependent Variable: Sequence Reads' + '\n'
                 elif button == 2:
@@ -699,10 +727,10 @@ def getCatAlphaData(request):
                 indVar = ' x '.join(final_fieldList)
                 result = result + 'Independent Variable: ' + str(indVar) + '\n'
 
-                if error == 'no':
-                    result = result + str(D) + '\n'
-                else:
+                if equal_error == 'yes' or anova_error == 'yes':
                     result = result + 'Analysis cannot be performed...' + '\n'
+                else:
+                    result = result + str(D) + '\n'
                 result = result + '===============================================\n'
                 result = result + '\n\n\n\n'
 
@@ -718,7 +746,7 @@ def getCatAlphaData(request):
                     dataList.extend(list(grouped2['diversity'].T))
 
                 seriesDict = {}
-                seriesDict['name'] = name1[1] + ": " + name1[2]
+                seriesDict['name'] = str(name1[0]) + ": " + str(name1[1])
                 seriesDict['data'] = dataList
                 seriesList.append(seriesDict)
 
@@ -746,6 +774,8 @@ def getCatAlphaData(request):
             finalDict['empty'] = 0
         else:
             finalDict['empty'] = 1
+
+        finalDict['finalDF'] = str(finalDF)
         res = simplejson.dumps(finalDict)
         return HttpResponse(res, content_type='application/json')
 
@@ -762,46 +792,66 @@ def getQuantAlphaData(request):
 
         button = int(all["button"])
         sig_only = int(all["sig_only"])
-
-        metaString = all["meta"]
-        metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
+        norm = int(all["normalize"])
 
         taxaString = all["taxa"]
         taxaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(taxaString)
 
+        metaString = all["meta"]
+        metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
         metaDF = quantAlphaDF(qs1, metaDict)
 
-        finalDF = alphaTaxaDF(metaDF, taxaDict)
-        finalDF['x-value'] = finalDF['x-value'].astype(float)
+        myList = metaDF['sampleid'].tolist()
+        mySet = list(set(myList))
+        taxaDF = taxaProfileDF(mySet)
+
+        factor = 'none'
+        if norm == 1:
+            factor = 'none'
+        elif norm == 2:
+            factor = 'min'
+        elif norm == 3:
+            factor = '10th percentile'
+        elif norm == 4:
+            factor = 'median'
+        elif norm == 5:
+            factor = 'mean'
+        elif norm == 6:
+            factor = '90th percentile'
 
         final_fieldList = []
         for key, value in metaDict.items():
             final_fieldList.append(value)
 
+        normDF = normalizeAlpha(taxaDF, taxaDict, mySet, factor)
+        finalDF = metaDF.merge(normDF, on='sampleid', how='outer')
+        finalDF[[final_fieldList[0], 'count', 'rel_abund', 'rich', 'diversity']] = finalDF[[final_fieldList[0], 'count', 'rel_abund', 'rich', 'diversity']].astype(float)
+        pd.set_option('display.max_rows', finalDF.shape[0], 'display.max_columns', finalDF.shape[1], 'display.width', 1000)
+
         finalDict = {}
         seriesList = []
         xAxisDict = {}
         yAxisDict = {}
-        grouped1 = finalDF.groupby(['rank', 'taxa', 'taxa_name', 'taxa_id'])
+        grouped1 = finalDF.groupby(['rank', 'taxa_name', 'taxa_id'])
         for name1, group1 in grouped1:
             dataList = []
             x = []
             y = []
             if button == 1:
-                dataList = group1[['x-value', 'count']].values.tolist()
-                x = group1['x-value'].values.tolist()
+                dataList = group1[[final_fieldList[0], 'count']].values.tolist()
+                x = group1[final_fieldList[0]].values.tolist()
                 y = group1['count'].values.tolist()
             elif button == 2:
-                dataList = group1[['x-value', 'rel_abund']].values.tolist()
-                x = group1['x-value'].values.tolist()
+                dataList = group1[[final_fieldList[0], 'rel_abund']].values.tolist()
+                x = group1[final_fieldList[0]].values.tolist()
                 y = group1['rel_abund'].values.tolist()
             elif button == 3:
-                dataList = group1[['x-value', 'rich']].values.tolist()
-                x = group1['x-value'].values.tolist()
+                dataList = group1[[final_fieldList[0], 'rich']].values.tolist()
+                x = group1[final_fieldList[0]].values.tolist()
                 y = group1['rich'].values.tolist()
             elif button == 4:
-                dataList = group1[['x-value', 'diversity']].values.tolist()
-                x = group1['x-value'].values.tolist()
+                dataList = group1[[final_fieldList[0], 'diversity']].values.tolist()
+                x = group1[final_fieldList[0]].values.tolist()
                 y = group1['diversity'].values.tolist()
 
             if max(x) == min(x):
@@ -814,6 +864,8 @@ def getQuantAlphaData(request):
                 r_square = "%0.4f" % r_square
                 min_y = slope*min(x) + intercept
                 max_y = slope*max(x) + intercept
+                slope = "%.3E" % slope
+                intercept = "%.3E" % intercept
 
                 regrList = []
                 regrList.append([min(x), min_y])
@@ -822,7 +874,7 @@ def getQuantAlphaData(request):
             if sig_only == 0:
                 seriesDict = {}
                 seriesDict['type'] = 'scatter'
-                seriesDict['name'] = name1[1] + ": " + name1[2]
+                seriesDict['name'] = str(name1[0]) + ": " + str(name1[1])
                 seriesDict['data'] = dataList
                 seriesList.append(seriesDict)
                 if stop == 0:
@@ -830,7 +882,7 @@ def getQuantAlphaData(request):
                 elif stop == 1:
                     regrDict = {}
                     regrDict['type'] = 'line'
-                    regrDict['name'] = 'R2: ' + str(r_square) + '; p-value: ' + str(p_value)
+                    regrDict['name'] = 'R2: ' + str(r_square) + '; p-value: ' + str(p_value) + '<br>' + '(y = ' + str(slope) + 'x' + ' + ' + str(intercept) + ')'
                     regrDict['data'] = regrList
                     seriesList.append(regrDict)
 
@@ -838,13 +890,13 @@ def getQuantAlphaData(request):
                 if p_value <= 0.05:
                     seriesDict = {}
                     seriesDict['type'] = 'scatter'
-                    seriesDict['name'] = name1[1] + ": " + name1[2]
+                    seriesDict['name'] = str(name1[0]) + ": " + str(name1[1])
                     seriesDict['data'] = dataList
                     seriesList.append(seriesDict)
 
                     regrDict = {}
                     regrDict['type'] = 'line'
-                    regrDict['name'] = 'R2: ' + str(r_square) + '; p-value: ' + str(p_value)
+                    regrDict['name'] = 'R2: ' + str(r_square) + '; p-value: ' + str(p_value) + '<br>' + '(y = ' + str(slope) + 'x' + ' + ' + str(intercept) + ')'
                     regrDict['data'] = regrList
                     seriesList.append(regrDict)
 
@@ -870,6 +922,8 @@ def getQuantAlphaData(request):
             finalDict['empty'] = 0
         else:
             finalDict['empty'] = 1
+
+        finalDict['finalDF'] = str(finalDF)
         res = simplejson.dumps(finalDict)
         return HttpResponse(res, content_type='application/json')
 
@@ -887,70 +941,55 @@ def getCatBetaData(request):
         button = int(all["button"])
         taxaLevel = int(all["taxa"])
         distance = int(all["distance"])
+        norm = int(all["normalize"])
         PC1 = all["PC1"]
         PC2 = all["PC2"]
 
         metaString = all["meta"]
         metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
+        metaDF = catBetaMetaDF(qs1, metaDict)
+
+        myList = metaDF['sampleid'].tolist()
+        mySet = list(set(myList))
+        taxaDF = taxaProfileDF(mySet)
+
+        factor = 'none'
+        factor = 'none'
+        if norm == 1:
+            factor = 'none'
+        elif norm == 2:
+            factor = 'min'
+        elif norm == 3:
+            factor = '10th percentile'
+        elif norm == 4:
+            factor = 'median'
+        elif norm == 5:
+            factor = 'mean'
+        elif norm == 6:
+            factor = '90th percentile'
+
+        normDF = normalizeBeta(taxaDF, taxaLevel, mySet, factor)
+
+        finalDF = metaDF.merge(normDF, on='sampleid', how='outer')
+        pd.set_option('display.max_rows', finalDF.shape[0], 'display.max_columns', finalDF.shape[1], 'display.width', 1000)
 
         fieldList = []
         for key in metaDict:
             fieldList.append(key)
-
-        metaDF = catBetaMetaDF(qs1, metaDict)
-        myset = list(metaDF['sampleid'].T)
-
-        taxaDF = betaTaxaDF(metaDF, myset, taxaLevel)
 
         sampleList = list(set(metaDF['sampleid'].tolist()))
 
-        taxaDF2 = pd.DataFrame()
+        matrixDF = pd.DataFrame()
         if button == 1:
-            fieldList.extend(['rel_abund', 'rich', 'diversity'])
-            taxaDF2 = taxaDF.drop(fieldList, axis=1)
-            taxaDF2.rename(columns={'count': 'response'}, inplace=True)
+            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='count')
         elif button == 2:
-            fieldList.extend(['count', 'rich', 'diversity'])
-            taxaDF2 = taxaDF.drop(fieldList, axis=1)
-            taxaDF2.rename(columns={'rel_abund': 'response'}, inplace=True)
+            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='rel_abund')
         elif button == 3:
-            fieldList.extend(['count', 'rel_abund', 'diversity'])
-            taxaDF2 = taxaDF.drop(fieldList, axis=1)
-            taxaDF2.rename(columns={'rich': 'response'}, inplace=True)
+            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='rich')
         elif button == 4:
-            fieldList.extend(['count', 'rel_abund', 'rich'])
-            taxaDF2 = taxaDF.drop(fieldList, axis=1)
-            taxaDF2.rename(columns={'diversity': 'response'}, inplace=True)
+            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='diversity')
 
-        taxaDF2.set_index(['taxaid', 'sampleid'], drop=True, inplace=True)
-
-        taxaFinalDF = pd.DataFrame()
-        for sample in sampleList:
-            df = taxaDF2.iloc[taxaDF2.index.get_level_values('sampleid') == sample]
-            df.reset_index(inplace=True)
-            df2 = df.drop('sampleid', axis=1)
-            if taxaFinalDF.empty:
-                taxaFinalDF = df2
-                taxaFinalDF.rename(columns={'response': sample}, inplace=True)
-            else:
-                taxaFinalDF = taxaFinalDF.merge(df2, on='taxaid', how='outer')
-                taxaFinalDF.reset_index(drop=True, inplace=True)
-                taxaFinalDF.rename(columns={'response': sample}, inplace=True)
-                taxaFinalDF.fillna(0, inplace=True)
-        taxaFinalDF.set_index('taxaid', drop=True, inplace=True)
-
-        taxa = taxaFinalDF.reset_index(drop=True).T
-        metaDF.set_index('sampleid', drop=True, inplace=True)
-        finalDF = taxa.join(metaDF)
-
-        fieldList = []
-        for key in metaDict:
-            fieldList.append(key)
-
-        pcoaDF = finalDF.reset_index(drop=True)
-        matrixDF = pcoaDF.drop(fieldList, axis=1)
-
-        datamtx = asarray(matrixDF)
+        datamtx = asarray(matrixDF[mySet].T)
         numrows, numcols = shape(datamtx)
         dists = zeros((numrows, numrows))
 
@@ -982,11 +1021,12 @@ def getCatBetaData(request):
         propDF = pd.DataFrame(proportion_explained, columns=['Variance Explained (R2)'], index=axesList)
         eigenDF = valsDF.join(propDF)
 
+        metaDF.set_index('sampleid', drop=True, inplace=True)
         pcoaDF = pd.DataFrame(coordinates, columns=axesList, index=sampleList)
         resultDF = metaDF.join(pcoaDF)
         pd.set_option('display.max_rows', resultDF.shape[0], 'display.max_columns', resultDF.shape[1], 'display.width', 1000)
 
-        trtList = list(finalDF[fieldList[0]].T)
+        trtList = list(metaDF[fieldList[0]])
         bigf, p = permanova_oneway(dists, trtList, 1000)
 
         finalDict = {}
@@ -996,12 +1036,10 @@ def getCatBetaData(request):
         grouped = resultDF.groupby(fieldList)
         for name, group in grouped:
             dataList = group[[PC1, PC2]].values.tolist()
-
             if isinstance(name, unicode):
                 trt = name
             else:
                 trt = ' & '.join(list(name))
-
             seriesDict = {}
             seriesDict['name'] = trt
             seriesDict['data'] = dataList
@@ -1059,10 +1097,15 @@ def getCatBetaData(request):
         elif distance == 5:
             result = result + 'Distance score: Jaccard' + '\n'
 
-        result = result + '===============================================\n'
-        result = result + 'perMANOVA results' + '\n'
-        result = result + 'f-value: ' + str(bigf) + '\n'
-        result = result + 'p-value: ' + str(p) + '\n'
+        if math.isnan(bigf):
+            result = result + '===============================================\n'
+            result = result + 'perMANOVA cannot be performed...' + '\n'
+        else:
+            result = result + '===============================================\n'
+            result = result + 'perMANOVA results' + '\n'
+            result = result + 'f-value: ' + str(bigf) + '\n'
+            result = result + 'p-value: ' + str(p) + '\n'
+
         result = result + '===============================================\n'
         result = result + str(eigenDF) + '\n'
         result = result + '===============================================\n'
@@ -1071,6 +1114,11 @@ def getCatBetaData(request):
         result = result + '\n\n\n\n'
 
         finalDict['text'] = result
+
+        nameList = list(metaDF['sample_name'])
+        distsDF = pd.DataFrame(dists, columns=nameList, index=nameList)
+        pd.set_option('display.max_rows', distsDF.shape[0], 'display.max_columns', distsDF.shape[1], 'display.width', 1000)
+        finalDict['finalDF'] = str(distsDF)
 
         res = simplejson.dumps(finalDict)
         return HttpResponse(res, content_type='application/json')
@@ -1089,68 +1137,54 @@ def getQuantBetaData(request):
         button = int(all["button"])
         taxaLevel = int(all["taxa"])
         distance = int(all["distance"])
+        norm = int(all["normalize"])
         PC1 = all["PC1"]
 
         metaString = all["meta"]
         metaDict = simplejson.JSONDecoder(object_pairs_hook=multidict).decode(metaString)
+        metaDF = quantBetaMetaDF(qs1, metaDict)
+
+        myList = metaDF['sampleid'].tolist()
+        mySet = list(set(myList))
+        taxaDF = taxaProfileDF(mySet)
+
+        factor = 'none'
+        factor = 'none'
+        if norm == 1:
+            factor = 'none'
+        elif norm == 2:
+            factor = 'min'
+        elif norm == 3:
+            factor = '10th percentile'
+        elif norm == 4:
+            factor = 'median'
+        elif norm == 5:
+            factor = 'mean'
+        elif norm == 6:
+            factor = '90th percentile'
+
+        normDF = normalizeBeta(taxaDF, taxaLevel, mySet, factor)
+
+        finalDF = metaDF.merge(normDF, on='sampleid', how='outer')
+        pd.set_option('display.max_rows', finalDF.shape[0], 'display.max_columns', finalDF.shape[1], 'display.width', 1000)
 
         fieldList = []
         for key, value in metaDict.items():
             fieldList.append(value)
-
-        metaDF = quantBetaMetaDF(qs1, metaDict)
-        myset = list(metaDF['sampleid'].T)
-
-        taxaDF = betaTaxaDF(metaDF, myset, taxaLevel)
 
         sampleList = list(set(metaDF['sampleid'].tolist()))
 
-        taxaDF2 = pd.DataFrame()
+        matrixDF = pd.DataFrame()
         if button == 1:
-            fieldList.extend(['rel_abund', 'rich', 'diversity'])
-            taxaDF2 = taxaDF.drop(fieldList, axis=1)
-            taxaDF2.rename(columns={'count': 'response'}, inplace=True)
+            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='count')
         elif button == 2:
-            fieldList.extend(['count', 'rich', 'diversity'])
-            taxaDF2 = taxaDF.drop(fieldList, axis=1)
-            taxaDF2.rename(columns={'rel_abund': 'response'}, inplace=True)
+            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='rel_abund')
         elif button == 3:
-            fieldList.extend(['count', 'rel_abund', 'diversity'])
-            taxaDF2 = taxaDF.drop(fieldList, axis=1)
-            taxaDF2.rename(columns={'rich': 'response'}, inplace=True)
+            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='rich')
         elif button == 4:
-            fieldList.extend(['count', 'rel_abund', 'rich'])
-            taxaDF2 = taxaDF.drop(fieldList, axis=1)
-            taxaDF2.rename(columns={'diversity': 'response'}, inplace=True)
+            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='diversity')
 
-        taxaDF2.set_index(['taxaid', 'sampleid'], drop=True, inplace=True)
-
-        taxaFinalDF = pd.DataFrame()
-        for sample in sampleList:
-            df = taxaDF2.iloc[taxaDF2.index.get_level_values('sampleid') == sample]
-            df.reset_index(inplace=True)
-            df2 = df.drop('sampleid', axis=1)
-            if taxaFinalDF.empty:
-                taxaFinalDF = df2
-                taxaFinalDF.rename(columns={'response': sample}, inplace=True)
-            else:
-                taxaFinalDF = taxaFinalDF.merge(df2, on='taxaid', how='outer')
-                taxaFinalDF.reset_index(drop=True, inplace=True)
-                taxaFinalDF.rename(columns={'response': sample}, inplace=True)
-                taxaFinalDF.fillna(0, inplace=True)
-        taxaFinalDF.set_index('taxaid', drop=True, inplace=True)
-
-        taxa = taxaFinalDF.reset_index(drop=True).T
-        metaDF.set_index('sampleid', drop=True, inplace=True)
-        finalDF = taxa.join(metaDF)
-        fieldList = []
-        for key, value in metaDict.items():
-            fieldList.append(value)
-
-        pcoaDF = finalDF.reset_index(drop=True)
-        matrixDF = pcoaDF.drop(fieldList, axis=1)
-
-        datamtx = asarray(matrixDF)
+        datamtx = asarray(matrixDF[mySet].T)
         numrows, numcols = shape(datamtx)
         dists = zeros((numrows, numrows))
 
@@ -1182,9 +1216,11 @@ def getQuantBetaData(request):
         propDF = pd.DataFrame(proportion_explained, columns=['Variance Explained (R2)'], index=axesList)
         eigenDF = valsDF.join(propDF)
 
+        metaDF.set_index('sampleid', drop=True, inplace=True)
         pcoaDF = pd.DataFrame(coordinates, columns=axesList, index=sampleList)
         resultDF = metaDF.join(pcoaDF)
         pd.set_option('display.max_rows', resultDF.shape[0], 'display.max_columns', resultDF.shape[1], 'display.width', 1000)
+
 
         finalDict = {}
         seriesList = []
@@ -1211,6 +1247,8 @@ def getQuantBetaData(request):
             r_square = "%0.4f" % r_square
             min_y = slope*min(x) + intercept
             max_y = slope*max(x) + intercept
+            slope = "%.3E" % slope
+            intercept = "%.3E" % intercept
 
             regrList = []
             regrList.append([min(x), min_y])
@@ -1221,7 +1259,7 @@ def getQuantBetaData(request):
             elif stop == 1:
                 regrDict = {}
                 regrDict['type'] = 'line'
-                regrDict['name'] = 'R2: ' + str(r_square) + '; p-value: ' + str(p_value)
+                regrDict['name'] = 'R2: ' + str(r_square) + '; p-value: ' + str(p_value) + '<br>' + '(y = ' + str(slope) + 'x' + ' + ' + str(intercept) + ')'
                 regrDict['data'] = regrList
                 seriesList.append(regrDict)
 
@@ -1284,6 +1322,11 @@ def getQuantBetaData(request):
         result = result + '\n\n\n\n'
 
         finalDict['text'] = result
+
+        nameList = list(metaDF['sample_name'])
+        distsDF = pd.DataFrame(dists, columns=nameList, index=nameList)
+        pd.set_option('display.max_rows', distsDF.shape[0], 'display.max_columns', distsDF.shape[1], 'display.width', 1000)
+        finalDict['finalDF'] = str(distsDF)
 
         res = simplejson.dumps(finalDict)
         return HttpResponse(res, content_type='application/json')
