@@ -4,19 +4,7 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f5def0b1-44de-4e55-9c23-a7de3aa1fb18" name="Default" comment="normalization is fully functional">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/uploads/143d73bcf9a94bce9696dfe8217c0ee9/mothur.shared" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/uploads/b987fab9cbcf4b94904adef9afae28ce/mothur.shared" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/uploads/d3eb0b1c0ec64d41858ee73d48d194b5/mothur.shared" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/uploads/143d73bcf9a94bce9696dfe8217c0ee9/mothur.taxonomy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/uploads/b987fab9cbcf4b94904adef9afae28ce/mothur.taxonomy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/uploads/d3eb0b1c0ec64d41858ee73d48d194b5/mothur.taxonomy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/uploads/143d73bcf9a94bce9696dfe8217c0ee9/project.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/uploads/b987fab9cbcf4b94904adef9afae28ce/project.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/uploads/d3eb0b1c0ec64d41858ee73d48d194b5/project.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/uploads/143d73bcf9a94bce9696dfe8217c0ee9/sample.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/uploads/b987fab9cbcf4b94904adef9afae28ce/sample.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/uploads/d3eb0b1c0ec64d41858ee73d48d194b5/sample.csv" />
+    <list default="true" id="f5def0b1-44de-4e55-9c23-a7de3aa1fb18" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="PhyloDB.iws" />
@@ -687,7 +675,11 @@
       <created>1420835851199</created>
       <updated>1420835851199</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="normalization is fully functional">
+      <created>1420836800505</created>
+      <updated>1420836800505</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
