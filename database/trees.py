@@ -125,7 +125,7 @@ def getSampleCatTreeChildren(request):
         if field in mimark:
             exclude_list = []
             exclude_list.append(Q(**{field: 'null'}))
-            values = Sample.objects.values_list(field, flat='True').filter(sampleid__in=selected).exclude(reduce(operator.or_, exclude_list)).distinct()
+            values = Sample.objects.values_list(field, flat='True').filter(sampleid__in=selected).exclude(reduce(operator.or_, exclude_list)).distinct().order_by(field)
             for j in range(len(values)):
                 myNode1 = {
                     'title': values[j],
@@ -152,7 +152,7 @@ def getSampleCatTreeChildren(request):
             table_field = 'collect__' + field
             exclude_list = []
             exclude_list.append(Q(**{table_field: 'null'}))
-            values = Sample.objects.values_list(table_field, flat='True').filter(sampleid__in=selected).exclude(reduce(operator.or_, exclude_list)).distinct()
+            values = Sample.objects.values_list(table_field, flat='True').filter(sampleid__in=selected).exclude(reduce(operator.or_, exclude_list)).distinct().order_by(table_field)
             for j in range(len(values)):
                 myNode1 = {
                     'title': values[j],
@@ -179,7 +179,7 @@ def getSampleCatTreeChildren(request):
             table_field = 'soil_class__' + field
             exclude_list = []
             exclude_list.append(Q(**{table_field: 'null'}))
-            values = Sample.objects.values_list(table_field, flat='True').filter(sampleid__in=selected).exclude(reduce(operator.or_, exclude_list)).distinct()
+            values = Sample.objects.values_list(table_field, flat='True').filter(sampleid__in=selected).exclude(reduce(operator.or_, exclude_list)).distinct().order_by(table_field)
             for j in range(len(values)):
                 myNode1 = {
                     'title': values[j],
@@ -206,7 +206,7 @@ def getSampleCatTreeChildren(request):
             table_field = 'management__' + field
             exclude_list = []
             exclude_list.append(Q(**{table_field: 'null'}))
-            values = Sample.objects.values_list(table_field, flat='True').filter(sampleid__in=selected).exclude(reduce(operator.or_, exclude_list)).distinct()
+            values = Sample.objects.values_list(table_field, flat='True').filter(sampleid__in=selected).exclude(reduce(operator.or_, exclude_list)).distinct().order_by(table_field)
             for j in range(len(values)):
                 myNode1 = {
                     'title': values[j],
@@ -234,7 +234,7 @@ def getSampleCatTreeChildren(request):
             table_field = 'user__' + field
             exclude_list = []
             exclude_list.append(Q(**{table_field: 'null'}))
-            values = Sample.objects.values_list(table_field, flat='True').filter(sampleid__in=selected).exclude(reduce(operator.or_, exclude_list)).distinct()
+            values = Sample.objects.values_list(table_field, flat='True').filter(sampleid__in=selected).exclude(reduce(operator.or_, exclude_list)).distinct().order_by(table_field)
             for j in range(len(values)):
                 myNode1 = {
                     'title': values[j],

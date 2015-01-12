@@ -61,13 +61,13 @@ def getCatBetaData(request):
 
         matrixDF = pd.DataFrame()
         if button == 1:
-            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='count')
+            matrixDF = finalDF.pivot(index='taxaid', columns='sampleid', values='count')
         elif button == 2:
-            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='rel_abund')
+            matrixDF = finalDF.pivot(index='taxaid', columns='sampleid', values='rel_abund')
         elif button == 3:
-            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='rich')
+            matrixDF = finalDF.pivot(index='taxaid', columns='sampleid', values='rich')
         elif button == 4:
-            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='diversity')
+            matrixDF = finalDF.pivot(index='taxaid', columns='sampleid', values='diversity')
 
         datamtx = asarray(matrixDF[mySet].T)
         numrows, numcols = shape(datamtx)
@@ -258,13 +258,13 @@ def getQuantBetaData(request):
 
         matrixDF = pd.DataFrame()
         if button == 1:
-            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='count')
+            matrixDF = finalDF.pivot(index='taxaid', columns='sampleid', values='count')
         elif button == 2:
-            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='rel_abund')
+            matrixDF = finalDF.pivot(index='taxaid', columns='sampleid', values='rel_abund')
         elif button == 3:
-            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='rich')
+            matrixDF = finalDF.pivot(index='taxaid', columns='sampleid', values='rich')
         elif button == 4:
-            matrixDF = finalDF.pivot_table(index='taxaid', columns='sampleid', values='diversity')
+            matrixDF = finalDF.pivot(index='taxaid', columns='sampleid', values='diversity')
 
         datamtx = asarray(matrixDF[mySet].T)
         numrows, numcols = shape(datamtx)
