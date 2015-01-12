@@ -67,7 +67,7 @@
         </table>
     </div>
 
-    <div id="Menu">
+    <div id="Menu" style="position: fixed;">
         <div class="menuTitle">
            Menu
         </div>
@@ -78,8 +78,8 @@
             <p><em><strong>General Info</strong></em></p>
             <hr>
 
-            <a class="Offmouse" href="{% url "home" %}" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Overview</li></a>
-            <a class="Offmouse" href="{% url "instructions" %}" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Instructions</li></a>
+            <a class="Offmouse" href="{% url "home" %}" target="_blank" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Overview</li></a>
+            <a class="Offmouse" href="{% url "instructions" %}" target="_blank" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Instructions</li></a>
             <br>
 
             <div>
@@ -89,7 +89,7 @@
             </div>
 
             <a class="Offmouse" href="{% url "upload" %}" target="_blank" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>[Upload Data]</li></a>
-            <a class="Offmouse" href="{% url "select" %}" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Select Data</li></a>
+            <a class="Offmouse" href="{% url "select" %}" target="_blank" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Select Data</li></a>
             <br>
 
             <div id="link0">
@@ -98,9 +98,13 @@
                 <hr>
             </div>
 
-            <a id="link1" style="display: none" class="Offmouse" href="{% url "alpha" %}" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Alpha Diversity</li></a>
-            <a id="link2" style="display: none"  class="Offmouse" href="{% url "beta" %}" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Beta Diversity</li></a>
+            <a id="link1" style="display: none" class="Offmouse" href="{% url "alpha" %}" target="_blank" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Alpha Diversity</li></a>
+            <a id="link2" style="display: none"  class="Offmouse" href="{% url "beta" %}" target="_blank" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Beta Diversity</li></a>
             <br>
+        </div>
+        <div>
+            <input id="run" type="button" value="Run Analysis!"/>
+        </div>
         </div>
     </div>
 

@@ -50,7 +50,6 @@
                     }
                     if (node.childList !=  undefined) {
                         nodesCat = node.tree.getSelectedNodes();
-                        chooseData();
                     }
                 }
             }); // end tree_metaCat
@@ -91,7 +90,6 @@
             $("#normalize").change(function () {
                 normalize = $(this).val();
                 chooseDisplay();
-                chooseData();
             });
 
             // set highchart theme
@@ -210,41 +208,39 @@
             $("#button1").change(function () {
                 button1 = $(this).val();
                 chooseDisplay();
-                chooseData();
             });
 
             //dependent variable
             $("#button2").change(function () {
                 button2 = $(this).val();
                 chooseDisplay();
-                chooseData();
             });
 
             // get all nodes for specified taxa levels
             $("#selectall").change(function () {
                 taxaLevel = $(this).val();
                 chooseDisplay();
-                chooseData();
             });
 
             // distance score
             $("#distance").change(function () {
                 distance = $(this).val();
                 chooseDisplay();
-                chooseData();
             });
 
             // PC1
             $("#PC1").change(function () {
                 PC1 = $(this).val();
                 chooseDisplay();
-                chooseData();
             });
 
             // PC2
             $("#PC2").change(function () {
                 PC2 = $(this).val();
                 chooseDisplay();
+            });
+
+            $("#run").click(function () {
                 chooseData();
             });
 
@@ -592,9 +588,8 @@
                     <option value="1" selected="selected">None</option>
                     <option value="2">Minimum</option>
                     <option value="3">10th percentile</option>
-                    <option value="4">Mean</option>
+                    <option value="4">25th percentile</option>
                     <option value="5">Median</option>
-                    <option value="6">90th percentile</option>
                 </select>
 
             </td>

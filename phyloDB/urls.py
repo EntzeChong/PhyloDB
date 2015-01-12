@@ -4,7 +4,6 @@ from django.conf.urls import *
 urlpatterns = patterns('',
 
     url(r'^home/$', 'database.views.home', name='home'),
-    url(r'^instructions/$', 'database.views.instructions', name='instructions'),
     url(r'^upload/$', 'database.views.upload', name='upload'),
     url(r'^select/$', 'database.views.select', name='select'),
     url(r'^alpha_graphs/$', 'database.views.alpha_diversity', name='alpha'),
@@ -23,12 +22,14 @@ urlpatterns = patterns('',
     url(r'^getSampleQuantTreeChildren/$', 'database.trees.getSampleQuantTreeChildren', name='getSampleQuantTreeChildren'),
 
     url(r'^getTaxaTree/$', 'database.trees.getTaxaTree', name='getTaxaTree'),
+    url(r'^getTaxaTreeChildren/$', 'database.trees.getTaxaTreeChildren', name='getTaxaTreeChildren'),
 
-    url(r'^getCatAlphaData', 'database.trees.getCatAlphaData', name='getCatAlphaData'),
-    url(r'^getQuantAlphaData', 'database.trees.getQuantAlphaData', name='getQuantAlphaData'),
-    url(r'^getCatBetaData', 'database.trees.getCatBetaData', name='getCatBetaData'),
-    url(r'^getQuantBetaData', 'database.trees.getQuantBetaData', name='getQuantBetaData'),
+    url(r'^getCatAlphaData', 'database.alpha_graphs.getCatAlphaData', name='getCatAlphaData'),
+    url(r'^getQuantAlphaData', 'database.alpha_graphs.getQuantAlphaData', name='getQuantAlphaData'),
+    url(r'^getCatBetaData', 'database.beta_graphs.getCatBetaData', name='getCatBetaData'),
+    url(r'^getQuantBetaData', 'database.beta_graphs.getQuantBetaData', name='getQuantBetaData'),
 
+    url(r'^instructions', 'database.views.instructions', name='instructions'),
     url(r'^project_file', 'database.views.project_file', name='project_file'),
     url(r'^sample_file', 'database.views.sample_file', name='sample_file'),
     url(r'^shared_file', 'database.views.shared_file', name='shared_file'),

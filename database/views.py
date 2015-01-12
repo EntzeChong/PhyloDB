@@ -1,24 +1,20 @@
 import datetime
+from django.core.servers.basehttp import FileWrapper
+from django.http import HttpResponse
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from forms import UploadForm1, UploadForm2, UploadForm3, UploadForm4, UploadForm5
+from models import Project, Sample
+import os
+from parsers import parse_project, parse_sample, parse_taxonomy, parse_profile
 import pickle
 import simplejson
 from uuid import uuid4
-from django.shortcuts import render_to_response
-from django.http import HttpResponse
-from django.template import RequestContext
-from models import Project, Sample
-from forms import UploadForm1, UploadForm2, UploadForm3, UploadForm4, UploadForm5
 from utils import handle_uploaded_file, remove_list
-from parsers import parse_project, parse_sample, parse_taxonomy, parse_profile
-from django.core.servers.basehttp import FileWrapper
-import os
 
 
 def home(request):
     return render_to_response('home.html')
-
-
-def instructions(request):
-    return render_to_response('instructions.html')
 
 
 def upload(request):
@@ -29,11 +25,8 @@ def upload(request):
         form4 = UploadForm4(request.POST, request.FILES)
         form5 = UploadForm5(request.POST, request.FILES)
 
-        year = datetime.datetime.now().year
-        month = datetime.datetime.now().month
-        day = datetime.datetime.now().day
         p_uuid = uuid4().hex
-        date = "-".join([str(year), str(month), str(day)])
+        date = datetime.date.today().isoformat()
         dest = "/".join(["uploads", str(p_uuid)])
 
         if form1.is_valid():
@@ -114,7 +107,7 @@ def upload(request):
     elif request.method == 'POST' and 'clickMe' in request.POST:
         remove_list(request)
 
-    projects = Project.objects.all()
+    projects = Project.objects.all().order_by('project_name')
     return render_to_response(
         'upload.html',
         {'projects': projects,
@@ -172,6 +165,15 @@ def getCookie(request):
         return HttpResponse('yes', content_type='application/text')
     except:
         return HttpResponse('no', content_type='application/text')
+
+
+def instructions(request):
+    filename = "samples/Instructions.doc"
+    wrapper = FileWrapper(file(filename))
+    response = HttpResponse(wrapper, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="Instructions.doc"'
+    response['Content-Length'] = os.path.getsize(filename)
+    return response
 
 
 def project_file(request):

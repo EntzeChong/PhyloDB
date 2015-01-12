@@ -1,17 +1,11 @@
-import time
 import csv
-import re
-import math
-from uuid import uuid4
-from decimal import *
 from models import Project, Sample, Collect, Climate, Soil_class, Soil_nutrient, Management, Microbial, User
 from models import Kingdom, Phyla, Class, Order, Family, Genus, Species, Profile
-from django.db.models import Sum, Count
-import fileinput
-from itertools import izip
 import pandas as pd
 from pandas.io.parsers import read_csv
 from pandas import Series
+import re
+from uuid import uuid4
 
 
 def parse_project(filepath, uploaddate, Document, p_uuid):

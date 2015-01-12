@@ -15,8 +15,8 @@
     <script type="text/javascript">
         $(function () {
             // initialize variables
-            var button1 = 1, button2 = 2, toggle = "on", selTheme = 0, i = 0, normalize = 1;
-            var nodesCat = "", nodesQuant = "", nodesTaxa = "";
+            var button1 = 1, button2 = 2, selTheme = 0, i = 0, normalize = 1;
+            var nodesCat = "", nodesQuant = "", nodesTaxa = "", selectAll = 0;
             var chart1 = {}, chart2 = {};
             var catOptions = {}, quantOptions = {};
             var sig_only = 0;
@@ -24,6 +24,7 @@
             // start of dynatrees
             $("#tree_metaCat").dynatree({
                 checkbox: true,
+                rootVisible: false,
                 selectMode: 3,
                 initAjax: {
                     url: '/getSampleCatTree/',
@@ -48,10 +49,7 @@
                             node.select(true);
                         });
                     }
-                    if (node.childList !=  undefined) {
-                        nodesCat = node.tree.getSelectedNodes();
-                        chooseData();
-                    }
+                    nodesCat = node.tree.getSelectedNodes();
                 }
             }); // end tree_metaCat
 
@@ -73,7 +71,6 @@
                             }
                         }
                     });
-
                 },
                 onSelect: function(flag, node) {
                     if (flag && node.childList == undefined) {
@@ -82,10 +79,7 @@
                             node.select(true);
                         });
                     }
-                    if (node.childList !=  undefined) {
-                        nodesQuant = node.tree.getSelectedNodes();
-                        chooseData();
-                    }
+                    nodesQuant = node.tree.getSelectedNodes();
                 }
             }); // end tree_metaQuant
 
@@ -97,30 +91,44 @@
                     dataType: 'jsonp',
                     data: {}
                 },
-                onSelect: function(select, node) {
-                    nodesTaxa = node.tree.getSelectedNodes();
-                    searchData(nodesTaxa);
-                    if (toggle == "on") {
-                        chooseData();
+                onLazyRead: function(node) {
+                    node.appendAjax({
+                        url: '/getTaxaTreeChildren/',
+                        data: {
+                            tooltip: node.data.tooltip,
+                            id: node.data.id
+                        }
+                    });
+                },
+                onSelect: function(flag, node) {
+                    if (flag && node.childList == undefined) {
+                        node.reloadChildren(function () {
+                            node.select(false);
+                            node.select(true);
+                        });
                     }
+                    nodesTaxa = node.tree.getSelectedNodes();
+                    searchData();
                 }
-
             }); // end tree_taxa
+
+            $("#run").click(function () {
+                chooseData();
+            });
 
             // categorical or quantitative data
             $("#button1").change(function () {
                 button1 = $(this).val();
                 chooseDisplay();
-                chooseData();
             });
 
             // dependent variable
             $("#button2").change(function () {
                 button2 = $(this).val();
                 chooseDisplay();
-                chooseData();
             });
 
+            // only display significant ANOVAs
             $("#sig_box").change(function () {
                 if ( document.getElementById('sig_box').checked ) {
                     sig_only = 1
@@ -128,13 +136,12 @@
                     sig_only = 0
                 }
                 chooseDisplay();
-                chooseData();
             });
 
+            // normalize data
             $("#normalize").change(function () {
                 normalize = $(this).val();
                 chooseDisplay();
-                chooseData();
             });
 
             // set highchart theme
@@ -264,35 +271,15 @@
             });
 
             $("#clearTaxa").click(function() {
-                toggle = "off";
                 $("#selectall").val(0);
                 $("#tree_taxa").dynatree("getRoot").visit(function (node) {
                     node.select(false);
                 });
-                toggle = "on";
-                chooseData();
             });
 
-            // get all nodes for specified taxa levels
+            // select all taxa for given level
             $("#selectall").change(function () {
-                var rank = $(this).val();
-
-                $("#tree_taxa").dynatree("getRoot").visit(function (node) {
-                    toggle = "off";
-                    node.select(false);
-                    toggle = "on";
-                });
-                $("#tree_taxa").dynatree("getRoot").visit(function (node) {
-                    toggle = "off";
-                    if (node.getLevel() == rank) {
-                        node.select(true);
-                    }
-                    toggle = "on";
-                });
-                toggle = "off";
-                nodesTaxa = $("#tree_taxa").dynatree("getSelectedNodes");
-                toggle = "on";
-                chooseData();
+                selectAll = $(this).val();
             });
 
 
@@ -318,17 +305,17 @@
 
         // select categorical or quantitative data
         function chooseData() {
-            if ((nodesCat != "") && (nodesTaxa != "") && (button1 == 1)) {
+            if ((nodesCat != "") && ((nodesTaxa != "") || (selectAll != 0)) && (button1 == 1)) {
                 $("#container-1").empty();
                 $("#container-1").append('Analysis is running...please be patient');
                 getCatGraphData();
             }
-            else if ((nodesQuant != "") && (nodesTaxa != "") && (button1 == 2)) {
+            else if ((nodesQuant != "") && ((nodesTaxa != "") || (selectAll != 0)) && (button1 == 2)) {
                 $("#container-2").empty();
                 $("#container-2").append('Analysis is running...please be patient');
                 getQuantGraphData();
             }
-            else if ((nodesCat != "") && (nodesTaxa == "") && (button1 == 1)) {
+            else if ((nodesCat != "") && (nodesTaxa == "") && (selectAll == 0) && (button1 == 1)) {
                 $("#container-1").empty();
                 $("#container-1").append('Please also choose your taxa level(s)!');
                 $("#container-2").empty();
@@ -336,7 +323,7 @@
                 $("#text-1").val('No data selected');
                 $("#text-raw").val('No data selected');
             }
-            else if ((nodesQuant != "") && (nodesTaxa == "") && (button1 == 2)) {
+            else if ((nodesQuant != "") && (nodesTaxa == "") && (selectAll == 0) && (button1 == 2)) {
                 $("#container-1").empty();
                 $("#container-1").append('Please also choose your taxa level(s)!');
                 $("#container-2").empty();
@@ -359,7 +346,7 @@
         }
 
         // populate search links
-        function searchData(nodesTaxa) {
+        function searchData() {
             var search = $.map(nodesTaxa, function(node) {
                 return node.data.title;
             });
@@ -397,6 +384,7 @@
             myDict['button'] = button2;
             myDict['sig_only'] = sig_only;
             myDict['normalize'] = normalize;
+            myDict['selectAll'] = selectAll;
             var jsonDict = JSON.stringify(myDict);
 
             $.ajax({
@@ -454,6 +442,7 @@
             myDict['button'] = button2;
             myDict['sig_only'] = sig_only;
             myDict['normalize'] = normalize;
+            myDict['selectAll'] = selectAll;
             var jsonDict = JSON.stringify(myDict);
 
             $.ajax({
@@ -500,9 +489,9 @@
                 series: series,
                 tooltip: {
                     formatter: function () {
-                        return '<b>' + this.x + '</b><br/>' +
-                        this.series.name + ': ' + this.y + '<br/>' +
-                        'Total: ' + this.point.stackTotal;
+                        return this.series.name + '<br>' +
+                            'Value: ' + this.y + '<br>' +
+                            'Total: ' + this.point.stackTotal;
                     }
                 },
                 plotOptions: { column: { stacking: 'normal' } },
@@ -555,13 +544,13 @@
         Select all taxa:
         <select id="selectall">
             <option value="0">Off</option>
-            <option value="2">Kingdoms</option>
-            <option value="3">Phyla</option>
-            <option value="4">Classes</option>
-            <option value="5">Orders</option>
-            <option value="6">Families</option>
-            <option value="7">Genera</option>
-            <option value="8">Species</option>
+            <option value="1">Kingdoms</option>
+            <option value="2">Phyla</option>
+            <option value="3">Classes</option>
+            <option value="4">Orders</option>
+            <option value="5">Families</option>
+            <option value="6">Genera</option>
+            <option value="7">Species</option>
         </select>
     </span>
     <!-- tree tables -->
@@ -577,7 +566,7 @@
                 </td>
             </tr>
         </table>
-        <table border="2" cellspacing="0" cellpadding="5" class="inlineTable">
+        <table border="2" cellspacing="0" cellpadding="5" class="inlineTable" style="margin-left:10px;">
             <tr>
                 <th>Select Taxa:<a href="#" id="clearTaxa" style="font-size: 12px;">-Deselect all-</a></th>
             </tr>
@@ -588,7 +577,7 @@
             </tr>
         </table>
 
-        <table  border="2" cellspacing="0" cellpadding="5" class="inlineTable">
+        <table  border="2" cellspacing="0" cellpadding="5" class="inlineTable" style="margin-left: 200px;">
             <tr>
                 <th>Search Selected Taxa:</th>
             </tr>
@@ -608,7 +597,7 @@
             </tr>
         </table>
     </div>
-    <br>
+    <br><br>
     <div style="float: left; padding-left: 10px;" id="sig_text">
         Display only significantly different taxa (p <= 0.05): &nbsp
         <input type="checkbox" id="sig_box">
@@ -644,9 +633,8 @@
                     <option value="1" selected="selected">None</option>
                     <option value="2">Minimum</option>
                     <option value="3">10th percentile</option>
-                    <option value="4">Mean</option>
+                    <option value="4">25th percentile</option>
                     <option value="5">Median</option>
-                    <option value="6">90th percentile</option>
                 </select>
 
             </td>

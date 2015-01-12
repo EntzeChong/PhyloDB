@@ -3,7 +3,7 @@ from django_extensions.db.fields import UUIDField
 
 
 class Project(models.Model):
-    projectid = UUIDField(primary_key=True, editable=True)
+    projectid = UUIDField(primary_key=True)
     path = models.CharField(max_length=90)
     upload_date = models.CharField(max_length=15, blank=True)
     project_name = models.CharField(max_length=90, blank=True)
@@ -13,12 +13,12 @@ class Project(models.Model):
     pi_last = models.CharField(max_length=45, blank=True)
     pi_first = models.CharField(max_length=45, blank=True)
     pi_affiliation = models.CharField(max_length=45, blank=True)
-    pi_email = models.CharField(max_length=100, blank=True)
+    pi_email = models.EmailField(blank=True)
     pi_phone = models.CharField(max_length=15, blank=True)
 
 
 class Sample(models.Model):
-    sampleid = UUIDField(primary_key=True, editable=True)
+    sampleid = UUIDField(primary_key=True)
     projectid = models.ForeignKey(Project)
     sample_name = models.CharField(max_length=45, blank=False)
     organism = models.CharField(max_length=90, blank=True)
@@ -39,6 +39,9 @@ class Sample(models.Model):
 
     def natural_key(self):
         return self.sampleid
+
+    def __unicode__(self):
+        return unicode(self.sample_name)
 
 
 class Collect(models.Model):
@@ -205,7 +208,7 @@ class Genus(models.Model):
     classid = models.ForeignKey(Class)
     orderid = models.ForeignKey(Order)
     familyid = models.ForeignKey(Family)
-    genusid = UUIDField(primary_key=True, editable=True)
+    genusid = UUIDField(primary_key=True)
     genusName = models.CharField(max_length=90, blank=True)
 
 
@@ -216,7 +219,7 @@ class Species(models.Model):
     orderid = models.ForeignKey(Order)
     familyid = models.ForeignKey(Family)
     genusid = models.ForeignKey(Genus)
-    speciesid = UUIDField(primary_key=True, editable=True)
+    speciesid = UUIDField(primary_key=True)
     speciesName = models.CharField(max_length=90, blank=True)
 
 
@@ -231,9 +234,5 @@ class Profile(models.Model):
     genusid = models.ForeignKey(Genus)
     speciesid = models.ForeignKey(Species)
     count = models.IntegerField()
-#    total = models.IntegerField()
-#    rel_abund = models.DecimalField(max_digits=7, decimal_places=6)
-#    binary = models.IntegerField()
-#    diversity = models.DecimalField(max_digits=6, decimal_places=4)
 
 
