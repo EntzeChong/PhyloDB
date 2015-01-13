@@ -6,6 +6,7 @@ urlpatterns = patterns('',
     url(r'^home/$', 'database.views.home', name='home'),
     url(r'^upload/$', 'database.views.upload', name='upload'),
     url(r'^select/$', 'database.views.select', name='select'),
+    url(r'^taxa/$', 'database.views.taxa', name='taxa'),
     url(r'^alpha_graphs/$', 'database.views.alpha_diversity', name='alpha'),
     url(r'^beta-graphs/$', 'database.views.beta_diversity', name='beta'),
 

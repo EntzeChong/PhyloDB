@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from forms import UploadForm1, UploadForm2, UploadForm3, UploadForm4, UploadForm5
-from models import Project, Sample
+from models import Project, Sample, Kingdom, Phyla, Class, Order, Family, Genus, Species
 import os
 from parsers import parse_project, parse_sample, parse_taxonomy, parse_profile
 import pickle
@@ -128,6 +128,28 @@ def select(request):
         'select.html',
         {'projects': projects,
          'samples': samples},
+        context_instance=RequestContext(request)
+    )
+
+
+def taxa(request):
+    kingdoms = Kingdom.objects.all()
+    phylas = Phyla.objects.all()
+    classes = Class.objects.all()
+    orders = Order.objects.all()
+    families = Family.objects.all()
+    genera = Genus.objects.all()
+    species = Species.objects.all()
+
+    return render_to_response(
+        'taxa.html',
+        {'kingdoms': kingdoms,
+        'phylas': phylas,
+        'classes': classes,
+        'orders': orders,
+        'families': families,
+        'genera': genera,
+        'species': species},
         context_instance=RequestContext(request)
     )
 

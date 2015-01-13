@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+
+{% block pagetitle %}
+    <title>Taxa</title>
+{% endblock pagetitle%}
+
+{% block javascript %}
+    <style>
+        div.dataTables_wrapper {
+            width: 950px;
+            margin: 0 auto;
+        }
+    </style>
+    <script type="text/javascript">
+        var taxaLevel = 0, search = "";
+
+        $(function () {
+            $("#taxaTable").dataTable({
+                "scrollX": true,
+                "order": [
+                    [1, "asc"],
+                    [2, "asc"],
+                    [3, "asc"],
+                    [4, "asc"],
+                    [5, "asc"],
+                    [6, "asc"],
+                    [7, "asc"]
+                ]
+            });
+
+            $("#textbox").change(function () {
+                search = $(this).val();
+                $("#MicrobeWiki").attr("href", "https://microbewiki.kenyon.edu/index.php/Special:Search?search=" + search);
+                $("#Wiki").attr("href", "http://en.wikipedia.org/wiki/" + search);
+                $("#Google").attr("href", "http://www.google.com/search?q=" + search);
+            });
+
+            $("#selectall").change(function () {
+                taxaLevel = $(this).val();
+                var table = $('#taxaTable').DataTable();
+                updateTable(table);
+            });
+        });
+
+        function updateTable(table) {
+            if (taxaLevel == 1) {
+                table.rows().remove().draw();
+                {% for kingdom in kingdoms %}
+                    table.row.add([
+                        "{{ kingdom.kingdomName }}",
+                        "{{ kingdom.kingdomid }}",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null"
+                    ]).draw();
+                {% endfor %}
+            }
+            if (taxaLevel == 2) {
+                table.rows().remove().draw();
+                {% for phyla in phylas %}
+                    table.row.add([
+                        "{{ phyla.kingdomid.kingdomName }}",
+                        "{{ phyla.kingdomid.kingdomid }}",
+                        "{{ phyla.phylaName }}",
+                        "{{ phyla.phylaid }}",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null"
+                    ]).draw();
+                {% endfor %}
+            }
+            if (taxaLevel == 3) {
+                table.rows().remove().draw();
+                {% for class in classes %}
+                    table.row.add([
+                        "{{ class.kingdomid.kingdomName }}",
+                        "{{ class.kingdomid.kingdomid }}",
+                        "{{ class.phylaid.phylaName }}",
+                        "{{ class.phylaid.phylaid }}",
+                        "{{ class.className }}",
+                        "{{ class.classid }}",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null"
+                    ]).draw();
+                {% endfor %}
+            }
+            if (taxaLevel == 4) {
+                table.rows().remove().draw();
+                {% for order in orders %}
+                    table.row.add([
+                        "{{ order.kingdomid.kingdomName }}",
+                        "{{ order.kingdomid.kingdomid }}",
+                        "{{ order.phylaid.phylaName }}",
+                        "{{ order.phylaid.phylaid }}",
+                        "{{ order.classid.className }}",
+                        "{{ order.classid.classid }}",
+                        "{{ order.orderName }}",
+                        "{{ order.orderid }}",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null",
+                        "null"
+                    ]).draw();
+                {% endfor %}
+            }
+            if (taxaLevel == 5) {
+                table.rows().remove().draw();
+                {% for family in families %}
+                    table.row.add([
+                        "{{ family.kingdomid.kingdomName }}",
+                        "{{ family.kingdomid.kingdomid }}",
+                        "{{ family.phylaid.phylaName }}",
+                        "{{ family.phylaid.phylaid }}",
+                        "{{ family.classid.className }}",
+                        "{{ family.classid.classid }}",
+                        "{{ family.orderid.orderName }}",
+                        "{{ family.orderid.orderid }}",
+                        "{{ family.familyName }}",
+                        "{{ family.familyid }}",
+                        "null",
+                        "null",
+                        "null",
+                        "null"
+                    ]).draw();
+                {% endfor %}
+            }
+            if (taxaLevel == 6) {
+                table.rows().remove().draw();
+                {% for genus in genera %}
+                    table.row.add([
+                        "{{ genus.kingdomid.kingdomName }}",
+                        "{{ genus.kingdomid.kingdomid }}",
+                        "{{ genus.phylaid.phylaName }}",
+                        "{{ genus.phylaid.phylaid }}",
+                        "{{ genus.classid.className }}",
+                        "{{ genus.classid.classid }}",
+                        "{{ genus.orderid.orderName }}",
+                        "{{ genus.orderid.orderid }}",
+                        "{{ genus.familyid.familyName }}",
+                        "{{ genus.familyid.familyid }}",
+                        "{{ genus.genusName }}",
+                        "{{ genus.genusid }}",
+                        "null",
+                        "null"
+                    ]).draw();
+                {% endfor %}
+            }
+            if (taxaLevel == 7) {
+                table.rows().remove().draw();
+                {% for spec in species %}
+                    table.row.add([
+                        "{{ spec.kingdomid.kingdomName }}",
+                        "{{ spec.kingdomid.kingdomid }}",
+                        "{{ spec.phylaid.phylaName }}",
+                        "{{ spec.phylaid.phylaid }}",
+                        "{{ spec.classid.className }}",
+                        "{{ spec.classid.classid }}",
+                        "{{ spec.orderid.orderName }}",
+                        "{{ spec.orderid.orderid }}",
+                        "{{ spec.familyid.familyName }}",
+                        "{{ spec.familyid.familyid }}",
+                        "{{ spec.genusid.genusName }}",
+                        "{{ spec.genusid.genusid }}",
+                        "{{ spec.speciesName }}",
+                        "{{ spec.speciesid }}"
+                    ]).draw();
+                {% endfor %}
+            }
+        }
+    </script>
+{% endblock javascript %}
+
+{% block my_content %}
+    <h2>Search External Links:</h2>
+
+    <table width="400px">
+        <tr>
+            <td width="60%">
+                Taxa name:<input type="text" id="textbox">
+            </td>
+            <td width="40%">
+                <ul>
+                    <a style="font-size: 12px;" id="MicrobeWiki" class="Offmouse" href="https://microbewiki.kenyon.edu" target="_blank">-MicrobeWiki-</a><br>
+                    <a style="font-size: 12px;" id="Wiki" class="Offmouse" href="http://en.wikipedia.org/wiki/" target="_blank">-Wiki-</a><br>
+                    <a style="font-size: 12px;" id="Google" class="Offmouse" href="http://www.google.com/" target="_blank">-Google-</a>
+                </ul>
+            </td>
+        </tr>
+    </table>
+    <br><br>
+
+    <h2>Search taxa in database:<span title="Warning: lower taxa levels (i.e., genus, species) may be slow to load">&nbsp?</span></h2>
+
+    Select Taxa Level:
+    <select id="selectall">
+        <option value="0">Off</option>
+        <option value="1">Kingdoms</option>
+        <option value="2">Phyla</option>
+        <option value="3">Classes</option>
+        <option value="4">Orders</option>
+        <option value="5">Families</option>
+        <option value="6">Genera</option>
+        <option value="7">Species</option>
+    </select>
+    <br><br>
+    <table id="taxaTable" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Kingdom Name</th>
+                <th>Kingdom ID</th>
+                <th>Phyla Name</th>
+                <th>Phyla ID</th>
+                <th>Class Name</th>
+                <th>Class ID</th>
+                <th>Order Name</th>
+                <th>Order ID</th>
+                <th>Family Name</th>
+                <th>Family ID</th>
+                <th>Genus Name</th>
+                <th>Genus ID</th>
+                <th>Species Name</th>
+                <th>Species ID</th>
+            </tr>
+        </thead>
+    </table>
+{% endblock my_content%}

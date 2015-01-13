@@ -13,13 +13,15 @@
     </style>
 
     <script type="text/javascript">
+        // initialize variables
+        var button1 = 1, button2 = 2, selTheme = 0, i = 0, normalize = 1;
+        var nodesCat = "", nodesQuant = "", nodesTaxa = "", selectAll = 0;
+        var chart1 = {}, chart2 = {};
+        var catOptions = {}, quantOptions = {};
+        var sig_only = 0;
+
         $(function () {
-            // initialize variables
-            var button1 = 1, button2 = 2, selTheme = 0, i = 0, normalize = 1;
-            var nodesCat = "", nodesQuant = "", nodesTaxa = "", selectAll = 0;
-            var chart1 = {}, chart2 = {};
-            var catOptions = {}, quantOptions = {};
-            var sig_only = 0;
+            $("#run").show();
 
             // start of dynatrees
             $("#tree_metaCat").dynatree({
@@ -50,6 +52,7 @@
                         });
                     }
                     nodesCat = node.tree.getSelectedNodes();
+                    $("#run").css("background-color", "lightgray");
                 }
             }); // end tree_metaCat
 
@@ -80,6 +83,7 @@
                         });
                     }
                     nodesQuant = node.tree.getSelectedNodes();
+                    $("#run").css("background-color", "lightgray");
                 }
             }); // end tree_metaQuant
 
@@ -108,6 +112,7 @@
                         });
                     }
                     nodesTaxa = node.tree.getSelectedNodes();
+                    $("#run").css("background-color", "lightgray");
                     searchData();
                 }
             }); // end tree_taxa
@@ -120,12 +125,14 @@
             $("#button1").change(function () {
                 button1 = $(this).val();
                 chooseDisplay();
+                $("#run").css("background-color", "lightgray");
             });
 
             // dependent variable
             $("#button2").change(function () {
                 button2 = $(this).val();
                 chooseDisplay();
+                $("#run").css("background-color", "lightgray");
             });
 
             // only display significant ANOVAs
@@ -136,12 +143,14 @@
                     sig_only = 0
                 }
                 chooseDisplay();
+                $("#run").css("background-color", "lightgray");
             });
 
             // normalize data
             $("#normalize").change(function () {
                 normalize = $(this).val();
                 chooseDisplay();
+                $("#run").css("background-color", "lightgray");
             });
 
             // set highchart theme
@@ -268,6 +277,7 @@
                         node.select(false);
                     });
                 }
+                $("#run").css("background-color", "lightgray");
             });
 
             $("#clearTaxa").click(function() {
@@ -275,11 +285,13 @@
                 $("#tree_taxa").dynatree("getRoot").visit(function (node) {
                     node.select(false);
                 });
+                $("#run").css("background-color", "lightgray");
             });
 
             // select all taxa for given level
             $("#selectall").change(function () {
                 selectAll = $(this).val();
+                $("#run").css("background-color", "lightgray");
             });
 
 
@@ -306,11 +318,13 @@
         // select categorical or quantitative data
         function chooseData() {
             if ((nodesCat != "") && ((nodesTaxa != "") || (selectAll != 0)) && (button1 == 1)) {
+                $("#run").css("background-color", "yellow");
                 $("#container-1").empty();
                 $("#container-1").append('Analysis is running...please be patient');
                 getCatGraphData();
             }
             else if ((nodesQuant != "") && ((nodesTaxa != "") || (selectAll != 0)) && (button1 == 2)) {
+                $("#run").css("background-color", "yellow");
                 $("#container-2").empty();
                 $("#container-2").append('Analysis is running...please be patient');
                 getQuantGraphData();
@@ -322,12 +336,14 @@
                 $("#container-2").append('Please also choose your taxa level(s)!');
                 $("#text-1").val('No data selected');
                 $("#text-raw").val('No data selected');
+                $("#run").css("background-color", "red");
             }
             else if ((nodesQuant != "") && (nodesTaxa == "") && (selectAll == 0) && (button1 == 2)) {
                 $("#container-1").empty();
                 $("#container-1").append('Please also choose your taxa level(s)!');
                 $("#container-2").empty();
                 $("#container-2").append('Please also choose your taxa level(s)!');
+                $("#run").css("background-color", "red");
             }
             else if ((nodesCat == "") && (nodesTaxa != "") && (button1 == 1)) {
                 $("#container-1").empty();
@@ -336,12 +352,14 @@
                 $("#container-2").append('Please also choose your meta variable(s)!');
                 $("#text-1").val('No data selected');
                 $("#text-raw").val('No data selected');
+                $("#run").css("background-color", "red");
             }
             else if ((nodesQuant == "") && (nodesTaxa != "") && (button1 == 2)) {
                 $("#container-1").empty();
                 $("#container-1").append('Please also choose your meta variable(s)!');
                 $("#container-2").empty();
                 $("#container-2").append('Please also choose your meta variable(s)!');
+                $("#run").css("background-color", "red");
             }
         }
 
@@ -409,7 +427,7 @@
                     $('#text-1').val(text);
                     var finalDF = obj['finalDF'];
                     $('#text-raw').val(finalDF);
-
+                    $("#run").css("background-color", "green");
                 }
             });
         }
@@ -465,6 +483,7 @@
                     linechart(xAxis, yAxis, series);
                     var finalDF = obj['finalDF'];
                     $('#text-raw').val(finalDF);
+                    $("#run").css("background-color", "green");
                 }
             });
         }
@@ -573,26 +592,6 @@
             <tr>
                 <td style="padding-right: 10px; vertical-align: top">
                     <div id="tree_taxa"></div>
-                </td>
-            </tr>
-        </table>
-
-        <table  border="2" cellspacing="0" cellpadding="5" class="inlineTable" style="margin-left: 200px;">
-            <tr>
-                <th>Search Selected Taxa:</th>
-            </tr>
-            <tr>
-                <td bgcolor="white" align="center">
-                    <a style="font-size: 12px;" id="MicrobeWiki" class="Offmouse" href="https://microbewiki.kenyon.edu"  target="_blank">-MicrobeWiki-</a><br>
-                    <a style="font-size: 12px;" id="Wiki" class="Offmouse" href="http://en.wikipedia.org/wiki/"  target="_blank">-Wiki-</a><br>
-                    <a style="font-size: 12px;" id="Google" class="Offmouse" href="http://www.google.com/"  target="_blank">-Google-</a>
-                </td>
-            </tr>
-            <tr>
-                <td width="160px" bgcolor="white" align="center">
-                    <p>Above link(s) open a search of the currently selected taxa
-                    in a new window. Search will most likely fail if more than one
-                    node is selected.</p>
                 </td>
             </tr>
         </table>

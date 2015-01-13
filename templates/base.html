@@ -92,16 +92,27 @@
             <a class="Offmouse" href="{% url "select" %}" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Select Data</li></a>
             <br>
 
+            <div>
+                <hr>
+                <p><em><strong>Taxonomy</strong></em></p>
+                <hr>
+            </div>
+
+            <a class="Offmouse" href="{% url "taxa" %}" target="_blank" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Search Taxa</li></a>
+            <br>
+
             <div id="link0">
                 <hr>
                 <p><em><strong>Analysis</strong></em></p>
                 <hr>
             </div>
-
             <a id="link1" style="display: none" class="Offmouse" href="{% url "alpha" %}" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Alpha Diversity</li></a>
             <a id="link2" style="display: none" class="Offmouse" href="{% url "beta" %}" onmouseout="this.className='Offmouse'" onmouseover="this.className='Onmouse'"><li>Beta Diversity</li></a>
-
-            <input id="run" type="button" value="Run Analysis!" style="font-size: 11px; font-style: italic; font-weight: bold"/>
+            <br>
+        </div>
+        <div>
+            <input id="run" type="button" value="Run Analysis!" style="background-color: lightgray; display: none"/>
+        </div>
         </div>
     </div>
 
