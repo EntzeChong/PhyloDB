@@ -298,7 +298,7 @@ def normalizeAlpha(df, taxaDict, mySet, factor):
         relabundDF[i] = countDF[i].div(countDF[i].sum(axis=1), axis=0)
         binaryDF[i] = countDF[i].apply(lambda x: 1 if x != 0 else 0)
         diversityDF[i] = relabundDF[i].apply(lambda x: -1 * x * math.log(x) if x > 0 else 0)
-
+    print 'relabundDF\n', relabundDF
     rowsList = []
     namesDF = pd.DataFrame()
     normDF = pd.DataFrame()

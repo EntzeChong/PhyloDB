@@ -50,9 +50,7 @@
                             node.select(true);
                         });
                     }
-                    if (node.childList !=  undefined) {
-                        nodesCat = node.tree.getSelectedNodes();
-                    }
+                    nodesCat = node.tree.getSelectedNodes();
                     $("#run").css("background-color", "lightgray");
                 }
             }); // end tree_metaCat
@@ -83,10 +81,7 @@
                             node.select(true);
                         });
                     }
-                    if (node.childList !=  undefined) {
-                        nodesQuant = node.tree.getSelectedNodes();
-                        chooseData();
-                    }
+                    nodesQuant = node.tree.getSelectedNodes();
                     $("#run").css("background-color", "lightgray");
                 }
             }); // end tree_metaQuant

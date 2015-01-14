@@ -57,7 +57,7 @@ def getCatBetaData(request):
         for key in metaDict:
             fieldList.append(key)
 
-        sampleList = list(set(metaDF['sampleid'].tolist()))
+#        sampleList = list(set(metaDF['sampleid'].tolist()))
 
         matrixDF = pd.DataFrame()
         if button == 1:
@@ -71,7 +71,7 @@ def getCatBetaData(request):
 
         datamtx = asarray(matrixDF[mySet].T)
         numrows, numcols = shape(datamtx)
-        dists = zeros((numrows, numrows))
+        dists = np.zeros((numrows, numrows))
 
         if distance == 1:
             dist = pdist(datamtx, 'braycurtis')
@@ -102,15 +102,31 @@ def getCatBetaData(request):
         eigenDF = valsDF.join(propDF)
 
         metaDF.set_index('sampleid', drop=True, inplace=True)
-        pcoaDF = pd.DataFrame(coordinates, columns=axesList, index=sampleList)
+        pcoaDF = pd.DataFrame(coordinates, columns=axesList, index=mySet)
         resultDF = metaDF.join(pcoaDF)
         pd.set_option('display.max_rows', resultDF.shape[0], 'display.max_columns', resultDF.shape[1], 'display.width', 1000)
 
-        trtList = list(metaDF[fieldList[0]])
+        ### create trtList that merges all categorical values
+        groupList = metaDF[fieldList].values.tolist()
+        trtList = []
+        for i in groupList:
+            trtList.append(':'.join(i))
 
-        try:
-            bigf, p = permanova_oneway(dists, trtList, 1000)
-        except:
+        ### check to see if all samples the same size
+        sizeList = []
+        grouped = resultDF.groupby(fieldList)
+        for name, group in grouped:
+            (row, col) = shape(group)
+            sizeList.append(row)
+        setSize = len(set(sizeList))
+
+        if setSize == 1:
+            try:
+                bigf, p = permanova_oneway(dists, trtList, 200)
+            except:
+                bigf = float('nan')
+                p = float('nan')
+        else:
             bigf = float('nan')
             p = float('nan')
 
@@ -185,6 +201,7 @@ def getCatBetaData(request):
         if math.isnan(bigf):
             result = result + '===============================================\n'
             result = result + 'perMANOVA cannot be performed...' + '\n'
+            result = result + 'The current version requires all treatments to be of equal sample size.' + '\n'
         else:
             result = result + '===============================================\n'
             result = result + 'perMANOVA results' + '\n'
@@ -268,7 +285,7 @@ def getQuantBetaData(request):
 
         datamtx = asarray(matrixDF[mySet].T)
         numrows, numcols = shape(datamtx)
-        dists = zeros((numrows, numrows))
+        dists = np.zeros((numrows, numrows))
 
         if distance == 1:
             dist = pdist(datamtx, 'braycurtis')

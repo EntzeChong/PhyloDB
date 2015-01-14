@@ -6,7 +6,7 @@
 
 {% block javascript %}
     <script type="text/javascript">
-        var selNodes = "", selKeys = "";
+        var selKeys = "";
 
         $(function () {
             $('#projectTable').DataTable();
@@ -40,13 +40,14 @@
                             node.select(true);
                         });
                     }
-                    if (node.childList !=  undefined) {
-                        selKeys = $.map(node.tree.getSelectedNodes(), function (node) {
-                            return node.data.id;
-                        });
-                        updateNodes(selKeys);
-                    }
                 }
+            });
+
+            $("#tree").click(function() {
+                selKeys = $.map($("#tree").dynatree("getSelectedNodes"), function(node) {
+                    return node.data.id;
+                });
+                updateNodes(selKeys);
             });
 
             $("input[name$='tables']").click(function() {
