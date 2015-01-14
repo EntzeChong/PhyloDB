@@ -57,8 +57,6 @@ def getCatBetaData(request):
         for key in metaDict:
             fieldList.append(key)
 
-#        sampleList = list(set(metaDF['sampleid'].tolist()))
-
         matrixDF = pd.DataFrame()
         if button == 1:
             matrixDF = finalDF.pivot(index='taxaid', columns='sampleid', values='count')
@@ -112,7 +110,7 @@ def getCatBetaData(request):
         for i in groupList:
             trtList.append(':'.join(i))
 
-        ### check to see if all samples the same size
+        ### check to see if all samples are the same size
         sizeList = []
         grouped = resultDF.groupby(fieldList)
         for name, group in grouped:
@@ -211,16 +209,20 @@ def getCatBetaData(request):
         result = result + '===============================================\n'
         result = result + str(eigenDF) + '\n'
         result = result + '===============================================\n'
-
-        result = result + str(resultDF) + '\n'
         result = result + '\n\n\n\n'
 
         finalDict['text'] = result
 
+        resultDF.reset_index(drop=True, inplace=True)
+        res_table = resultDF.to_html(classes="table display")
+        res_table = res_table.replace('border="1"', 'border="0"')
+        finalDict['res_table'] = str(res_table)
+
         nameList = list(metaDF['sample_name'])
         distsDF = pd.DataFrame(dists, columns=nameList, index=nameList)
-        pd.set_option('display.max_rows', distsDF.shape[0], 'display.max_columns', distsDF.shape[1], 'display.width', 1000)
-        finalDict['finalDF'] = str(distsDF)
+        dist_table = distsDF.to_html(classes="table display")
+        dist_table = dist_table.replace('border="1"', 'border="0"')
+        finalDict['dist_table'] = str(dist_table)
 
         res = simplejson.dumps(finalDict)
         return HttpResponse(res, content_type='application/json')
@@ -271,8 +273,6 @@ def getQuantBetaData(request):
         for key in metaDict:
             fieldList.append(metaDict[key])
 
-        sampleList = list(set(metaDF['sampleid'].tolist()))
-
         matrixDF = pd.DataFrame()
         if button == 1:
             matrixDF = finalDF.pivot(index='taxaid', columns='sampleid', values='count')
@@ -285,7 +285,7 @@ def getQuantBetaData(request):
 
         datamtx = asarray(matrixDF[mySet].T)
         numrows, numcols = shape(datamtx)
-        dists = np.zeros((numrows, numrows))
+        dists = zeros((numrows, numrows))
 
         if distance == 1:
             dist = pdist(datamtx, 'braycurtis')
@@ -316,7 +316,7 @@ def getQuantBetaData(request):
         eigenDF = valsDF.join(propDF)
 
         metaDF.set_index('sampleid', drop=True, inplace=True)
-        pcoaDF = pd.DataFrame(coordinates, columns=axesList, index=sampleList)
+        pcoaDF = pd.DataFrame(coordinates, columns=axesList, index=mySet)
         resultDF = metaDF.join(pcoaDF)
         pd.set_option('display.max_rows', resultDF.shape[0], 'display.max_columns', resultDF.shape[1], 'display.width', 1000)
 
@@ -416,15 +416,20 @@ def getQuantBetaData(request):
         result = result + str(eigenDF) + '\n'
 
         result = result + '===============================================\n'
-        result = result + str(resultDF) + '\n'
         result = result + '\n\n\n\n'
 
         finalDict['text'] = result
 
+        resultDF.reset_index(drop=True, inplace=True)
+        res_table = resultDF.to_html(classes="table display")
+        res_table = res_table.replace('border="1"', 'border="0"')
+        finalDict['res_table'] = str(res_table)
+
         nameList = list(metaDF['sample_name'])
         distsDF = pd.DataFrame(dists, columns=nameList, index=nameList)
-        pd.set_option('display.max_rows', distsDF.shape[0], 'display.max_columns', distsDF.shape[1], 'display.width', 1000)
-        finalDict['finalDF'] = str(distsDF)
+        dist_table = distsDF.to_html(classes="table display")
+        dist_table = dist_table.replace('border="1"', 'border="0"')
+        finalDict['dist_table'] = str(dist_table)
 
         res = simplejson.dumps(finalDict)
         return HttpResponse(res, content_type='application/json')

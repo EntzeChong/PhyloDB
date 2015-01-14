@@ -1,23 +1,96 @@
 {% extends 'base.html' %}
 
 {% block pagetitle %}
-    <title>Select</title>
+    <title xmlns="http://www.w3.org/1999/html">Select</title>
 {% endblock pagetitle %}
 
 {% block javascript %}
     <script type="text/javascript">
-        var selKeys = "";
+        var selKeys = "", table = 1;
 
         $(function () {
-            $('#projectTable').DataTable();
-            $('#sampleTable').DataTable();
-            $('#collectTable').DataTable();
-            $('#climateTable').DataTable();
-            $('#soil_classTable').DataTable();
-            $('#soil_nutrTable').DataTable();
-            $('#mgtTable').DataTable();
-            $('#microbeTable').DataTable();
-            $('#usrTable').DataTable();
+            $('#projectTable').dataTable({
+                "dom": 'T<"clear">lfrtip',
+                "tableTools": {
+                    "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                },
+                "bSort": false,
+                "scrollX": true,
+                "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+            });
+
+            $('#sampleTable').DataTable({
+                "dom": 'T<"clear">lfrtip',
+                "tableTools": {
+                    "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                },
+                "bSort": false,
+                "scrollX": true,
+                "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+            });
+            $('#collectTable').DataTable({
+                "dom": 'T<"clear">lfrtip',
+                "tableTools": {
+                    "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                },
+                "bSort": false,
+                "scrollX": true,
+                "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+            });
+            $('#climateTable').DataTable({
+                "dom": 'T<"clear">lfrtip',
+                "tableTools": {
+                    "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                },
+                "bSort": false,
+                "scrollX": true,
+                "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+            });
+            $('#soil_classTable').DataTable({
+                "dom": 'T<"clear">lfrtip',
+                "tableTools": {
+                    "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                },
+                "bSort": false,
+                "scrollX": true,
+                "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+            });
+            $('#soil_nutrTable').DataTable({
+                "dom": 'T<"clear">lfrtip',
+                "tableTools": {
+                    "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                },
+                "bSort": false,
+                "scrollX": true,
+                "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+            });
+            $('#mgtTable').DataTable({
+                "dom": 'T<"clear">lfrtip',
+                "tableTools": {
+                    "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                },
+                "bSort": false,
+                "scrollX": true,
+                "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+            });
+            $('#microbeTable').DataTable({
+                "dom": 'T<"clear">lfrtip',
+                "tableTools": {
+                    "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                },
+                "bSort": false,
+                "scrollX": true,
+                "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+            });
+            $('#usrTable').DataTable({
+                "dom": 'T<"clear">lfrtip',
+                "tableTools": {
+                    "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                },
+                "bSort": false,
+                "scrollX": true,
+                "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+            });
 
             $("#tree").dynatree({
                 checkbox: true,
@@ -38,6 +111,10 @@
                         node.reloadChildren(function () {
                             node.select(false);
                             node.select(true);
+                            selKeys = $.map($("#tree").dynatree("getSelectedNodes"), function(node) {
+                                return node.data.id;
+                            });
+                            updateNodes(selKeys);
                         });
                     }
                 }
@@ -50,10 +127,10 @@
                 updateNodes(selKeys);
             });
 
-            $("input[name$='tables']").click(function() {
-                var test = $(this).val();
+            $("#selectTable").change(function() {
+                table = $(this).val();
                 $("div.desc").hide();
-                $("#table" + test).show();
+                $("#table" + table).show();
             });
 
            // Clear all selected nodes
@@ -369,207 +446,210 @@
 
     <br>
     <h2>Project/Sample information for selected samples</h2>
-    <div id="myRadio">
-        <h5>
-            <input type="radio" name="tables" checked="checked" value="1"/>Project
-            <input type="radio" name="tables" value="2"/>MIMARKs
-            <input type="radio" name="tables" value="3"/>Sample Collection
-            <input type="radio" name="tables" value="4"/>Climate
-            <input type="radio" name="tables" value="5"/>Soil Classification
-            <input type="radio" name="tables" value="6"/>Soil Nutrient
-            <input type="radio" name="tables" value="7"/>Management
-            <input type="radio" name="tables" value="8"/>Microbial Biomass
-            <input type="radio" name="tables" value="9"/>User-defined
-        </h5>
-        <div id="table1" class="desc">
-            <table id="projectTable" class="display compact">
-                <thead>
-                    <tr>
-                        <th>Project Name</th>
-                        <th>Sample Name</th>
-                        <th>Project Description</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>PI: Last_name</th>
-                        <th>PI: First_name</th>
-                        <th>PI: Affiliation</th>
-                        <th>PI: E-mail</th>
-                        <th>PI: Phone</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
 
-        <div id="table2" class="desc" style="display: none;">
-            <table id="sampleTable" class="display">
-                <thead>
-                    <tr>
-                        <th>Project Name</th>
-                        <th>Sample ID</th>
-                        <th>Sample Name</th>
-                        <th>Organism</th>
-                        <th>Title</th>
-                        <th>Seq Method</th>
-                        <th>Collection Date</th>
-                        <th>Biome</th>
-                        <th>Feature</th>
-                        <th>Country</th>
-                        <th>State</th>
-                        <th>City</th>
-                        <th>Farm/Site</th>
-                        <th>Plot</th>
-                        <th>Material</th>
-                        <th>Latitude</th>
-                        <th>Longitude</th>
-                        <th>Elevation</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+    Select datatable:&nbsp;
+    <select id="selectTable">
+        <option selected="selected" value="1">Project</option>
+        <option value="2">MIMARKs</option>
+        <option value="3">Sample Collection</option>
+        <option value="4">Climate</option>
+        <option value="5">Soil Classification</option>
+        <option value="6">Soil Nutrient</option>
+        <option value="7">Management</option>
+        <option value="8">Microbial Biomass</option>
+        <option value="9">User-defined</option>
+<!--        <option value="10">Count Table</option>     -->
+    </select>
+    <br><br>
 
-        <div id="table3" class="desc" style="display: none;">
-            <table id="collectTable" class="display">
-                <thead>
-                    <tr>
-                        <th>Project Name</th>
-                        <th>Sample Name</th>
-                        <th>Depth</th>
-                        <th>Pool DNA Extracts</th>
-                        <th>Sample Size</th>
-                        <th>Collection Device</th>
-                        <th>Sample Weight DNA Extract</th>
-                        <th>Sieving</th>
-                        <th>Storage Conditions</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+    <div id="table1" class="desc" style="width: 950px;">
+        <table id="projectTable" class="display compact">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Sample Name</th>
+                    <th>Project Description</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>PI: Last_name</th>
+                    <th>PI: First_name</th>
+                    <th>PI: Affiliation</th>
+                    <th>PI: E-mail</th>
+                    <th>PI: Phone</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 
-        <div id="table4" class="desc" style="display: none;">
-            <table id="climateTable" class="display">
-                <thead>
-                    <tr>
-                        <th>Project Name</th>
-                        <th>Sample Name</th>
-                        <th>Annual Precip</th>
-                        <th>Annual Temp</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+    <div id="table2" class="desc" style="display: none; width: 950px;">
+        <table id="sampleTable" class="display">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Sample ID</th>
+                    <th>Sample Name</th>
+                    <th>Organism</th>
+                    <th>Title</th>
+                    <th>Seq Method</th>
+                    <th>Collection Date</th>
+                    <th>Biome</th>
+                    <th>Feature</th>
+                    <th>Country</th>
+                    <th>State</th>
+                    <th>City</th>
+                    <th>Farm/Site</th>
+                    <th>Plot</th>
+                    <th>Material</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Elevation</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 
-        <div id="table5" class="desc" style="display: none;">
-            <table id="soil_classTable" class="display">
-                <thead>
-                    <tr>
-                        <th>Project Name</th>
-                        <th>Sample Name</th>
-                        <th>Bulk Density</th>
-                        <th>Drainage Class</th>
-                        <th>FAO Class</th>
-                        <th>Horizon</th>
-                        <th>Local Class</th>
-                        <th>Porosity</th>
-                        <th>Profile Position</th>
-                        <th>Slope Aspect</th>
-                        <th>Slope Gradient</th>
-                        <th>Soil Type</th>
-                        <th>Texture Class</th>
-                        <th>Water Content Soil</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+    <div id="table3" class="desc" style="display: none; width: 950px;">
+        <table id="collectTable" class="display">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Sample Name</th>
+                    <th>Depth</th>
+                    <th>Pool DNA Extracts</th>
+                    <th>Sample Size</th>
+                    <th>Collection Device</th>
+                    <th>Sample Weight DNA Extract</th>
+                    <th>Sieving</th>
+                    <th>Storage Conditions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 
-        <div id="table6" class="desc" style="display: none;">
-            <table id="soil_nutrTable" class="display">
-                <thead>
-                    <tr>
-                        <th>Project Name</th>
-                        <th>Sample Name</th>
-                        <th>pH</th>
-                        <th>EC</th>
-                        <th>tot_C</th>
-                        <th>tot_OM</th>
-                        <th>tot_N</th>
-                        <th>NO3_N</th>
-                        <th>NH4_N</th>
-                        <th>P</th>
-                        <th>K</th>
-                        <th>S</th>
-                        <th>Zn</th>
-                        <th>Fe</th>
-                        <th>Cu</th>
-                        <th>Mn</th>
-                        <th>Ca</th>
-                        <th>Mg</th>
-                        <th>Na</th>
-                        <th>B</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+    <div id="table4" class="desc" style="display: none; width: 950px;">
+        <table id="climateTable" class="display">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Sample Name</th>
+                    <th>Annual Precip</th>
+                    <th>Annual Temp</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 
-        <div id="table7" class="desc" style="display: none;">
-            <table id="mgtTable" class="display">
-                <thead>
-                    <tr>
-                        <th>Project Name</th>
-                        <th>Sample Name</th>
-                        <th>Agrochem Addition</th>
-                        <th>Biological Amendment</th>
-                        <th>Cover Crop</th>
-                        <th>Crop Rotation</th>
-                        <th>Cur Land Use</th>
-                        <th>Cur Vegetation</th>
-                        <th>Cur Crop</th>
-                        <th>Cur Cultivar</th>
-                        <th>Organic</th>
-                        <th>Previous Land Use</th>
-                        <th>Soil Amendments</th>
-                        <th>Tillage</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+    <div id="table5" class="desc" style="display: none; width: 950px;">
+        <table id="soil_classTable" class="display">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Sample Name</th>
+                    <th>Bulk Density</th>
+                    <th>Drainage Class</th>
+                    <th>FAO Class</th>
+                    <th>Horizon</th>
+                    <th>Local Class</th>
+                    <th>Porosity</th>
+                    <th>Profile Position</th>
+                    <th>Slope Aspect</th>
+                    <th>Slope Gradient</th>
+                    <th>Soil Type</th>
+                    <th>Texture Class</th>
+                    <th>Water Content Soil</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 
-        <div id="table8" class="desc" style="display: none;">
-            <table id="microbeTable" class="display">
-                <thead>
-                    <tr>
-                        <th>Project Name</th>
-                        <th>Sample Name</th>
-                        <th>rRNA Copies</th>
-                        <th>Microbial  Biomass C</th>
-                        <th>Microbial Biomass N</th>
-                        <th>Microbial Respiration</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+    <div id="table6" class="desc" style="display: none; width: 950px;">
+        <table id="soil_nutrTable" class="display">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Sample Name</th>
+                    <th>pH</th>
+                    <th>EC</th>
+                    <th>tot_C</th>
+                    <th>tot_OM</th>
+                    <th>tot_N</th>
+                    <th>NO3_N</th>
+                    <th>NH4_N</th>
+                    <th>P</th>
+                    <th>K</th>
+                    <th>S</th>
+                    <th>Zn</th>
+                    <th>Fe</th>
+                    <th>Cu</th>
+                    <th>Mn</th>
+                    <th>Ca</th>
+                    <th>Mg</th>
+                    <th>Na</th>
+                    <th>B</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 
-        <div id="table9" class="desc" style="display: none;">
-            <table id="usrTable" class="display">
-                <thead>
-                    <tr>
-                        <th>Project Name</th>
-                        <th>Sample Name</th>
-                        <th>Usr Cat 1</th>
-                        <th>Usr Cat 2</th>
-                        <th>Usr Cat 3</th>
-                        <th>Usr Cat 4</th>
-                        <th>Usr Cat 5</th>
-                        <th>Usr Cat 6</th>
-                        <th>Usr Quant 1</th>
-                        <th>Usr Quant 2</th>
-                        <th>Usr Quant 3</th>
-                        <th>Usr Quant 4</th>
-                        <th>Usr Quant 5</th>
-                        <th>Usr Quant 6</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+    <div id="table7" class="desc" style="display: none; width: 950px;">
+        <table id="mgtTable" class="display">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Sample Name</th>
+                    <th>Agrochem Addition</th>
+                    <th>Biological Amendment</th>
+                    <th>Cover Crop</th>
+                    <th>Crop Rotation</th>
+                    <th>Cur Land Use</th>
+                    <th>Cur Vegetation</th>
+                    <th>Cur Crop</th>
+                    <th>Cur Cultivar</th>
+                    <th>Organic</th>
+                    <th>Previous Land Use</th>
+                    <th>Soil Amendments</th>
+                    <th>Tillage</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div id="table8" class="desc" style="display: none; width: 950px;">
+        <table id="microbeTable" class="display">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Sample Name</th>
+                    <th>rRNA Copies</th>
+                    <th>Microbial  Biomass C</th>
+                    <th>Microbial Biomass N</th>
+                    <th>Microbial Respiration</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div id="table9" class="desc" style="display: none; width: 950px;">
+        <table id="usrTable" class="display">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Sample Name</th>
+                    <th>Usr Cat 1</th>
+                    <th>Usr Cat 2</th>
+                    <th>Usr Cat 3</th>
+                    <th>Usr Cat 4</th>
+                    <th>Usr Cat 5</th>
+                    <th>Usr Cat 6</th>
+                    <th>Usr Quant 1</th>
+                    <th>Usr Quant 2</th>
+                    <th>Usr Quant 3</th>
+                    <th>Usr Quant 4</th>
+                    <th>Usr Quant 5</th>
+                    <th>Usr Quant 6</th>
+                </tr>
+            </thead>
+        </table>
     </div>
 {% endblock my_content %}
 

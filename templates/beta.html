@@ -263,6 +263,7 @@
                     });
                 }
                 $("#run").css("background-color", "lightgray");
+
             });
 
         // Choose what tree/graph/text to display
@@ -365,10 +366,35 @@
                     var series = obj['series'];
                     var yAxis = obj['yAxis'];
                     linechart1(xAxis, yAxis, series);
+
                     var text = obj['text'];
                     $('#text-1').val(text);
-                    var finalDF = obj['finalDF'];
-                    $('#text-raw').val(finalDF);
+
+                    var res_table = obj['res_table'];
+                    $('#res_table').empty();
+                    $('#res_table').append(res_table);
+                    $('#res_table .table').DataTable({
+                        "dom": 'T<"clear">lfrtip',
+                        "tableTools": {
+                          "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                        },
+                        "scrollX": true,
+                        "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+                    }).draw();
+
+                    var dist_table = obj['dist_table'];
+                    $('#dist_table').append(dist_table);
+                    $('#dist_table').empty();
+                    $('#dist_table .table').DataTable({
+                        "dom": 'T<"clear">lfrtip',
+                        "tableTools": {
+                          "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                        },
+                        "bSort": false,
+                        "scrollX": true,
+                        "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+                    }).draw();
+
                     $("#run").css("background-color", "green");
                 }
             });
@@ -409,10 +435,35 @@
                     var series = obj['series'];
                     var yAxis = obj['yAxis'];
                     linechart2(xAxis, yAxis, series);
+
                     var text = obj['text'];
                     $('#text-1').val(text);
-                    var finalDF = obj['finalDF'];
-                    $('#text-raw').val(finalDF);
+
+                    var res_table = obj['res_table'];
+                    $('#res_table').empty();
+                    $('#res_table').append(res_table);
+                    $('#res_table .table').DataTable({
+                        "dom": 'T<"clear">lfrtip',
+                        "tableTools": {
+                          "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                        },
+                        "scrollX": true,
+                        "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+                    }).draw();
+
+                    var dist_table = obj['dist_table'];
+                    $('#dist_table').empty();
+                    $('#dist_table').append(dist_table);
+                    $('#dist_table .table').DataTable({
+                        "dom": 'T<"clear">lfrtip',
+                        "tableTools": {
+                          "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                        },
+                        "bSort": false,
+                        "scrollX": true,
+                        "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+                    }).draw();
+
                     $("#run").css("background-color", "green");
                 }
             });
@@ -617,16 +668,16 @@
     </table>
 
     <div id="txt-1">
-        <p>Test Results:</p>
+        <h2>Test Results:</h2>
         <textarea style="width: 950px;" wrap="off" id="text-1" rows="20">No data selected</textarea>
         <br>
     </div>
-    <div id="txt-raw">
-        <p>Distance Matrix:</p>
-        <textarea style="width: 950px;" wrap="off" id="text-raw" rows="20">No data selected</textarea>
+    <br>
+    <div id="res_table" style="width: 950px; overflow-x: auto;">
+        <h2>Principal Coordinates:</h2>
     </div>
     <br>
-    <br>
-    <br>
-
+    <div id="dist_table" style="width: 950px; overflow-x: auto;">
+        <h2>Distance Matrix:</h2>
+    </div>
 {% endblock my_content%}

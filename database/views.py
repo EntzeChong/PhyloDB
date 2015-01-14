@@ -4,9 +4,10 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from forms import UploadForm1, UploadForm2, UploadForm3, UploadForm4, UploadForm5
-from models import Project, Sample, Kingdom, Phyla, Class, Order, Family, Genus, Species
+from models import Project, Sample, Species
 import os
 from parsers import parse_project, parse_sample, parse_taxonomy, parse_profile
+import pandas as pd
 import pickle
 import simplejson
 from uuid import uuid4
@@ -133,23 +134,21 @@ def select(request):
 
 
 def taxa(request):
-    kingdoms = Kingdom.objects.all()
-    phylas = Phyla.objects.all()
-    classes = Class.objects.all()
-    orders = Order.objects.all()
-    families = Family.objects.all()
-    genera = Genus.objects.all()
-    species = Species.objects.all()
+    qs1 = Species.objects.values('kingdomid__kingdomName', 'kingdomid', 'phylaid__phylaName', 'phylaid', 'classid__className', 'classid', 'orderid__orderName', 'orderid', 'familyid__familyName', 'familyid', 'genusid__genusName', 'genusid', 'speciesName', 'speciesid')
+    speciesDF = pd.DataFrame.from_records(qs1)
+    speciesDF.rename(columns={'kingdomid__kingdomName': 'Kingdom Name', 'kingdomid': 'Kingdom ID'}, inplace=True)
+    speciesDF.rename(columns={'phylaid__phylaName': 'Phylum Name', 'phylaid': 'Phylum ID'}, inplace=True)
+    speciesDF.rename(columns={'classid__className': 'Class Name', 'classid': 'Class ID'}, inplace=True)
+    speciesDF.rename(columns={'orderid__orderName': 'Order Name', 'orderid': 'Order ID'}, inplace=True)
+    speciesDF.rename(columns={'familyid__familyName': 'Family Name', 'familyid': 'Family ID'}, inplace=True)
+    speciesDF.rename(columns={'genusid__genusName': 'Genus Name', 'genusid': 'Genus ID'}, inplace=True)
+    speciesDF.rename(columns={'speciesName': 'Species Name', 'speciesid': 'Species ID'}, inplace=True)
+    table = speciesDF.to_html(classes="table display", columns=['Kingdom Name', 'Kingdom ID', 'Phylum Name', 'Phylum ID', 'Class Name', 'Class ID', 'Order Name', 'Order ID', 'Family Name', 'Family ID', 'Genus Name', 'Genus ID', 'Species Name', 'Species ID'])
+    table = table.replace('border="1"', 'border="0"')
 
     return render_to_response(
         'taxa.html',
-        {'kingdoms': kingdoms,
-        'phylas': phylas,
-        'classes': classes,
-        'orders': orders,
-        'families': families,
-        'genera': genera,
-        'species': species},
+        {'table': table},
         context_instance=RequestContext(request)
     )
 

@@ -280,8 +280,8 @@ def normalizeAlpha(df, taxaDict, mySet, factor):
             prob = (sample + myLambda) / (sample.sum() + cols[0] * myLambda)
 
             final = np.zeros(cols)
-            for j in range(1, reads):
-                sub = np.random.mtrand.choice(range(sample.size), size=1, replace=False, p=prob)
+            for x in xrange(reads):
+                sub = np.random.mtrand.choice(range(sample.size), size=1, replace=True, p=prob)
                 temp = np.zeros(cols)
                 np.put(temp, sub, 1)
                 final = np.add(final, temp)
@@ -298,7 +298,7 @@ def normalizeAlpha(df, taxaDict, mySet, factor):
         relabundDF[i] = countDF[i].div(countDF[i].sum(axis=1), axis=0)
         binaryDF[i] = countDF[i].apply(lambda x: 1 if x != 0 else 0)
         diversityDF[i] = relabundDF[i].apply(lambda x: -1 * x * math.log(x) if x > 0 else 0)
-    print 'relabundDF\n', relabundDF
+
     rowsList = []
     namesDF = pd.DataFrame()
     normDF = pd.DataFrame()

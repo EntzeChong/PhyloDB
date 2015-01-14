@@ -325,8 +325,8 @@ def normalizeBeta(df, taxaLevel, mySet, factor):
             prob = (sample + myLambda) / (sample.sum() + cols[0] * myLambda)
 
             final = np.zeros(cols)
-            for j in range(1, reads):
-                sub = np.random.mtrand.choice(range(sample.size), size=1, replace=False, p=prob)
+            for x in xrange(reads):
+                sub = np.random.mtrand.choice(range(sample.size), size=1, replace=True, p=prob)
                 temp = np.zeros(cols)
                 np.put(temp, sub, 1)
                 final = np.add(final, temp)

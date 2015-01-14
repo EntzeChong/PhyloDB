@@ -125,6 +125,7 @@
             $("#button1").change(function () {
                 button1 = $(this).val();
                 chooseDisplay();
+                $('#res_table').empty();
                 $("#run").css("background-color", "lightgray");
             });
 
@@ -425,8 +426,20 @@
                     barchart(xAxis, yAxis, series);
                     var text = obj['text'];
                     $('#text-1').val(text);
-                    var finalDF = obj['finalDF'];
-                    $('#text-raw').val(finalDF);
+
+                    var res_table = obj['res_table'];
+                    $('#res_table').empty();
+                    $('#res_table').append(res_table);
+                    $('#res_table .table').DataTable({
+                        "bDestroy": true,
+                        "dom": 'T<"clear">lfrtip',
+                        "tableTools": {
+                          "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                        },
+                        "scrollX": true,
+                        "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+                    }).draw();
+
                     $("#run").css("background-color", "green");
                 }
             });
@@ -481,8 +494,20 @@
                         alert('No significant regressions!');
                     }
                     linechart(xAxis, yAxis, series);
-                    var finalDF = obj['finalDF'];
-                    $('#text-raw').val(finalDF);
+
+                    var res_table = obj['res_table'];
+                    $('#res_table').empty();
+                    $('#res_table').append(res_table);
+                    $('#res_table .table').DataTable({
+                        "bDestroy": true,
+                        "dom": 'T<"clear">lfrtip',
+                        "tableTools": {
+                          "sSwfPath": "../media/tabletools/swf/copy_csv_xls_pdf.swf"
+                        },
+                        "scrollX": true,
+                        "aLengthMenu":[[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+                    }).draw();
+
                     $("#run").css("background-color", "green");
                 }
             });
@@ -501,14 +526,18 @@
                     verticalAlign: 'top',
                     layout: 'vertical',
                     x: 0,
-                    y: 20
+                    y: 20,
+                    labelFormatter: function () {
+                        return this.name[0] + ': ' + this.name[1] + '<br>'
+                    }
                 },
                 xAxis: xAxis,
                 yAxis: yAxis,
                 series: series,
                 tooltip: {
                     formatter: function () {
-                        return this.series.name + '<br>' +
+                        return this.series.name[0] + ':' + this.series.name[1] + '<br>' +
+                            'ID: ' + this.series.name[2] + '<br>' +
                             'Value: ' + this.y + '<br>' +
                             'Total: ' + this.point.stackTotal;
                     }
@@ -535,14 +564,27 @@
                     verticalAlign: 'top',
                     layout: 'vertical',
                     x: 0,
-                    y: 20
+                    y: 20,
+                    labelFormatter: function () {
+                        if (this.type == 'scatter') {
+                            return this.name[0] + ': ' + this.name[1] + '<br>'
+                        } else {
+                            return this.name[3]
+                        }
+                    }
                 },
                 xAxis: xAxis,
                 yAxis: yAxis,
                 series: series,
                 tooltip: {
                     formatter: function () {
-                        return '{' + this.series.name + '}' + '<br>' + '(' + this.x + ',' + this.y + ')'
+                        if (this.series.type == 'scatter') {
+                            return this.series.name[0] + ':' + this.series.name[1] + '<br>' +
+                                    'ID: ' + this.series.name[2] + '<br>' +
+                                    '(' + this.x + ',' + this.y + ')'
+                        } else {
+                            return this.series.name[0] + ':' + this.series.name[1] + '<br>'
+                        }
                     }
                 },
                 credits: { enabled: false }
@@ -654,11 +696,9 @@
         <textarea style="width: 950px;" wrap="off" id="text-1" rows="20">No data selected</textarea>
         <br>
     </div>
-    <div id="txt-raw">
-        <p>Raw Data:</p>
-        <textarea style="width: 950px;" wrap="off" id="text-raw" rows="20">No data selected</textarea>
+    <div id="res_table" style="width: 950px; overflow-x: auto;">
+        <h2>Raw Data:</h2>
     </div>
-    <br>
     <br>
     <br>
 

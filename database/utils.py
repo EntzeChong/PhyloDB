@@ -49,6 +49,47 @@ def taxaProfileDF(mySet):
     return taxaDF
 
 
+stats.ss = lambda l: sum(a*a for a in l)
+def above_diagonal(n):
+    row = xrange(n)
+    for i in row:
+        for j in xrange(i+1, n):
+            yield i, j
+
+
+def select_ss(dm, levels,  included):
+    bign = len(dm)
+    distances = (dm[i][j] for i, j in above_diagonal(bign) if included(levels[i], levels[j]))
+    return stats.ss(distances)
+
+
+def permanova_oneway(dm, levels, permutations=1000):
+    bigf = f_oneway(dm, levels)
+    above = below = 0
+    nf = 0
+    shuffledlevels = list(levels)
+    for i in xrange(permutations):
+        r.shuffle(shuffledlevels)
+        f = f_oneway(dm, shuffledlevels)
+        if f >= bigf:
+            above += 1
+    p = above/float(permutations)
+    return bigf, p
+
+
+def f_oneway(dm, levels):
+    bign = len(levels)
+    dm = np.asarray(dm)
+    a = len(set(levels))
+    n = bign/a
+    assert dm.shape == (bign, bign)
+    sst = np.sum(stats.ss(r) for r in (s[n+1:] for n, s in enumerate(dm[:-1])))/float(bign)
+    ssw = np.sum((dm[i][j]**2 for i, j in product(xrange(len(dm)), xrange(1, len(dm))) if i < j and levels[i] == levels[j]))/float(n)
+    ssa = sst - ssw
+    fstat = (ssa/float(a-1))/(ssw/float(bign-a))
+    return fstat
+
+
 def PCoA(dm):
     E_matrix = make_E_matrix(dm)
     F_matrix = make_F_matrix(E_matrix)
@@ -81,28 +122,3 @@ def scores(eigvals, eigvecs):
     proportion_explained = eigvals / eigvals.sum()
     return eigvals, coordinates, proportion_explained
 
-
-def permanova_oneway(dm, levels, permutations=200):
-    bigf = f_oneway(dm, levels)
-    above = 0
-    shuffledlevels = list(levels)
-    for i in range(permutations):
-        r.shuffle(shuffledlevels)
-        f = f_oneway(dm, shuffledlevels)
-        if f >= bigf:
-            above += 1
-    p = above/float(permutations)
-    return bigf, p
-
-stats.ss = lambda l: sum(p*p for p in l)
-def f_oneway(dm, levels):
-    bign = len(levels)
-    dm = np.asarray(dm)
-    a = len(set(levels))
-    n = bign/a
-    assert dm.shape == (bign, bign)
-    sst = np.sum(stats.ss(row) for row in (s[n+1:] for n, s in enumerate(dm[:-1])))/float(bign)
-    ssw = np.sum((dm[i][j]**2 for i, j in product(xrange(len(dm)), xrange(1, len(dm))) if i < j and levels[i] == levels[j]))/float(n)
-    ssa = sst - ssw
-    fstat = (ssa/float(a-1))/(ssw/float(bign-a))
-    return fstat

@@ -185,7 +185,7 @@ def getCatAlphaData(request):
                         dataList.extend(list(grouped2['diversity'].T))
 
                     seriesDict = {}
-                    seriesDict['name'] = str(name1[0]) + ": " + str(name1[1])
+                    seriesDict['name'] = name1
                     seriesDict['data'] = dataList
                     seriesList.append(seriesDict)
 
@@ -241,7 +241,7 @@ def getCatAlphaData(request):
                     dataList.extend(list(grouped2['diversity'].T))
 
                 seriesDict = {}
-                seriesDict['name'] = str(name1[0]) + ": " + str(name1[1])
+                seriesDict['name'] = name1
                 seriesDict['data'] = dataList
                 seriesList.append(seriesDict)
 
@@ -270,8 +270,10 @@ def getCatAlphaData(request):
         else:
             finalDict['empty'] = 1
 
-        finalDF.set_index('sampleid', drop=True, inplace=True)
-        finalDict['finalDF'] = str(finalDF)
+        finalDF.reset_index(drop=True, inplace=True)
+        res_table = finalDF.to_html(classes="table display")
+        res_table = res_table.replace('border="1"', 'border="0"')
+        finalDict['res_table'] = str(res_table)
 
         res = simplejson.dumps(finalDict)
         return HttpResponse(res, content_type='application/json')
@@ -369,7 +371,7 @@ def getQuantAlphaData(request):
             if sig_only == 0:
                 seriesDict = {}
                 seriesDict['type'] = 'scatter'
-                seriesDict['name'] = str(name1[0]) + ": " + str(name1[1])
+                seriesDict['name'] = name1
                 seriesDict['data'] = dataList
                 seriesList.append(seriesDict)
                 if stop == 0:
@@ -377,7 +379,12 @@ def getQuantAlphaData(request):
                 elif stop == 1:
                     regrDict = {}
                     regrDict['type'] = 'line'
-                    regrDict['name'] = 'R2: ' + str(r_square) + '; p-value: ' + str(p_value) + '<br>' + '(y = ' + str(slope) + 'x' + ' + ' + str(intercept) + ')'
+                    name2 = list(name1)
+                    temp = 'R2: ' + str(r_square) + '; p-value: ' + str(p_value) + '<br>' + '(y = ' + str(slope) + 'x' + ' + ' + str(intercept)
+                    print temp
+                    name2.append(temp)
+                    print name2
+                    regrDict['name'] = name2
                     regrDict['data'] = regrList
                     seriesList.append(regrDict)
 
@@ -385,13 +392,16 @@ def getQuantAlphaData(request):
                 if p_value <= 0.05:
                     seriesDict = {}
                     seriesDict['type'] = 'scatter'
-                    seriesDict['name'] = str(name1[0]) + ": " + str(name1[1])
+                    name2 = list(name1)
+                    temp = 'R2: ' + str(r_square) + '; p-value: ' + str(p_value) + '<br>' + '(y = ' + str(slope) + 'x' + ' + ' + str(intercept)
+                    name2.append(temp)
+                    seriesDict['name'] = name2
                     seriesDict['data'] = dataList
                     seriesList.append(seriesDict)
 
                     regrDict = {}
                     regrDict['type'] = 'line'
-                    regrDict['name'] = 'R2: ' + str(r_square) + '; p-value: ' + str(p_value) + '<br>' + '(y = ' + str(slope) + 'x' + ' + ' + str(intercept) + ')'
+                    regrDict['name'] = name1
                     regrDict['data'] = regrList
                     seriesList.append(regrDict)
 
@@ -418,8 +428,10 @@ def getQuantAlphaData(request):
         else:
             finalDict['empty'] = 1
 
-        finalDF.set_index('sampleid', drop=True, inplace=True)
-        finalDict['finalDF'] = str(finalDF)
+        finalDF.reset_index(drop=True, inplace=True)
+        res_table = finalDF.to_html(classes="table display")
+        res_table = res_table.replace('border="1"', 'border="0"')
+        finalDict['res_table'] = str(res_table)
 
         res = simplejson.dumps(finalDict)
         return HttpResponse(res, content_type='application/json')
