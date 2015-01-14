@@ -4,58 +4,7 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f5def0b1-44de-4e55-9c23-a7de3aa1fb18" name="Default" comment="normalization is fully functional">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/background.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/collection.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/psd/collection.psd" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/collection_hover.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/psd/copy document.psd" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/copy.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/swf/copy_csv_xls_pdf.swf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/copy_hover.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/csv.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/csv_hover.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/psd/file_types.psd" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/pdf.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/pdf_hover.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/print.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/print_hover.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/psd/printer.psd" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/xls.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/images/xls_hover.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/css/dataTables.tableTools.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/tabletools/js/dataTables.tableTools.js" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\responsive\dataTables.responsive.css" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\responsive\dataTables.responsive.js" afterPath="" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\css\jquery.dataTables.css" afterPath="$PROJECT_DIR$/media/datatables/css/jquery.dataTables.css" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\images\Sorting icons.psd" afterPath="$PROJECT_DIR$/media/datatables/images/Sorting icons.psd" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\images\back_disabled.png" afterPath="$PROJECT_DIR$/media/datatables/images/back_disabled.png" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\images\back_enabled.png" afterPath="$PROJECT_DIR$/media/datatables/images/back_enabled.png" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\images\back_enabled_hover.png" afterPath="$PROJECT_DIR$/media/datatables/images/back_enabled_hover.png" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\images\favicon.ico" afterPath="$PROJECT_DIR$/media/datatables/images/favicon.ico" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\images\forward_disabled.png" afterPath="$PROJECT_DIR$/media/datatables/images/forward_disabled.png" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\images\forward_enabled.png" afterPath="$PROJECT_DIR$/media/datatables/images/forward_enabled.png" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\images\forward_enabled_hover.png" afterPath="$PROJECT_DIR$/media/datatables/images/forward_enabled_hover.png" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\images\sort_asc.png" afterPath="$PROJECT_DIR$/media/datatables/images/sort_asc.png" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\images\sort_asc_disabled.png" afterPath="$PROJECT_DIR$/media/datatables/images/sort_asc_disabled.png" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\images\sort_both.png" afterPath="$PROJECT_DIR$/media/datatables/images/sort_both.png" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\images\sort_desc.png" afterPath="$PROJECT_DIR$/media/datatables/images/sort_desc.png" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\images\sort_desc_disabled.png" afterPath="$PROJECT_DIR$/media/datatables/images/sort_desc_disabled.png" />
-      <change type="MOVED" beforePath="C:\Users\daniel.manter\Documents\GitHub\phyloDB\media\datatables\media\js\jquery.dataTables.js" afterPath="$PROJECT_DIR$/media/datatables/js/jquery.dataTables.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dbMicrobe" afterPath="$PROJECT_DIR$/dbMicrobe" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/alpha.html" afterPath="$PROJECT_DIR$/templates/alpha.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/alpha_dataframe.py" afterPath="$PROJECT_DIR$/database/alpha_dataframe.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/alpha_graphs.py" afterPath="$PROJECT_DIR$/database/alpha_graphs.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/base.html" afterPath="$PROJECT_DIR$/templates/base.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/beta.html" afterPath="$PROJECT_DIR$/templates/beta.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/beta_dataframe.py" afterPath="$PROJECT_DIR$/database/beta_dataframe.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/beta_graphs.py" afterPath="$PROJECT_DIR$/database/beta_graphs.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/phyloDB.iml" afterPath="$PROJECT_DIR$/.idea/phyloDB.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/select.html" afterPath="$PROJECT_DIR$/templates/select.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/taxa.html" afterPath="$PROJECT_DIR$/templates/taxa.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/utils.py" afterPath="$PROJECT_DIR$/database/utils.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/views.py" afterPath="$PROJECT_DIR$/database/views.py" />
+    <list default="true" id="f5def0b1-44de-4e55-9c23-a7de3aa1fb18" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="PhyloDB.iws" />
@@ -770,7 +719,11 @@
       <created>1420836896438</created>
       <updated>1420836896438</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="datatables export function">
+      <created>1421266423260</created>
+      <updated>1421266423260</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -797,6 +750,7 @@
     <frame x="0" y="0" width="1069" height="724" extended-state="0" />
     <editor active="true" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32911393" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3132716" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32753164" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -812,7 +766,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32753164" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32911393" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24968944" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39872408" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -866,7 +819,8 @@
     <MESSAGE value="minor changes" />
     <MESSAGE value="more error checking" />
     <MESSAGE value="normalization is fully functional" />
-    <option name="LAST_COMMIT_MESSAGE" value="normalization is fully functional" />
+    <MESSAGE value="datatables export function" />
+    <option name="LAST_COMMIT_MESSAGE" value="datatables export function" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
